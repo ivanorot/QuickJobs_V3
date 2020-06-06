@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/welcomeFragment">
+    <fragment
+        android:id="@+id/myJobsFragment"
+        android:name="com.example.quickjobs.MyJobsFragment"
+        android:label="fragment_my_jobs"
+        tools:layout="@layout/fragment_my_jobs">
+        <action
+            android:id="@+id/action_myJobsFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_myJobsFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_myJobsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="com.example.quickjobs.newPostFragment"
+        android:label="fragment_new_post"
+        tools:layout="@layout/fragment_new_post">
+        <action
+            android:id="@+id/action_newPostFragment_to_myJobsFragment"
+            app:destination="@id/myJobsFragment" />
+        <action
+            android:id="@+id/action_newPostFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_newPostFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProfileFragment"
+        android:name="com.example.quickjobs.myProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile">
+        <action
+            android:id="@+id/action_myProfileFragment_to_myJobsFragment"
+            app:destination="@id/myJobsFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.quickjobs.editProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.quickjobs.welcomeFragment"
+        android:label="fragment_welcome"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.quickjobs.homeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_myJobsFragment"
+            app:destination="@id/myJobsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+    </fragment>
+</navigation>
