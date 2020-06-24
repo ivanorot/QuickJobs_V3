@@ -10,7 +10,7 @@
         android:icon="@drawable/baseline_home_black_36"
         android:title="home" />
     <item
-        android:id="@+id/newPostFragment"
+        android:id="@+id/newPostActivity"
         android:icon="@drawable/baseline_add_black_36"
         android:title="New Post" />
     <item

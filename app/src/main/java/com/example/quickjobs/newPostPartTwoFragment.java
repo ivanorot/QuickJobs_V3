@@ -3,10 +3,12 @@ package com.example.quickjobs;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +25,9 @@ public class newPostPartTwoFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Button previousButton;
+    Button nextButton;
+
 
     public newPostPartTwoFragment() {
         // Required empty public constructor
@@ -59,6 +64,12 @@ public class newPostPartTwoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_post_part_two, container, false);
+        View v = inflater.inflate(R.layout.fragment_new_post_part_two, container, false);
+
+        previousButton = (Button) v.findViewById(R.id.newPostPartTwo_Previous_Button);
+        previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostFragment));
+
+
+        return v;
     }
 }

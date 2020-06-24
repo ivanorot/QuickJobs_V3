@@ -1,6 +1,8 @@
 package com.example.quickjobs
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -23,6 +25,6 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         setupWithNavController(bottomNavigationView, navController)
 
-
     }
+
 }
