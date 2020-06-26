@@ -5,7 +5,7 @@
     android:id="@+id/myJobs_ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyJobsFragment">
+    tools:context=".view.content.MyJobsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomNavigationView"

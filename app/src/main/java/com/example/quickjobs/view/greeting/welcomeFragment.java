@@ -1,18 +1,21 @@
-package com.example.quickjobs;
+package com.example.quickjobs.view.greeting;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.fragment.app.Fragment;
+import com.example.quickjobs.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link newPostFragment#newInstance} factory method to
+ * Use the {@link welcomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class newPostFragment extends Fragment {
+public class welcomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +26,7 @@ public class newPostFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public newPostFragment() {
+    public welcomeFragment() {
         // Required empty public constructor
     }
 
@@ -33,11 +36,11 @@ public class newPostFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment newPostFragment.
+     * @return A new instance of fragment welcomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static newPostFragment newInstance(String param1, String param2) {
-        newPostFragment fragment = new newPostFragment();
+    public static welcomeFragment newInstance(String param1, String param2) {
+        welcomeFragment fragment = new welcomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,6 +61,6 @@ public class newPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_post, container, false);
+        return inflater.inflate(R.layout.fragment_welcome, container, false);
     }
 }
