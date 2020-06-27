@@ -1,38 +1,48 @@
 package com.example.quickjobs.model.content;
 
+import com.example.quickjobs.model.user.QuickJobsUser;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuickJobsPost {
 
-    private String whoPostedEmail;
-    private String whoPostedDisplayName;
+    private QuickJobsUser whoPosted;
+    private List<QuickJobsUser> whoBidded;
 
     private String jobTitle;
     private String jobDescription;
 
-    private ArrayList<String> jobImages;
+    private String amountForJob;
+    private String dateOfJob;
 
-    public QuickJobsPost(String whoPostedEmail, String whoPostedDisplayName) {
-        this.whoPostedEmail = whoPostedEmail;
-        this.whoPostedDisplayName = whoPostedDisplayName;
+    private List<String> jobImages;
+
+    public QuickJobsPost(QuickJobsUser inWhoPosted) {
+        whoPosted = inWhoPosted;
+        whoBidded = new ArrayList<>();
         jobImages = new ArrayList<>();
     }
 
-    public String getWhoPostedEmail() {
-        return whoPostedEmail;
+    public QuickJobsUser getOwner() {
+        return whoPosted;
     }
 
-    public void setWhoPostedEmail(String whoPostedEmail) {
-        this.whoPostedEmail = whoPostedEmail;
+    public void setOwner(QuickJobsUser inWhoPosted) {
+        whoPosted = inWhoPosted;
     }
 
-    public String getWhoPostedDisplayName() {
-        return whoPostedDisplayName;
+    public void addBidder(String imageUrl)
+    {
+        jobImages.add(imageUrl);
     }
 
-    public void setWhoPostedDisplayName(String whoPostedDisplayName) {
-        this.whoPostedDisplayName = whoPostedDisplayName;
+    public void removeBidder(String imageUrl)
+    {
+        jobImages.remove(imageUrl);
     }
+
+    public List<QuickJobsUser> getAllBidders(){ return whoBidded;}
 
     public String getJobTitle() {
         return jobTitle;
@@ -50,7 +60,23 @@ public class QuickJobsPost {
         this.jobDescription = jobDescription;
     }
 
-    public ArrayList<String> getJobImages() {
+    public String getAmountForJob() {
+        return amountForJob;
+    }
+
+    public void setAmountForJob(String amountForJob) {
+        this.amountForJob = amountForJob;
+    }
+
+    public String getDateOfJob() {
+        return dateOfJob;
+    }
+
+    public void setDateOfJob(String dateOfJob) {
+        this.dateOfJob = dateOfJob;
+    }
+
+    public List<String> getJobImages() {
         return jobImages;
     }
 
@@ -63,4 +89,6 @@ public class QuickJobsPost {
     {
         jobImages.remove(imageUrl);
     }
+
+    public List<String> getAllImages(){return jobImages;}
 }

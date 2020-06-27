@@ -2,8 +2,10 @@ package com.example.quickjobs.model.persistence;
 
 import com.example.quickjobs.model.user.QuickJobsUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.Objects;
@@ -13,10 +15,20 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UserSource {
     private final String COLLECTION_NAME = "user";
     private CollectionReference userCollection;
+    private DocumentReference currentUserDocument;
 
     public UserSource(FirebaseFirestore firebaseFirestore)
     {
         userCollection = firebaseFirestore.collection(COLLECTION_NAME);
+    }
+
+    public void setCurrentUser(QuickJobsUser currentUser) {
+        currentUserDocument = userCollection.document(currentUser.getUid());
+    }
+
+    public void listenToUserCollection(EventListener<QuerySnapshot> userDocumentListener)
+    {
+        userCollection.addSnapshotListener(userDocumentListener);
     }
 
     public QuickJobsUser readUserFromFirestore(String inUid)
