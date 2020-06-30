@@ -12,6 +12,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/newPost_next_frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:background="#C5CAE9 "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/newPost_Next_button"
+                    android:layout_width="200dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="32dp"
+                    android:backgroundTint="#512DA8   "
+                    android:enabled="false"
+                    android:text="Next"
+                    android:textColor="#B39DDB "
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+
         <ScrollView
             android:id="@+id/newPost_content_ScrollView"
             android:layout_width="match_parent"
@@ -134,6 +165,7 @@
                                 android:layout_height="72dp"
                                 android:background="#9E9E9E"
                                 android:baselineAlignBottom="true"
+                                android:scaleType="center"
                                 android:src="@drawable/baseline_image_black_48"
                                 android:tint="#E0E0E0"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -203,6 +235,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <EditText
+                        android:id="@+id/newPost_titletext_EditText"
+                        android:layout_width="360dp"
+                        android:layout_height="wrap_content"
+                        android:background="#FFFFFF"
+                        android:hint="Write the post title here"
+                        android:singleLine="true"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/newPost_Title_textView" />
+
                     <TextView
                         android:id="@+id/newPost_Title_textView"
                         android:layout_width="wrap_content"
@@ -214,50 +258,10 @@
                         app:layout_constraintStart_toStartOf="@+id/newPost_titletext_EditText"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
-                        android:id="@+id/newPost_titletext_EditText"
-                        android:layout_width="360dp"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:singleLine="true"
-                        android:textSize="18sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/newPost_Title_textView" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
         </ScrollView>
-
-        <FrameLayout
-            android:id="@+id/newPost_next_frameLayout"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:background="#C5CAE9 "
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/newPost_Next_button"
-                    android:layout_width="200dp"
-                    android:layout_height="64dp"
-                    android:layout_marginTop="32dp"
-                    android:backgroundTint="#512DA8   "
-                    android:text="Next"
-                    android:textColor="#B39DDB "
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

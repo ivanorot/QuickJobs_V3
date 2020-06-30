@@ -63,10 +63,10 @@
                             android:bufferType="normal"
                             android:ems="10"
                             android:gravity="start|top"
+                            android:hint="Describe the tasks you need completed"
                             android:inputType="textMultiLine"
-                            android:textColorHighlight="#E0E0E0 "
-                            android:textSize="14sp"
-                            tools:text="Description text" />
+                            android:textColorHighlight="@color/common_google_signin_btn_text_dark_disabled"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -113,8 +113,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ems="10"
-                            android:inputType="numberDecimal"
-                            android:text="$" />
+                            android:hint="$"
+                            android:inputType="numberDecimal" />
 
                     </androidx.cardview.widget.CardView>
 
