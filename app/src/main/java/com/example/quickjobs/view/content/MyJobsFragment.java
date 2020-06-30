@@ -1,4 +1,4 @@
-package com.example.quickjobs;
+package com.example.quickjobs.view.content;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.quickjobs.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/welcomeFragment">
     <fragment
         android:id="@+id/myJobsFragment"
-        android:name="com.example.quickjobs.MyJobsFragment"
+        android:name="com.example.quickjobs.view.content.MyJobsFragment"
         android:label="fragment_my_jobs"
         tools:layout="@layout/fragment_my_jobs">
         <action
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/newPostFragment"
-        android:name="com.example.quickjobs.newPostFragment"
+        android:name="com.example.quickjobs.view.content.newPostFragment"
         android:label="fragment_new_post"
         tools:layout="@layout/fragment_new_post">
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/myProfileFragment"
-        android:name="com.example.quickjobs.myProfileFragment"
+        android:name="com.example.quickjobs.view.profile.myProfileFragment"
         android:label="fragment_my_profile"
         tools:layout="@layout/fragment_my_profile">
         <action
@@ -54,12 +54,21 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.quickjobs.editProfileFragment"
+        android:name="com.example.quickjobs.view.profile.editProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
     <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.quickjobs.view.greeting.welcomeFragment"
+        android:label="fragment_welcome"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.quickjobs.homeFragment"
+        android:name="com.example.quickjobs.view.main.homeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action

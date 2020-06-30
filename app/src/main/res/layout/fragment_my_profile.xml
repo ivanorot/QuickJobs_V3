@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
-    tools:context=".myProfileFragment">
+    tools:context=".view.profile.myProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/myProfile_ScrollView"
