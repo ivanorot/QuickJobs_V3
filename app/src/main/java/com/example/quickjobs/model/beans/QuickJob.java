@@ -1,14 +1,12 @@
-package com.example.quickjobs.model.content;
-
-import com.example.quickjobs.model.user.QuickJobsUser;
+package com.example.quickjobs.model.beans;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickJobsPost {
+public class QuickJob {
 
-    private QuickJobsUser whoPosted;
-    private List<QuickJobsUser> whoBidded;
+    private User whoPosted;
+    private List<User> whoBidded;
 
     private String jobTitle;
     private String jobDescription;
@@ -18,17 +16,17 @@ public class QuickJobsPost {
 
     private List<String> jobImages;
 
-    public QuickJobsPost(QuickJobsUser inWhoPosted) {
+    public QuickJob(User inWhoPosted) {
         whoPosted = inWhoPosted;
         whoBidded = new ArrayList<>();
         jobImages = new ArrayList<>();
     }
 
-    public QuickJobsUser getOwner() {
+    public User getOwner() {
         return whoPosted;
     }
 
-    public void setOwner(QuickJobsUser inWhoPosted) {
+    public void setOwner(User inWhoPosted) {
         whoPosted = inWhoPosted;
     }
 
@@ -42,7 +40,7 @@ public class QuickJobsPost {
         jobImages.remove(imageUrl);
     }
 
-    public List<QuickJobsUser> getAllBidders(){ return whoBidded;}
+    public List<User> getAllBidders(){ return whoBidded;}
 
     public String getJobTitle() {
         return jobTitle;

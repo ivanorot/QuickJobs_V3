@@ -1,8 +1,11 @@
-package com.example.quickjobs.model.user;
+package com.example.quickjobs.model.beans;
 
 import com.google.firebase.auth.FirebaseUser;
 
-public class QuickJobsUser {
+import java.util.ArrayList;
+import java.util.List;
+
+public class User {
 
     private final String uid;
 
@@ -14,17 +17,30 @@ public class QuickJobsUser {
     private float longitude;
     private float latitude;
 
-    public QuickJobsUser(String inUid)
+    private List<QuickJob> myJobs;
+    private List<String> photos;
+
+    private boolean isAuthenticated;
+    private boolean isNew;
+    private boolean isCreated;
+
+    public User(String inUid)
     {
         uid = inUid;
+
+        myJobs = new ArrayList<>();
+        photos = new ArrayList<>();
     }
 
-    public QuickJobsUser(String inUid, String inDisplayName) {
+    public User(String inUid, String inDisplayName) {
         uid = inUid;
         displayName = inDisplayName;
+
+        myJobs = new ArrayList<>();
+        photos = new ArrayList<>();
     }
 
-    public QuickJobsUser(FirebaseUser firebaseUser){
+    public User(FirebaseUser firebaseUser){
         uid = firebaseUser.getUid();
 
         if(firebaseUser.getEmail() != null) {
@@ -83,5 +99,53 @@ public class QuickJobsUser {
 
     public void setLatitude(float latitude) {
         this.latitude = latitude;
+    }
+
+    public void addQuickJob(QuickJob quickJob){
+        myJobs.add(quickJob);
+    }
+
+    public void removeQuickJob(QuickJob quickJob){
+        myJobs.remove(quickJob);
+    }
+
+    public List<QuickJob> getMyJobs(){
+        return myJobs;
+    }
+
+    public void addPhoto(String urlPhoto){
+        photos.add(urlPhoto);
+    }
+
+    public void removePhoto(String urlPhoto){
+        photos.remove(urlPhoto);
+    }
+
+    public List<String> getPhotos(){
+        return photos;
+    }
+
+    public boolean isAuthenticated() {
+        return isAuthenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        isAuthenticated = authenticated;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public boolean isCreated() {
+        return isCreated;
+    }
+
+    public void setCreated(boolean created) {
+        isCreated = created;
     }
 }
