@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newPostTwo_Layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EDE7F6 "
+    tools:context=".newPostPartTwoFragment" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:nestedScrollingEnabled="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/frameLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/newPostPartTwo_Description_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="64dp"
+                        android:text="Description:"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="@+id/newPostPartTwo_description_cardView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/newPostPartTwo_description_cardView"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:background="#FFFFFF"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/newPostPartTwo_Description_textView">
+
+                        <EditText
+                            android:id="@+id/editTextTextMultiLine"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#FFFFFF"
+                            android:bufferType="normal"
+                            android:ems="10"
+                            android:gravity="start|top"
+                            android:hint="Describe the tasks you need completed"
+                            android:inputType="textMultiLine"
+                            android:textColorHighlight="@color/common_google_signin_btn_text_dark_disabled"
+                            android:textSize="14sp" />
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <CheckBox
+                        android:id="@+id/newPostPartTwo_perHour_checkBox"
+                        android:layout_width="100dp"
+                        android:layout_height="34dp"
+                        android:background="#7E57C2 "
+                        android:buttonTint="#EDE7F6 "
+                        android:text="Per Hour"
+                        android:textColor="#EDE7F6 "
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/newPostPartTwo_Amount_cardView"
+                        app:layout_constraintTop_toBottomOf="@+id/newPostPartTwo_Amount_cardView" />
+
+                    <TextView
+                        android:id="@+id/newPostPartTwo_Amount_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="100dp"
+                        android:text="Amount:"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/newPostPartTwo_Amount_cardView"
+                        app:layout_constraintStart_toStartOf="@+id/newPostPartTwo_Amount_cardView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/newPostPartTwo_Amount_cardView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/newPostPartTwo_Amount_textView">
+
+                        <EditText
+                            android:id="@+id/newPostPartTwo_Amount_editTextNumberDecimal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="$"
+                            android:inputType="numberDecimal" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/frameLayout3"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:background="#C5CAE9 "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <Button
+                        android:id="@+id/newPostPartTwo_Previous_Button"
+                        android:layout_width="150dp"
+                        android:layout_height="64dp"
+                        android:backgroundTint="#512DA8   "
+                        android:text="Previous"
+                        android:textColor="#B39DDB "
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/newPostPartTwo_Next_Button"
+                        android:layout_width="150dp"
+                        android:layout_height="64dp"
+                        android:layout_marginStart="32dp"
+                        android:backgroundTint="#512DA8   "
+                        android:text="Next"
+                        android:textColor="#B39DDB "
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/newPostPartTwo_Previous_Button"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
