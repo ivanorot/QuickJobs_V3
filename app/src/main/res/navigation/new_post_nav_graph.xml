@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/newPostPartTwoFragment"
-        android:name="com.example.quickjobs.newPostPartTwoFragment"
+        android:name="com.example.quickjobs.view.jobs.NewPostPartTwoFragment"
         android:label="fragment_new_post_part_two"
         tools:layout="@layout/fragment_new_post_part_two">
         <action

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7F6 "
-    tools:context=".newPostPartTwoFragment" >
+    tools:context=".view.jobs.NewPostPartTwoFragment" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
