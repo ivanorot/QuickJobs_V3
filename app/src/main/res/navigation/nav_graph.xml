@@ -37,10 +37,18 @@
         <action
             android:id="@+id/action_homeFragment_to_newPostActivity"
             app:destination="@id/newPostActivity" />
+        <action
+            android:id="@+id/action_homeFragment_to_anonymousUserProfileFragment"
+            app:destination="@id/anonymousUserProfileFragment" />
     </fragment>
     <activity
         android:id="@+id/newPostActivity"
         android:name="com.example.quickjobs.view.jobs.newPostActivity"
         android:label="activity_new_post"
         tools:layout="@layout/activity_new_post" />
+    <fragment
+        android:id="@+id/anonymousUserProfileFragment"
+        android:name="com.example.quickjobs.AnonymousUserProfileFragment"
+        android:label="fragment_anonymous_user_profile"
+        tools:layout="@layout/fragment_anonymous_user_profile" />
 </navigation>

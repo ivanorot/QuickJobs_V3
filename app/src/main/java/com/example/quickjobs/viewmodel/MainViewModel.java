@@ -16,7 +16,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private Repository repository;
     private MutableLiveData<User> currentUserMutableLiveData;
-    private MutableLiveData<Boolean> setRestrictionsMutableLiveData;
+    private MutableLiveData<Boolean> isUserAnonymousMutableLiveData;
 
     private UserSource userSource;
 
@@ -26,7 +26,7 @@ public class MainViewModel extends AndroidViewModel {
         repository = Repository.getInstance();
 
         currentUserMutableLiveData = new MutableLiveData<>();
-        setRestrictionsMutableLiveData = new MutableLiveData<>();
+        isUserAnonymousMutableLiveData = new MutableLiveData<>();
 
         userSource = new UserSource(FirebaseFirestore.getInstance());
     }
@@ -38,11 +38,11 @@ public class MainViewModel extends AndroidViewModel {
         currentUserMutableLiveData.setValue(user);
     }
 
-    public LiveData<Boolean> observeRestrictionsForAnonymousUser(){
-        return setRestrictionsMutableLiveData;
+    public LiveData<Boolean> isUserAnonymousMutableLiveData(){
+        return isUserAnonymousMutableLiveData;
     }
-    public void setRestrictionsForAnonymousUser(boolean setRestrictions){
-        setRestrictionsMutableLiveData.setValue(setRestrictions);
+    public void setUserAnonymous(boolean setRestrictions){
+        isUserAnonymousMutableLiveData.setValue(setRestrictions);
     }
 
 }

@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
@@ -12,12 +13,14 @@ import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private final String USER = "user";
 
     private MainViewModel mainViewModel;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
         initMainViewModel();
         initQuickJobsUser();
+
         mainViewModel.observeCurrentUserLiveData().observe(this, user ->{
+            mainViewModel.setUserAnonymous(user.isAnonymous());
             if(user.isAnonymous()){
-//                todo set restrictions
+                Navigation.findNavController(getCurrentFocus()).navigate(R.id.action_homeFragment_to_anonymousUserProfileFragment);
+            }
+            else{
+                Navigation.findNavController(getCurrentFocus()).navigate(R.id.action_homeFragment_to_myProfileFragment);
             }
         });
 

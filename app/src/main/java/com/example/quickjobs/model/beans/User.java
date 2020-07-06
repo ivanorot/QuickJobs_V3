@@ -1,7 +1,6 @@
 package com.example.quickjobs.model.beans;
 
 import android.location.Address;
-import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;

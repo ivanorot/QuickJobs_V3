@@ -29,6 +29,6 @@ public class HomeFragment extends Fragment {
 
 
     public void initMainViewModel(){
-//        mainViewModel = new ViewModelProviders(this).get(
+
     }
 }

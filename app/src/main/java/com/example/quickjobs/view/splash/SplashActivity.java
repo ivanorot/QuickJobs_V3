@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         splashViewModel.checkIfUserIsAuthenticated();
         splashViewModel.isUserAuthenticatedLiveData.observe(this, user -> {
            if(!user.isAuthenticated()){
-               goToAuthActivity();
+               signInAnonymously();
                finish();
            }
            else {
