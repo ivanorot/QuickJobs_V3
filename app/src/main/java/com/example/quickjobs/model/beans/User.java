@@ -1,11 +1,15 @@
 package com.example.quickjobs.model.beans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
     private final String uid;
 
@@ -24,8 +28,7 @@ public class User {
     private boolean isNew;
     private boolean isCreated;
 
-    public User(String inUid)
-    {
+    public User(String inUid) {
         uid = inUid;
 
         myJobs = new ArrayList<>();
@@ -54,7 +57,6 @@ public class User {
         if(firebaseUser.getPhoneNumber() != null) {
             phoneNumber = firebaseUser.getPhoneNumber();
         }
-
     }
 
     public String getUid() {

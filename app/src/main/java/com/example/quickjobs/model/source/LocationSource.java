@@ -28,6 +28,8 @@ public class LocationSource extends FusedLocationProviderClient{
     public LocationSource(@NonNull Context context) {
         super(context);
 
+        setDefaultSettings();
+
         //hot observable
         locationObservable = Observable.create(source -> {
            new LocationCallback()
@@ -40,9 +42,10 @@ public class LocationSource extends FusedLocationProviderClient{
                    {
                        source.onNext(locationResult.getLastLocation());
                    }
+
+//                   requestLocationUpdates(locationRequest,);
                }
            };
-
        });
     }
 

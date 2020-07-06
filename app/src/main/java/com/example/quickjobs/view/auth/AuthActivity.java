@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;

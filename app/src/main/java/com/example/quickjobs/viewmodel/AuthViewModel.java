@@ -31,6 +31,6 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void createUser(User authenticatedUser){
-        authenticatedUser = repository.
+//        authenticatedUser = repository.
     }
 }
