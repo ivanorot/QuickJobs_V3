@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -23,6 +24,7 @@ public class LocationSource extends FusedLocationProviderClient{
     public final int DEFAULT_DISPLACEMENT = 3000;
 
     private Observable<Location> locationObservable;
+    private MutableLiveData<Location> locationMutableLiveData;
     private LocationRequest locationRequest;
 
     public LocationSource(@NonNull Context context) {

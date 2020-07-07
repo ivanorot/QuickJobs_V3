@@ -23,7 +23,7 @@
         <activity android:name=".view.auth.AuthActivity" />
         <activity android:name=".view.main.MainActivity" />
         <activity
-            android:name=".view.jobs.newPostActivity"
+            android:name=".view.jobs.NewPostActivity"
             android:windowSoftInputMode="adjustPan" />
     </application>
 

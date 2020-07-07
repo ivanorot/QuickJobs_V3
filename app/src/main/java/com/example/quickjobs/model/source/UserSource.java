@@ -26,16 +26,9 @@ public class UserSource {
     private User currentUser;
 
 
-
-
-
     public UserSource(FirebaseFirestore firebaseFirestore) {
         currentUser = new User();
         userCollectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
-    }
-
-    public MutableLiveData<User> getCurrentUser(){
-        return new MutableLiveData<>(currentUser);
     }
 
     public MutableLiveData<User> firebaseAnonymousSignIn(IdpResponse response){
@@ -113,6 +106,8 @@ public class UserSource {
         MutableLiveData<User> isUserAuthenticatedInFirebaseMutableLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+
+
         if(firebaseUser == null){
             currentUser.setAuthenticated(false);
             isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
@@ -120,6 +115,7 @@ public class UserSource {
         else{
             currentUser.setUid(firebaseUser.getUid());
             currentUser.setAuthenticated(true);
+            currentUser.setAnonymous(firebaseUser.isAnonymous());
             isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
         }
         return isUserAuthenticatedInFirebaseMutableLiveData;

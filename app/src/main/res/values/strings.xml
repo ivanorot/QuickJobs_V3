@@ -18,5 +18,9 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="nextButton">Next</string>
+    <string name="bottom_navigation_home">home</string>
+    <string name="bottom_navigation_new_post">New Post</string>
+    <string name="bottom_navigation_my_jobs">My Jobs</string>
+    <string name="bottom_navigation_my_profile">My Profile</string>
 
 </resources>

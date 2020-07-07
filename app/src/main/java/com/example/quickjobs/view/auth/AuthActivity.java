@@ -55,10 +55,6 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    private void onStartUp(){
-
-    }
-
     private void launchAuthentication()
     {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -79,7 +75,6 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void initAuthViewModel(){
-        Log.println(Log.ERROR, TAG, "initAuthViewModel()");
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
 
@@ -87,11 +82,9 @@ public class AuthActivity extends AppCompatActivity {
         authViewModel.signInDefault(response);
         authViewModel.authenticatedUserLiveData.observe(this, user ->{
             if(user.isNew()){
-                Log.println(Log.ERROR, TAG,"persisting user");
                 createNewUser(user);
             }
             else{
-                Log.println(Log.ERROR, TAG, "reading user from persistence");
                 goToMainActivity(user);
             }
         });
@@ -101,28 +94,13 @@ public class AuthActivity extends AppCompatActivity {
         Log.println(Log.ERROR, TAG, "createNewUser()");
         authViewModel.createUser(authenticatedUser);
         authViewModel.createdUserLiveData.observe(this, user -> {
-            if (user.isCreated()) {
-                toastMessage(user.getDisplayName());
-            }
-
             goToMainActivity(user);
         });
     }
-    public void goToMainActivity(User user){
+    public void goToMainActivity(User user) {
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         intent.putExtra(USER, user);
         startActivity(intent);
         finish();
     }
-
-    public void toastMessage(String displaceName){
-        Toast.makeText(this, "welcome " + displaceName, Toast.LENGTH_SHORT).show();
-    }
-
-    public void logErrorMessage(@NonNull Exception e){
-        if(e.getMessage() != null){
-            Log.println(Log.ERROR, TAG, "logErrorMessage()" + e.getMessage());
-        }
-    }
-
 }

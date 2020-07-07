@@ -27,17 +27,21 @@ public class SplashActivity extends AppCompatActivity {
 
         initSplashViewModel();
         checkIfUserIsAuthenticated();
+
     }
 
     private void initSplashViewModel(){
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
     }
 
+    private void checkUserLocation(){
+        
+    }
+
     private void checkIfUserIsAuthenticated(){
-        Log.println(Log.ERROR, TAG, "checkIfUserIsAuthenticated()");
         splashViewModel.checkIfUserIsAuthenticated();
         splashViewModel.isUserAuthenticatedLiveData.observe(this, user -> {
-           if(!user.isAuthenticated()){
+           if(user.isAnonymous()){
                signInAnonymously();
                finish();
            }
@@ -49,9 +53,14 @@ public class SplashActivity extends AppCompatActivity {
 
     private void getUserFromDatabase(String inUid){
         splashViewModel.setUid(inUid);
-        splashViewModel.userLiveData.observe(this, user ->{
-           goToMainActivity(user);
-           finish();
+        splashViewModel.userLiveData.observe(this, this::getJobsFromDatabase);
+    }
+
+    private void getJobsFromDatabase(User user){
+        splashViewModel.loadInitialJobsForUser(user);
+        splashViewModel.initialJobs.observe(this, jobs -> {
+            goToMainActivity(user);
+            finish();
         });
     }
 
@@ -61,7 +70,6 @@ public class SplashActivity extends AppCompatActivity {
            if(anonTask.isSuccessful()){
                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                if(firebaseUser != null){
-                   Log.println(Log.ERROR, TAG, "anonymous sign in");
                    User user = new User(firebaseUser);
                    user.setAnonymous(true);
                    goToMainActivity(user);
@@ -88,4 +96,5 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

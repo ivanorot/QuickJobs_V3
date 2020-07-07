@@ -43,7 +43,7 @@
     </fragment>
     <activity
         android:id="@+id/newPostActivity"
-        android:name="com.example.quickjobs.view.jobs.newPostActivity"
+        android:name="com.example.quickjobs.view.jobs.NewPostActivity"
         android:label="activity_new_post"
         tools:layout="@layout/activity_new_post" />
     <fragment

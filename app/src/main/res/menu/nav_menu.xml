@@ -8,18 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:icon="@drawable/baseline_home_black_36"
-        android:title="home" />
+        android:title="@string/bottom_navigation_home" />
     <item
         android:id="@+id/newPostActivity"
         android:icon="@drawable/baseline_add_black_36"
-        android:title="New Post" />
+        android:title="@string/bottom_navigation_new_post" />
     <item
         android:id="@+id/myJobsFragment"
         android:icon="@drawable/baseline_bookmarks_black_36"
-        android:title="My Jobs" />
+        android:title="@string/bottom_navigation_my_jobs" />
     <item
         android:id="@+id/myProfileFragment"
         android:icon="@drawable/baseline_perm_identity_black_36"
-        android:title="My Profile" />
+        android:title="@string/bottom_navigation_my_profile" />
 
 </menu>
