@@ -14,21 +14,29 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserSource {
-    private final String TAG = "Quickjobs: UserSource: ";
+    private final String USER_COLLECTION_NAME = "users";
+    private final String TAG = "UserSource";
 
-    //Firebase Firestore
-    private final String COLLECTION_NAME = "user";
-    private CollectionReference collectionReference;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private CollectionReference userCollectionReference;
     private DocumentReference currentUserDocument;
-    private FirebaseAuth firebaseAuth;
 
-    private User user;
+//  Authentication
+    private User currentUser;
 
 
     public UserSource(FirebaseFirestore firebaseFirestore) {
-        user = new User();
-        firebaseAuth = FirebaseAuth.getInstance();
-        collectionReference = firebaseFirestore.collection(COLLECTION_NAME);
+        currentUser = new User();
+        userCollectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
+    }
+
+    public MutableLiveData<User> firebaseAnonymousSignIn(IdpResponse response){
+        MutableLiveData<User> anonymousUserMutableLiveData = new MutableLiveData<>();
+        if(response != null){
+
+        }
+        return anonymousUserMutableLiveData;
     }
 
     public MutableLiveData<User> firebaseGenericSignIn(IdpResponse response){
@@ -56,7 +64,7 @@ public class UserSource {
     public MutableLiveData<User> createUserInFireBaseIfNotExists(User authenticatedUser){
         MutableLiveData<User> newUserMutableLiveData = new MutableLiveData<>();
 
-        DocumentReference uidReference = collectionReference.document(authenticatedUser.getUid());
+        DocumentReference uidReference = userCollectionReference.document(authenticatedUser.getUid());
 
         uidReference.get().addOnCompleteListener(uidTask -> {
             if(uidTask.isSuccessful()){
@@ -64,6 +72,8 @@ public class UserSource {
                 if(snapshot != null && !snapshot.exists()){
                     uidReference.set(authenticatedUser).addOnCompleteListener(userCreationTask -> {
                         if(userCreationTask.isSuccessful()){
+
+                            Log.println(Log.ERROR, TAG, authenticatedUser.getDisplayName());
                             authenticatedUser.setCreated(true);
                             newUserMutableLiveData.setValue(authenticatedUser);
                         }
@@ -76,6 +86,7 @@ public class UserSource {
                 }
                 else
                 {
+                    Log.println(Log.ERROR, TAG, authenticatedUser.getDisplayName());
                     User user = snapshot.toObject(User.class);
                     if(user != null){
                         newUserMutableLiveData.setValue(user);
@@ -91,28 +102,30 @@ public class UserSource {
         return newUserMutableLiveData;
     }
 
-
     public MutableLiveData<User> checkIfUserIsAuthenticated(){
         MutableLiveData<User> isUserAuthenticatedInFirebaseMutableLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
 
         if(firebaseUser == null){
-            user.setAuthenticated(false);
-            isUserAuthenticatedInFirebaseMutableLiveData.setValue(user);
+            currentUser.setAuthenticated(false);
+            isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
         }
         else{
-            user.setUid(firebaseUser.getUid());
-            user.setAuthenticated(true);
-            isUserAuthenticatedInFirebaseMutableLiveData.setValue(user);
+            currentUser.setUid(firebaseUser.getUid());
+            currentUser.setAuthenticated(true);
+            currentUser.setAnonymous(firebaseUser.isAnonymous());
+            isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
         }
         return isUserAuthenticatedInFirebaseMutableLiveData;
     }
 
     public MutableLiveData<User> addUserToLiveData(String inUid){
-        Log.println(Log.ERROR, TAG, "addUserToLiveData");
+        Log.println(Log.ERROR, TAG, "addUserToLiveData()");
         MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-        collectionReference.document(inUid).get().addOnCompleteListener(userTask -> {
-            Log.println(Log.ERROR, TAG, "userTask isSuccessful" + userTask.isSuccessful());
+        userCollectionReference.document(inUid).get().addOnCompleteListener(userTask -> {
+            Log.println(Log.ERROR, TAG, "userTask isSuccessful : " + userTask.isSuccessful());
             if(userTask.isSuccessful()){
                 DocumentSnapshot documentSnapshot = userTask.getResult();
                 Log.println(Log.ERROR, TAG, "documentSnapshot exists: " + documentSnapshot.exists());
@@ -120,7 +133,6 @@ public class UserSource {
                     User user = documentSnapshot.toObject(User.class);
                     userMutableLiveData.setValue(user);
                 }
-                //todo snapshot.exists() is returning false;
             }
             else{
                 if(userTask.getException() != null){
@@ -128,7 +140,6 @@ public class UserSource {
                 }
             }
         });
-        Log.println(Log.ERROR,TAG, "" + userMutableLiveData.getValue());
         return userMutableLiveData;
     }
 

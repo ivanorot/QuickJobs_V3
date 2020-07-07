@@ -12,9 +12,11 @@ import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
-    private final String TAG = "Quickjobs";
+    private final String TAG = "SplashActivity";
     private final String USER = "user";
     private SplashViewModel splashViewModel;
 
@@ -25,19 +27,22 @@ public class SplashActivity extends AppCompatActivity {
 
         initSplashViewModel();
         checkIfUserIsAuthenticated();
+
     }
 
     private void initSplashViewModel(){
-        Log.println(Log.ERROR, TAG, "initSplashViewModel()");
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
     }
 
+    private void checkUserLocation(){
+        
+    }
+
     private void checkIfUserIsAuthenticated(){
-        Log.println(Log.ERROR, TAG, "checkIfUserIsAuthenticated()");
         splashViewModel.checkIfUserIsAuthenticated();
         splashViewModel.isUserAuthenticatedLiveData.observe(this, user -> {
-           if(!user.isAuthenticated()){
-               goToAuthActivity();
+           if(user.isAnonymous()){
+               signInAnonymously();
                finish();
            }
            else {
@@ -47,27 +52,49 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getUserFromDatabase(String inUid){
-        Log.println(Log.ERROR, TAG, "getUserFromDatabase()");
         splashViewModel.setUid(inUid);
-        splashViewModel.userLiveData.observe(this, user ->{
-           goToMainActivity(user);
-           finish();
+        splashViewModel.userLiveData.observe(this, this::getJobsFromDatabase);
+    }
+
+    private void getJobsFromDatabase(User user){
+        splashViewModel.loadInitialJobsForUser(user);
+        splashViewModel.initialJobs.observe(this, jobs -> {
+            goToMainActivity(user);
+            finish();
         });
     }
 
+    private void signInAnonymously(){
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(anonTask ->
+        {
+           if(anonTask.isSuccessful()){
+               FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+               if(firebaseUser != null){
+                   User user = new User(firebaseUser);
+                   user.setAnonymous(true);
+                   goToMainActivity(user);
+               }
+               else{
+                   goToAuthActivity();
+               }
+           }
+           else{
+               goToAuthActivity();
+           }
+        });
+    }
 
     private void goToAuthActivity(){
-        Log.println(Log.ERROR, TAG, "goToAuthInActivity()");
         Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void goToMainActivity(User user){
-        Log.println(Log.ERROR, TAG, "goToMainActivity()");
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         intent.putExtra(USER, user);
         startActivity(intent);
         finish();
     }
+
 }

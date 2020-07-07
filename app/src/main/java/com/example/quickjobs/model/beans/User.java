@@ -1,7 +1,6 @@
 package com.example.quickjobs.model.beans;
 
 import android.location.Address;
-import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;
@@ -30,7 +29,7 @@ public class User implements Serializable {
     private List<String> photos;
 
     @Exclude
-    private boolean isAuthenticated, isNew, isCreated;
+    private boolean isAuthenticated, isNew, isCreated, isAnonymous;
 
 
     public User() {
@@ -163,5 +162,13 @@ public class User implements Serializable {
 
     public void setCreated(boolean created) {
         isCreated = created;
+    }
+
+    public boolean isAnonymous(){
+        return isAnonymous;
+    }
+
+    public void setAnonymous(boolean inAnonymous){
+        isAnonymous = inAnonymous;
     }
 }

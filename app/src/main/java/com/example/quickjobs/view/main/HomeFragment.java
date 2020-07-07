@@ -13,7 +13,7 @@ import com.example.quickjobs.R;
 import com.example.quickjobs.viewmodel.MainViewModel;
 
 public class HomeFragment extends Fragment {
-    private final String TAG = "Quickjobs";
+    private final String TAG = "HomeFragment";
     MainViewModel mainViewModel;
 
     @Override
@@ -29,6 +29,6 @@ public class HomeFragment extends Fragment {
 
 
     public void initMainViewModel(){
-//        mainViewModel = new ViewModelProviders(this).get(
+
     }
 }
