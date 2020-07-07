@@ -1,4 +1,4 @@
-package com.example.quickjobs;
+package com.example.quickjobs.view.jobs;
 
 import android.os.Bundle;
 
@@ -10,12 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.quickjobs.R;
+import com.example.quickjobs.viewmodel.NewPostViewModel;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link newPostPartTwoFragment#newInstance} factory method to
+ * Use the {@link NewPostPartTwoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class newPostPartTwoFragment extends Fragment {
+public class NewPostPartTwoFragment extends Fragment {
+
+    NewPostViewModel newPostViewModel;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,7 +34,7 @@ public class newPostPartTwoFragment extends Fragment {
     Button nextButton;
 
 
-    public newPostPartTwoFragment() {
+    public NewPostPartTwoFragment() {
         // Required empty public constructor
     }
 
@@ -42,8 +47,8 @@ public class newPostPartTwoFragment extends Fragment {
      * @return A new instance of fragment newPostPartTwoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static newPostPartTwoFragment newInstance(String param1, String param2) {
-        newPostPartTwoFragment fragment = new newPostPartTwoFragment();
+    public static NewPostPartTwoFragment newInstance(String param1, String param2) {
+        NewPostPartTwoFragment fragment = new NewPostPartTwoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,6 +70,8 @@ public class newPostPartTwoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_post_part_two, container, false);
+
+
 
         previousButton = (Button) v.findViewById(R.id.newPostPartTwo_Previous_Button);
         previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostFragment));

@@ -1,16 +1,21 @@
 package com.example.quickjobs.view.auth;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.AuthViewModel;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -19,9 +24,15 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class AuthActivity extends AppCompatActivity {
+    private final String TAG = "AuthActivity";
     private final String USER = "user";
 
     private GoogleSignInClient googleSignInClient;
@@ -34,81 +45,75 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        initSignButton();
         initAuthViewModel();
-        initGoogleSignInClient();
+        launchAuthentication();
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RC_SIGN_IN){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        Log.println(Log.ERROR, TAG, "initiated");
 
-            try {
-                GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
-
-                if (googleSignInAccount != null)
-                {
-                    getGoogleAuthCredential(googleSignInAccount);
-                }
-
-            } catch (ApiException exception)
-            {
-                logErrorMessage(exception);
+        if(requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (response != null) {
+                signInWithUsingDefault(response);
             }
         }
     }
 
-    public void initSignButton(){
-        SignInButton signInButton = findViewById(R.id.google_sign_in_button);
-        signInButton.setOnClickListener(v -> signIn());
+
+    private void launchAuthentication()
+    {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                    new AuthUI.IdpConfig.GoogleBuilder().build(),
+                    new AuthUI.IdpConfig.PhoneBuilder().build()
+            );
+
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .setIsSmartLockEnabled(false)
+                            .setTheme(R.style.QuickJobsFirebaseAuth)
+                            .build(),
+                    RC_SIGN_IN
+            );
     }
 
     public void initAuthViewModel(){
+        Log.println(Log.ERROR, TAG, "initAuthViewModel()");
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
 
-    public void initGoogleSignInClient(){
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("todo: fill")
-                .requestEmail()
-                .build();
-
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-    }
-
-    public void signIn(){
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    public void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount){
-        String googleSignInToken = googleSignInAccount.getIdToken();
-        AuthCredential googleAuthCredential = GoogleAuthProvider.getCredential(googleSignInToken, null);
-        signInWithGoogleAuthCredential(googleAuthCredential);
-    }
-
-    public void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential){
-        authViewModel.signInWithGoogle(googleAuthCredential);
-
-        authViewModel.authenticatedUserLiveData().observe(this, authenticatedUser -> {
-            if(authenticatedUser.isNew()){
-                createNewUser(authenticatedUser);
+    public void signInWithUsingDefault(IdpResponse response){
+        authViewModel.signInDefault(response);
+        authViewModel.authenticatedUserLiveData.observe(this, user ->{
+            if(user.isNew()){
+                Log.println(Log.ERROR, TAG,"persisting user");
+                createNewUser(user);
             }
-            else
-            {
-                goToMainActivity(authenticatedUser);
+            else{
+                Log.println(Log.ERROR, TAG, "reading user from persistence");
+                goToMainActivity(user);
             }
         });
     }
 
-    public void createNewUser(User authenticatedUser){
-//        authViewModel.
-    }
+    public void createNewUser(User authenticatedUser) {
+        Log.println(Log.ERROR, TAG, "createNewUser()");
+        authViewModel.createUser(authenticatedUser);
+        authViewModel.createdUserLiveData.observe(this, user -> {
+            if (user.isCreated()) {
+                toastMessage(user.getDisplayName());
+            }
 
+            goToMainActivity(user);
+        });
+    }
     public void goToMainActivity(User user){
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         intent.putExtra(USER, user);
@@ -116,7 +121,14 @@ public class AuthActivity extends AppCompatActivity {
         finish();
     }
 
-    public void logErrorMessage(Exception e){
-
+    public void toastMessage(String displaceName){
+        Toast.makeText(this, "welcome " + displaceName, Toast.LENGTH_SHORT).show();
     }
+
+    public void logErrorMessage(@NonNull Exception e){
+        if(e.getMessage() != null){
+            Log.println(Log.ERROR, TAG, "logErrorMessage()" + e.getMessage());
+        }
+    }
+
 }

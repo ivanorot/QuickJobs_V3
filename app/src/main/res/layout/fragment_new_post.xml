@@ -32,14 +32,14 @@
                     android:layout_marginTop="32dp"
                     android:backgroundTint="#512DA8   "
                     android:enabled="false"
-                    android:text="Next"
+                    android:text="@string/nextButton"
                     android:textColor="#B39DDB "
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
 

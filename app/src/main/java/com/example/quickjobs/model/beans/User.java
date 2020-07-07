@@ -1,28 +1,40 @@
 package com.example.quickjobs.model.beans;
 
-import com.google.firebase.auth.FirebaseUser;
+import android.location.Address;
+import android.net.Uri;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Exclude;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
 
-    private final String uid;
+    private  String uid;
 
     private String emailAddress;
     private String displayName;
+
+    private String bio;
 
     private String phoneNumber;
 
     private float longitude;
     private float latitude;
 
+    private Address address;
+
     private List<QuickJob> myJobs;
     private List<String> photos;
 
-    private boolean isAuthenticated;
-    private boolean isNew;
-    private boolean isCreated;
+    @Exclude
+    private boolean isAuthenticated, isNew, isCreated;
+
+
+    public User() {
+    }
 
     public User(String inUid)
     {
@@ -59,6 +71,10 @@ public class User {
 
     public String getUid() {
         return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getEmailAddress() {

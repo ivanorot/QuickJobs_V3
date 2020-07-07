@@ -5,32 +5,31 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.model.Repository;
 import com.example.quickjobs.model.beans.User;
-import com.google.firebase.auth.AuthCredential;
+import com.example.quickjobs.model.repos.AuthRepository;
+import com.firebase.ui.auth.IdpResponse;
+
 
 public class AuthViewModel extends AndroidViewModel {
-    private Repository repository;
-    private MutableLiveData<User> authenticatedUser;
+    private AuthRepository authRepository;
+
+    public LiveData<User> authenticatedUserLiveData;
+    public LiveData<User> createdUserLiveData;
+
+
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        repository = Repository.getInstance(application);
-        authenticatedUser = new MutableLiveData<>();
-
+        authRepository = AuthRepository.getInstance();
     }
 
-    public LiveData<User> authenticatedUserLiveData(){
-        return authenticatedUser;
-    }
-
-    public void signInWithGoogle(AuthCredential googleAuthCredential){
-        authenticatedUser = repository.firebaseSignInWithGoogle(googleAuthCredential);
+    public void signInDefault(IdpResponse firebaseResponse){
+        authenticatedUserLiveData = authRepository.firebaseGenericSignIn(firebaseResponse);
     }
 
     public void createUser(User authenticatedUser){
-        authenticatedUser = repository.
+        createdUserLiveData = authRepository.createUserInFireBaseIfNotExists(authenticatedUser);
     }
+
 }
