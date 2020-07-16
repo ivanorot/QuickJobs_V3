@@ -6,42 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDE7F6 "
-    tools:context=".newPostFragment">
+    tools:context=".view.jobs.NewPostFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/newPost_next_frameLayout"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:background="#C5CAE9 "
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/newPost_Next_button"
-                    android:layout_width="200dp"
-                    android:layout_height="64dp"
-                    android:layout_marginTop="32dp"
-                    android:backgroundTint="#512DA8   "
-                    android:enabled="false"
-                    android:text="@string/nextButton"
-                    android:textColor="#B39DDB "
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
 
         <ScrollView
             android:id="@+id/newPost_content_ScrollView"
@@ -262,6 +231,37 @@
 
             </LinearLayout>
         </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/newPost_next_frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:background="#C5CAE9 "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/newPost_Next_button"
+                    android:layout_width="200dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="32dp"
+                    android:backgroundTint="#512DA8   "
+                    android:enabled="false"
+                    android:text="@string/nextButton"
+                    android:textColor="#B39DDB "
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

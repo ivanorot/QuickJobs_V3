@@ -4,11 +4,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.viewmodel.NewPostViewModel;
@@ -21,6 +26,11 @@ import com.example.quickjobs.viewmodel.NewPostViewModel;
 public class NewPostPartTwoFragment extends Fragment {
 
     NewPostViewModel newPostViewModel;
+    EditText amountText;
+    EditText descriptionText;
+    CheckBox perHour_checkBox;
+    boolean amount_flag;
+    boolean description_flag;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,11 +82,67 @@ public class NewPostPartTwoFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_new_post_part_two, container, false);
 
 
+        amountText = v.findViewById(R.id.newPostPartTwo_Amount_editTextNumberDecimal);
+
+        descriptionText = v.findViewById((R.id.newPostPartTwo_description_editTextTextMultiLine));
+
+        perHour_checkBox = v.findViewById(R.id.newPostPartTwo_perHour_checkBox);
 
         previousButton = (Button) v.findViewById(R.id.newPostPartTwo_Previous_Button);
-        previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostFragment));
+        //previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostFragment));
 
+        amountText.addTextChangedListener(OnAmountChanged);
+
+        descriptionText.addTextChangedListener(OnDescriptionChanged);
+
+        nextButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostPartTwoFragment));
 
         return v;
     }
+
+    private TextWatcher OnAmountChanged = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            amount_flag = false;
+            EnableButton();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            amount_flag = true;
+            EnableButton();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private TextWatcher OnDescriptionChanged = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            description_flag = false;
+            EnableButton();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            description_flag = true;
+            EnableButton();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private void EnableButton() {
+        if (amount_flag == true && description_flag == true) {
+            nextButton.setEnabled(true);
+        } else
+            nextButton.setEnabled(false);
+    }
+
 }
