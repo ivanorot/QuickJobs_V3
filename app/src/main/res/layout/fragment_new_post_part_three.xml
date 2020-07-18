@@ -88,8 +88,7 @@
             android:id="@+id/newPostPartThree_buttons_FrameLayout"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="#C5CAE9 "
-            android:backgroundTint=" "
+            android:background="#C5CAE9"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
