@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/newPostFragment"
-        android:name="com.example.quickjobs.newPostFragment"
+        android:name="com.example.quickjobs.view.jobs.NewPostFragment"
         android:label="fragment_new_post"
         tools:layout="@layout/fragment_new_post">
         <action
@@ -17,12 +17,26 @@
     </fragment>
     <fragment
         android:id="@+id/newPostPartTwoFragment"
-        android:name="com.example.quickjobs.newPostPartTwoFragment"
+        android:name="com.example.quickjobs.view.jobs.NewPostPartTwoFragment"
         android:label="fragment_new_post_part_two"
         tools:layout="@layout/fragment_new_post_part_two">
         <action
             android:id="@+id/action_newPostPartTwoFragment_to_newPostFragment"
             app:destination="@id/newPostFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_newPostPartTwoFragment_to_newPostPartThreeFragment"
+            app:destination="@id/newPostPartThreeFragment"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPostPartThreeFragment"
+        android:name="com.example.quickjobs.view.jobs.NewPostPartThreeFragment"
+        android:label="fragment_new_post_part_three"
+        tools:layout="@layout/fragment_new_post_part_three">
+        <action
+            android:id="@+id/action_newPostPartThreeFragment_to_newPostPartTwoFragment"
+            app:destination="@id/newPostPartTwoFragment"
             app:launchSingleTop="true" />
     </fragment>
 </navigation>

@@ -3,43 +3,46 @@ package com.example.quickjobs.viewmodel;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.model.Repository;
-import com.example.quickjobs.model.beans.QuickJob;
 import com.example.quickjobs.model.beans.User;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.List;
+import com.example.quickjobs.model.repos.Repository;
+import com.example.quickjobs.model.source.UserSource;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainViewModel extends AndroidViewModel {
+
     private Repository repository;
+    private MutableLiveData<User> currentUserMutableLiveData;
+    private MutableLiveData<Boolean> isUserAnonymousMutableLiveData;
 
-    /*
-    User
-     */
-    private MutableLiveData<User> currentUser;
-    private MutableLiveData<List<QuickJob>> jobPostings;
-
+    private UserSource userSource;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
 
-        currentUser = new MutableLiveData<>();
-        jobPostings = new MutableLiveData<>();
+        repository = Repository.getInstance();
 
-        repository = Repository.getInstance(application);
+        currentUserMutableLiveData = new MutableLiveData<>();
+        isUserAnonymousMutableLiveData = new MutableLiveData<>();
+
+        userSource = new UserSource(FirebaseFirestore.getInstance());
     }
 
-    public LiveData<User> getCurrentUser()
-    {
-        return currentUser;
+    public LiveData<User> observeCurrentUserLiveData(){
+        return currentUserMutableLiveData;
+    }
+    public void setCurrentUserLiveData(User user){
+        currentUserMutableLiveData.setValue(user);
+    }
+
+    public LiveData<Boolean> isUserAnonymousMutableLiveData(){
+        return isUserAnonymousMutableLiveData;
+    }
+    public void setUserAnonymous(boolean setRestrictions){
+        isUserAnonymousMutableLiveData.setValue(setRestrictions);
     }
 
 }

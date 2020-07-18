@@ -1,9 +1,14 @@
 package com.example.quickjobs.model.beans;
 
+<<<<<<< HEAD
 import android.os.Parcel;
 import android.os.Parcelable;
+=======
+import android.location.Address;
+>>>>>>> firebase_default_auth
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,22 +16,29 @@ import java.util.List;
 
 public class User implements Serializable {
 
-    private final String uid;
+    private  String uid;
 
     private String emailAddress;
     private String displayName;
+
+    private String bio;
 
     private String phoneNumber;
 
     private float longitude;
     private float latitude;
 
+    private Address address;
+
     private List<QuickJob> myJobs;
     private List<String> photos;
 
-    private boolean isAuthenticated;
-    private boolean isNew;
-    private boolean isCreated;
+    @Exclude
+    private boolean isAuthenticated, isNew, isCreated, isAnonymous;
+
+
+    public User() {
+    }
 
     public User(String inUid) {
         uid = inUid;
@@ -61,6 +73,10 @@ public class User implements Serializable {
 
     public String getUid() {
         return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getEmailAddress() {
@@ -149,5 +165,13 @@ public class User implements Serializable {
 
     public void setCreated(boolean created) {
         isCreated = created;
+    }
+
+    public boolean isAnonymous(){
+        return isAnonymous;
+    }
+
+    public void setAnonymous(boolean inAnonymous){
+        isAnonymous = inAnonymous;
     }
 }

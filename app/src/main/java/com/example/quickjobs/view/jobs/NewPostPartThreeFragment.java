@@ -1,20 +1,21 @@
-package com.example.quickjobs.view.profile;
+package com.example.quickjobs.view.jobs;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.fragment.app.Fragment;
 
 import com.example.quickjobs.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link editProfileFragment#newInstance} factory method to
+ * Use the {@link NewPostPartThreeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class editProfileFragment extends Fragment {
+public class NewPostPartThreeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,7 +26,7 @@ public class editProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public editProfileFragment() {
+    public NewPostPartThreeFragment() {
         // Required empty public constructor
     }
 
@@ -35,11 +36,11 @@ public class editProfileFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment editProfileFragment.
+     * @return A new instance of fragment NewPostPartThreeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static editProfileFragment newInstance(String param1, String param2) {
-        editProfileFragment fragment = new editProfileFragment();
+    public static NewPostPartThreeFragment newInstance(String param1, String param2) {
+        NewPostPartThreeFragment fragment = new NewPostPartThreeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,6 +61,6 @@ public class editProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        return inflater.inflate(R.layout.fragment_new_post_part_three, container, false);
     }
 }

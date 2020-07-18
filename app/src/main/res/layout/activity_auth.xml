@@ -6,44 +6,4 @@
     android:layout_height="match_parent"
     tools:context=".view.auth.AuthActivity">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias=".7"
-        app:buttonSize="wide"/>
-
-<!--    <com.google.android.gms.common.SignInButton-->
-<!--        android:id="@+id/facebook_sign_in_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/google_sign_in_button"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/phone_sign_in_button"-->
-<!--        app:buttonSize="wide"/>-->
-
-<!--    <com.google.android.gms.common.SignInButton-->
-<!--        android:id="@+id/phone_sign_in_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/facebook_sign_in_button"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/email_sign_in_button"-->
-<!--        app:buttonSize="wide"/>-->
-
-<!--    <com.google.android.gms.common.SignInButton-->
-<!--        android:id="@+id/email_sign_in_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/phone_sign_in_button"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"app:buttonSize="wide"/>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
