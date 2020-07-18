@@ -10,13 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-<<<<<<< HEAD
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-=======
->>>>>>> firebase_default_auth
+//firebase_default_auth
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.main.MainActivity;
