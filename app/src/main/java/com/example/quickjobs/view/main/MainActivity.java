@@ -11,7 +11,9 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private MainViewModel mainViewModel;
     private BottomNavigationView bottomNavigationView;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         initMainViewModel();
         initQuickJobsUser();
-        initBottomNavigationView();
+        initNavControllerAndBottomNavigationView();
 
     }
 
@@ -53,9 +56,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mainViewModel.setCurrentUserLiveData(user);
     }
 
-    public void initBottomNavigationView(){
+    public void initNavControllerAndBottomNavigationView(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        navController = Navigation.findNavController(this, R.id.navigationHostFragment);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
     public void selectBottomNavigationViewMenuItem(@IdRes int inMenuItemId){
