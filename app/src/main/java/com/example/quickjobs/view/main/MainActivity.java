@@ -26,7 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FirebaseAuth.AuthStateListener {
+public class MainActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
     private final String TAG = "MainActivity";
     private final String USER = "user";
 
@@ -39,11 +39,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MainScreen defaultScreen = MainScreen.HOME;
-
         initMainViewModel();
         initQuickJobsUser();
-        initNavControllerAndBottomNavigationView();
+        initNavController();
 
     }
 
@@ -56,58 +54,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mainViewModel.setCurrentUserLiveData(user);
     }
 
-    public void initNavControllerAndBottomNavigationView(){
+    public void initNavController(){
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         navController = Navigation.findNavController(this, R.id.navigationHostFragment);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-    public void selectBottomNavigationViewMenuItem(@IdRes int inMenuItemId){
-        bottomNavigationView.setOnNavigationItemSelectedListener(null);
-        bottomNavigationView.setSelectedItemId(inMenuItemId);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-    }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        MainScreen temp = MainScreen.getMainScreenForMenuItem(menuItem.getItemId());
-        if(temp != null){
-            return true;
-        }
-
-        return false;
-    }
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
     }
-}
 
-enum MainScreen{
-
-    HOME(R.id.homeFragment, R.drawable.baseline_home_black_36, R.string.bottom_navigation_home, new HomeFragment()),
-    NEWPOST(R.id.newPostFragment, R.drawable.baseline_add_black_36, R.string.bottom_navigation_new_post, new NewPostFragment()),
-    MYJOBS(R.id.myJobsFragment, R.drawable.baseline_bookmarks_black_36, R.string.bottom_navigation_my_jobs, new HomeFragment()),
-    PROFILE(R.id.myProfileFragment, R.drawable.baseline_perm_identity_black_36, R.string.bottom_navigation_my_profile, new MyProfileFragment());
-
-    MainScreen(@IdRes int inMenuItem, @DrawableRes int inMenuItemIconId, @StringRes int inTitleStringId, Fragment inFragment) {
-        menuItem = inMenuItem;
-        menuItemIconId = inMenuItemIconId;
-        titleStringId = inTitleStringId;
-        fragment = inFragment;
-    }
-
-    @IdRes int menuItem;
-    @DrawableRes int menuItemIconId;
-    @StringRes int titleStringId;
-    Fragment fragment;
-
-    public static MainScreen getMainScreenForMenuItem(int menuItemId){
-        for (MainScreen mainScreen : MainScreen.values()){
-            if(mainScreen.menuItem == menuItemId){
-                return mainScreen;
-            }
-        }
-        return null;
-    }
 }

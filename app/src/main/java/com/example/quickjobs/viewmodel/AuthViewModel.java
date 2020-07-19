@@ -35,12 +35,8 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void createUser(User authenticatedUser){
-<<<<<<< HEAD
-//        authenticatedUser = repository.
-=======
         Log.println(Log.ERROR, TAG, "createUser()");
         createdUserLiveData = authRepository.createUserInFireBaseIfNotExists(authenticatedUser);
->>>>>>> firebase_default_auth
     }
 
 }

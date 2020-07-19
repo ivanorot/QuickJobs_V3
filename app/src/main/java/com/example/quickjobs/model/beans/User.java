@@ -1,11 +1,8 @@
 package com.example.quickjobs.model.beans;
 
-<<<<<<< HEAD
-import android.os.Parcel;
-import android.os.Parcelable;
-=======
+
 import android.location.Address;
->>>>>>> firebase_default_auth
+
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;
