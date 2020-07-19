@@ -1,13 +1,24 @@
 package com.example.quickjobs.view.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.view.auth.AuthActivity;
+import com.example.quickjobs.view.main.MainActivity;
+import com.example.quickjobs.viewmodel.MainViewModel;
+
+import io.reactivex.observers.DisposableCompletableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +26,14 @@ import com.example.quickjobs.R;
  * create an instance of this fragment.
  */
 public class MyProfileFragment extends Fragment {
+    private final String TAG = "MyProfile";
+    private MainViewModel mainViewModel;
+
+    private FrameLayout signin_FrameLayout;
+    private ScrollView myprofile_ScrollView;
+
+    Button signin_Button;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,12 +73,52 @@ public class MyProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        initMainViewModel();
+        initAuthentication();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_profile, container, false);
+
+        findInitViews();
+
+        signin_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent authIntent = new Intent(v.getContext(), AuthActivity.class);
+                startActivity(authIntent);
+
+            }
+        });
+
+
+        return v;
+    }
+
+    public void initMainViewModel(){
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    }
+
+    private void initAuthentication(){
+        mainViewModel.isUserAnonymousMutableLiveData().observe(this, isUserAnonymous->{
+            if(isUserAnonymous==false){
+                signin_FrameLayout.setVisibility(View.GONE);
+                myprofile_ScrollView.setVisibility(View.VISIBLE);
+                getProfileInfo();
+            }
+        });
+    }
+
+    private void findInitViews(){
+        signin_FrameLayout.findViewById(R.id.myProfile_signin_FrameLayout);
+        myprofile_ScrollView.findViewById(R.id.myProfile_ScrollView);
+        signin_Button.findViewById(R.id.myProfile_signin_button);
+    }
+
+    private void getProfileInfo(){
+        //TODO: Fill myProfile with user info
     }
 }
