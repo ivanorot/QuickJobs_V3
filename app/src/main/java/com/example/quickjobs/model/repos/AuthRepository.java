@@ -22,35 +22,16 @@ public class AuthRepository {
 
     private final static String TAG = "AuthRepository";
 
-    private static AuthRepository INSTANCE;
-
     private UserSource userSource;
 
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
 
     private CollectionReference collectionReference;
 
-    private AuthRepository(){
+    public AuthRepository(){
         firebaseFirestore = FirebaseFirestore.getInstance();
         collectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
-        userSource = new UserSource(firebaseFirestore);
-    }
-
-    public static AuthRepository getInstance() {
-        Log.println(Log.ERROR, TAG, "getInstance()");
-        if(INSTANCE == null)
-        {
-            synchronized (AuthRepository.class)
-            {
-                if(INSTANCE == null){
-
-                    INSTANCE = new AuthRepository();
-                }
-            }
-        }
-
-        return INSTANCE;
+        userSource = UserSource.getInstance(firebaseFirestore);
     }
 
     public MutableLiveData<User> firebaseGenericSignIn(IdpResponse response){

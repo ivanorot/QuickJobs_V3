@@ -10,12 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-
-//firebase_default_auth
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.main.MainActivity;
@@ -99,9 +93,7 @@ public class AuthActivity extends AppCompatActivity {
     public void createNewUser(User authenticatedUser) {
         Log.println(Log.ERROR, TAG, "createNewUser()");
         authViewModel.createUser(authenticatedUser);
-        authViewModel.createdUserLiveData.observe(this, user -> {
-            goToMainActivity(user);
-        });
+        authViewModel.createdUserLiveData.observe(this, this::goToMainActivity);
     }
     public void goToMainActivity(User user) {
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);

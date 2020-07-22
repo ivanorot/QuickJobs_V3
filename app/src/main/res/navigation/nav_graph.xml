@@ -48,7 +48,7 @@
         tools:layout="@layout/activity_new_post" />
     <fragment
         android:id="@+id/anonymousUserProfileFragment"
-        android:name="com.example.quickjobs.AnonymousUserProfileFragment"
+        android:name="com.example.quickjobs.view.auth.AnonymousUserRestrictedFragment"
         android:label="fragment_anonymous_user_profile"
-        tools:layout="@layout/fragment_anonymous_user_profile" />
+        tools:layout="@layout/fragment_anonymous_user_restricted" />
 </navigation>

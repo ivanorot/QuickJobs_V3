@@ -1,10 +1,13 @@
 package com.example.quickjobs.model.source;
 
+import android.annotation.SuppressLint;
+import android.location.Location;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -13,47 +16,130 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserSource {
     private final String USER_COLLECTION_NAME = "users";
     private final String TAG = "UserSource";
 
+    private static UserSource Instance;
+
 
     @SuppressWarnings("FieldCanBeLocal")
     private CollectionReference userCollectionReference;
-    private DocumentReference currentUserDocument;
 
 //  Authentication
     private User currentUser;
 
+    /*
 
-    public UserSource(FirebaseFirestore firebaseFirestore) {
-        currentUser = new User();
+     */
+    private UserSource(FirebaseFirestore firebaseFirestore) {
         userCollectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
     }
 
-    public MutableLiveData<User> firebaseAnonymousSignIn(IdpResponse response){
-        MutableLiveData<User> anonymousUserMutableLiveData = new MutableLiveData<>();
-        if(response != null){
-
+    public static UserSource getInstance(FirebaseFirestore firebaseFirestore) {
+        if (Instance == null) {
+            synchronized (UserSource.class) {
+                Instance = new UserSource(firebaseFirestore);
+            }
         }
-        return anonymousUserMutableLiveData;
+        return Instance;
+
+    }
+    ////
+
+
+    /*
+
+     */
+    public MutableLiveData<User> checkIfUserIsAnonymousAndAuthenticated(){
+        MutableLiveData<User> isUserAnonymousMutableLiveData = new MutableLiveData<>();
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        User user;
+
+        //nobody is signed in anonymously or authenticated
+        if(firebaseUser == null){
+            user = new User();
+            user.setAuthenticated(false);
+            user.setAnonymous(true);
+        }
+        //user is returnin to quick jobs and is therfore authenticated/ determines anonymity
+        else{
+            user = new User(firebaseUser);
+            user.setAuthenticated(true);
+            user.setAnonymous(firebaseUser.isAnonymous());
+        }
+
+        isUserAnonymousMutableLiveData.setValue(user);
+
+        return isUserAnonymousMutableLiveData;
+    }
+    ////////
+
+
+
+    /*
+
+     */
+    public MutableLiveData<User> getCurrentUserMutableLiveData(){
+        return new MutableLiveData<>(currentUser);
     }
 
+    public MutableLiveData<User> addAnonymousUserToLiveData(User anonymousUser){
+        MutableLiveData<User> currentUserMutableLiveData = new MutableLiveData<>();
+
+        if(anonymousUser != null){
+            currentUser = anonymousUser;
+            currentUserMutableLiveData.setValue(currentUser);
+        }
+
+        return currentUserMutableLiveData;
+    }
+
+    public MutableLiveData<User> addAuthenticatedUserToLiveData(String inUid){
+        MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
+        userCollectionReference.document(inUid).get().addOnCompleteListener(userTask -> {
+            if(userTask.isSuccessful()){
+                DocumentSnapshot documentSnapshot = userTask.getResult();
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                    currentUser = documentSnapshot.toObject(User.class);
+                    userMutableLiveData.setValue(currentUser);
+                }
+            }
+            else{
+                if(userTask.getException() != null){
+                    ExceptionHandler.consumeException(TAG, userTask.getException());
+                }
+            }
+        });
+
+        return userMutableLiveData;
+    }
+
+
+    /*
+
+     */
+    @SuppressLint("RestrictedApi")
     public MutableLiveData<User> firebaseGenericSignIn(IdpResponse response){
+        Log.println(Log.ERROR, TAG, "evaluating generic sign in response");
         MutableLiveData<User> authenicatedUserMutableLiveData = new MutableLiveData<>();
         if(response != null){
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             if(response.isSuccessful()){
                 if(firebaseUser != null) {
-                    User user = new User(firebaseUser);
-                    user.setNew(response.isNewUser());
-                    user.setCreated(true);
-                    authenicatedUserMutableLiveData.setValue(user);
+                    currentUser = new User(firebaseUser);
+                    currentUser.setNew(response.isNewUser());
+                    currentUser.setCreated(true);
+                    authenicatedUserMutableLiveData.setValue(currentUser);
                 }
             }
             else{
                 if(response.getError() != null){
-                    logErrorMessage(response.getError());
+                    ExceptionHandler.consumeException(TAG, response.getError());
                 }
             }
         }
@@ -61,6 +147,29 @@ public class UserSource {
         return authenicatedUserMutableLiveData;
     }
 
+    public MutableLiveData<User> firebaseAnonymousSignIn(){
+        Log.println(Log.ERROR, TAG, "signing user in as anonymous");
+        MutableLiveData<User> anonUserMutableLiveData = new MutableLiveData<>();
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signInAnonymously().addOnCompleteListener(anonTask -> {
+
+            if(anonTask.isSuccessful()){
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                if(firebaseUser != null){
+                    User user = new User(firebaseUser);
+                    user.setAnonymous(true);
+                    anonUserMutableLiveData.postValue(user);
+                }
+            }
+        });
+
+        return anonUserMutableLiveData;
+    }
+    /*
+
+     */
     public MutableLiveData<User> createUserInFireBaseIfNotExists(User authenticatedUser){
         MutableLiveData<User> newUserMutableLiveData = new MutableLiveData<>();
 
@@ -72,21 +181,18 @@ public class UserSource {
                 if(snapshot != null && !snapshot.exists()){
                     uidReference.set(authenticatedUser).addOnCompleteListener(userCreationTask -> {
                         if(userCreationTask.isSuccessful()){
-
-                            Log.println(Log.ERROR, TAG, authenticatedUser.getDisplayName());
                             authenticatedUser.setCreated(true);
                             newUserMutableLiveData.setValue(authenticatedUser);
                         }
                         else {
                             if(userCreationTask.getException() != null){
-                                logErrorMessage(userCreationTask.getException());
+                                ExceptionHandler.consumeException(TAG, userCreationTask.getException());
                             }
                         }
                     });
                 }
                 else
                 {
-                    Log.println(Log.ERROR, TAG, authenticatedUser.getDisplayName());
                     User user = snapshot.toObject(User.class);
                     if(user != null){
                         newUserMutableLiveData.setValue(user);
@@ -95,57 +201,34 @@ public class UserSource {
             }
             else{
                 if(uidTask.getException() != null){
-                    logErrorMessage(uidTask.getException());
+                    ExceptionHandler.consumeException(TAG, uidTask.getException());
                 }
             }
         });
         return newUserMutableLiveData;
     }
 
-    public MutableLiveData<User> checkIfUserIsAuthenticated(){
-        MutableLiveData<User> isUserAuthenticatedInFirebaseMutableLiveData = new MutableLiveData<>();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    public MutableLiveData<User> updateUserLocationDataAndPersist(Location location){
 
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
 
+        if(!currentUser.isAnonymous()){
+            DocumentReference uidReference = userCollectionReference.document(currentUser.getUid());
 
-        if(firebaseUser == null){
-            currentUser.setAuthenticated(false);
-            isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
+            currentUser.setLongitude(longitude);
+            currentUser.setLatitude(latitude);
+
+            uidReference.update("longitude", longitude);
+            uidReference.update("latitude", latitude);
+
         }
         else{
-            currentUser.setUid(firebaseUser.getUid());
-            currentUser.setAuthenticated(true);
-            currentUser.setAnonymous(firebaseUser.isAnonymous());
-            isUserAuthenticatedInFirebaseMutableLiveData.setValue(currentUser);
-        }
-        return isUserAuthenticatedInFirebaseMutableLiveData;
-    }
+            currentUser.setLatitude(location.getLatitude());
+            currentUser.setLongitude(location.getLongitude());
 
-    public MutableLiveData<User> addUserToLiveData(String inUid){
-        Log.println(Log.ERROR, TAG, "addUserToLiveData()");
-        MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-        userCollectionReference.document(inUid).get().addOnCompleteListener(userTask -> {
-            Log.println(Log.ERROR, TAG, "userTask isSuccessful : " + userTask.isSuccessful());
-            if(userTask.isSuccessful()){
-                DocumentSnapshot documentSnapshot = userTask.getResult();
-                Log.println(Log.ERROR, TAG, "documentSnapshot exists: " + documentSnapshot.exists());
-                if(documentSnapshot.exists()){
-                    User user = documentSnapshot.toObject(User.class);
-                    userMutableLiveData.setValue(user);
-                }
-            }
-            else{
-                if(userTask.getException() != null){
-                    logErrorMessage(userTask.getException());
-                }
-            }
-        });
-        return userMutableLiveData;
-    }
-
-    public void logErrorMessage(Exception e){
-        if(e.getMessage() != null){
-            Log.println(Log.ERROR, TAG, e.getMessage());
         }
+
+        return new MutableLiveData<>(currentUser);
     }
 }

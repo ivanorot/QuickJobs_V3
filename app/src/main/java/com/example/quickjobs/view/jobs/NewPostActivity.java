@@ -19,10 +19,5 @@ public class NewPostActivity extends AppCompatActivity {
 
         newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
 
-        newPostViewModel.getIsJobPostComplete().observe(this, isComplete ->{
-            if(isComplete){
-
-            }
-        });
     }
 }

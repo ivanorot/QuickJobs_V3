@@ -8,11 +8,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.QuickJob;
-import com.example.quickjobs.model.repos.Repository;
+import com.example.quickjobs.model.repos.MainRepository;
 
 public class NewPostViewModel extends AndroidViewModel {
 
-    Repository repository;
+    MainRepository mainRepository;
 
     MutableLiveData<Boolean> isJobPostComplete = new MutableLiveData<>();
 
@@ -22,7 +22,7 @@ public class NewPostViewModel extends AndroidViewModel {
     public NewPostViewModel(@NonNull Application application) {
         super(application);
 
-        repository = Repository.getInstance();
+        mainRepository = MainRepository.getInstance();
     }
 
     MutableLiveData<Boolean> currentUser = new MutableLiveData<>();

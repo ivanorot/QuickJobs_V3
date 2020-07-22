@@ -22,5 +22,10 @@
     <string name="bottom_navigation_new_post">New Post</string>
     <string name="bottom_navigation_my_jobs">My Jobs</string>
     <string name="bottom_navigation_my_profile">My Profile</string>
+    <string name="sign_in_button_text">sign in</string>
+    <string name="anonymous_restriction_message_text">please sign in to continue</string>
+
+    <string name="permission_denied_dialog_title">Permission Denied</string>
+    <string name="permission_denied_dialog_message_location">enable location from settings</string>
 
 </resources>

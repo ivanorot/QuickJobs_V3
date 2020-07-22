@@ -19,6 +19,7 @@ import io.reactivex.Observable;
 
 public class JobSource {
     private final String COLLECTION_NAME = "job_board";
+    private static JobSource Instance;
 
     private CollectionReference jobBoard;
 
@@ -26,8 +27,19 @@ public class JobSource {
     private double oneMileOfLongitudeInDegrees = 0.0181818181818182;
 
 
-    public JobSource(FirebaseFirestore firebaseFirestore) {
+    private JobSource(FirebaseFirestore firebaseFirestore) {
         jobBoard = firebaseFirestore.collection(COLLECTION_NAME);
+    }
+
+
+    public static JobSource getInstance(FirebaseFirestore firebaseFirestore){
+        if(Instance == null){
+            synchronized (JobSource.class){
+                Instance = new JobSource(firebaseFirestore);
+            }
+        }
+
+        return Instance;
     }
 
 

@@ -26,21 +26,15 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        authRepository = AuthRepository.getInstance();
+        authRepository = new AuthRepository();
     }
 
     public void signInDefault(IdpResponse firebaseResponse){
-        Log.println(Log.ERROR, TAG, "signInWithGoogle()");
         authenticatedUserLiveData = authRepository.firebaseGenericSignIn(firebaseResponse);
     }
 
     public void createUser(User authenticatedUser){
-<<<<<<< HEAD
-//        authenticatedUser = repository.
-=======
-        Log.println(Log.ERROR, TAG, "createUser()");
         createdUserLiveData = authRepository.createUserInFireBaseIfNotExists(authenticatedUser);
->>>>>>> firebase_default_auth
     }
 
 }

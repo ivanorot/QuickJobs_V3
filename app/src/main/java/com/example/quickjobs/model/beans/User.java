@@ -1,11 +1,6 @@
 package com.example.quickjobs.model.beans;
 
-<<<<<<< HEAD
-import android.os.Parcel;
-import android.os.Parcelable;
-=======
 import android.location.Address;
->>>>>>> firebase_default_auth
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;
@@ -25,8 +20,8 @@ public class User implements Serializable {
 
     private String phoneNumber;
 
-    private float longitude;
-    private float latitude;
+    private double longitude = 200.0;
+    private double latitude = 200.0;
 
     private Address address;
 
@@ -34,13 +29,14 @@ public class User implements Serializable {
     private List<String> photos;
 
     @Exclude
-    private boolean isAuthenticated, isNew, isCreated, isAnonymous;
+    private boolean isAuthenticated, isNew, isCreated, isAnonymous, locationHasBeenUpdated;
 
 
     public User() {
     }
 
-    public User(String inUid) {
+    public User(String inUid)
+    {
         uid = inUid;
 
         myJobs = new ArrayList<>();
@@ -69,6 +65,7 @@ public class User implements Serializable {
         if(firebaseUser.getPhoneNumber() != null) {
             phoneNumber = firebaseUser.getPhoneNumber();
         }
+
     }
 
     public String getUid() {
@@ -103,19 +100,19 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -173,5 +170,13 @@ public class User implements Serializable {
 
     public void setAnonymous(boolean inAnonymous){
         isAnonymous = inAnonymous;
+    }
+
+    public boolean hasLocationAvailable() {
+        return locationHasBeenUpdated;
+    }
+
+    public void setLocationAvailiable(boolean hasBeenUpdated) {
+        locationHasBeenUpdated = hasBeenUpdated;
     }
 }
