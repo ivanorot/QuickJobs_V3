@@ -4,11 +4,9 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +37,7 @@ public class CameraActivity extends AppCompatActivity {
     private ImageCapture imageCapture;
     private Camera camera;
     private Button image_capture_Button;
-    private ImageView images[] = new ImageView[10];
+    private Bitmap images[] = new Bitmap[10];
 
     private static int REQUESTED_CODE_PERMISSIONS = 10;
     private static String[] REQUIRED_PERSMISSIONS = {Manifest.permission.CAMERA};
@@ -93,12 +91,16 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+        return null;
     }
 
     private void saveImageIntoArray(Bitmap tempBitmap){
+        END:
         for(int i = 0; i<10; i++){
-           // if()
-            //images[i].setImageBitmap();
+           if(images[i]==null) {
+               images[i] = tempBitmap;
+               break END;
+           }
         }
     }
 
