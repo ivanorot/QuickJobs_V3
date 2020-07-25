@@ -23,7 +23,8 @@
         <action
             android:id="@+id/action_newPostPartTwoFragment_to_newPostFragment"
             app:destination="@id/newPostFragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/newPostPartTwoFragment" />
         <action
             android:id="@+id/action_newPostPartTwoFragment_to_newPostPartThreeFragment"
             app:destination="@id/newPostPartThreeFragment"
@@ -37,6 +38,7 @@
         <action
             android:id="@+id/action_newPostPartThreeFragment_to_newPostPartTwoFragment"
             app:destination="@id/newPostPartTwoFragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/newPostPartThreeFragment" />
     </fragment>
 </navigation>

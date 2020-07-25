@@ -81,7 +81,19 @@ public class NewPostPartTwoFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_post_part_two, container, false);
 
+        initFindViews(v);
+        previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_newPostPartTwoFragment_to_newPostFragment));
 
+        amountText.addTextChangedListener(OnAmountChanged);
+        descriptionText.addTextChangedListener(OnDescriptionChanged);
+
+
+        nextButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_newPostPartTwoFragment_to_newPostPartThreeFragment));
+
+        return v;
+    }
+
+    private void initFindViews(View v){
         amountText = v.findViewById(R.id.newPostPartTwo_Amount_editTextNumberDecimal);
 
         descriptionText = v.findViewById((R.id.newPostPartTwo_description_editTextTextMultiLine));
@@ -90,14 +102,6 @@ public class NewPostPartTwoFragment extends Fragment {
 
         previousButton = (Button) v.findViewById(R.id.newPostPartTwo_Previous_Button);
         //previousButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostFragment));
-
-        amountText.addTextChangedListener(OnAmountChanged);
-
-        descriptionText.addTextChangedListener(OnDescriptionChanged);
-
-        nextButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostPartTwoFragment));
-
-        return v;
     }
 
     private TextWatcher OnAmountChanged = new TextWatcher() {

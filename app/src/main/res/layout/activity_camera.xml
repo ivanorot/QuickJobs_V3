@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cameraActivity_FrameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="0.6"
+    android:background="#EFEFEF"
+    tools:context=".view.jobs.CameraActivity">
+
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/cameraActivity_viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cameraActivity_ConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageButton
+                android:id="@+id/cameraActivity_capture_imageButton"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="24dp"
+                android:background="@color/cardview_shadow_end_color"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/camera_button" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/cameraActivity_ViewPager2"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/cameraActivity_capture_imageButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
