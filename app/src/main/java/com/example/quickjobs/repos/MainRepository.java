@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.repos;
+package com.example.quickjobs.repos;
 
 import android.util.Log;
 

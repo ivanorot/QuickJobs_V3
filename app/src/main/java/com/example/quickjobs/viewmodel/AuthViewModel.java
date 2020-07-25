@@ -1,18 +1,14 @@
 package com.example.quickjobs.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.repos.AuthRepository;
+import com.example.quickjobs.repos.AuthRepository;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.AuthCredential;
-
-import io.reactivex.Observable;
 
 
 public class AuthViewModel extends AndroidViewModel {

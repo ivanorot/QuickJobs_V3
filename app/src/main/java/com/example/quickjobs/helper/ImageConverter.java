@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.helper;
+package com.example.quickjobs.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

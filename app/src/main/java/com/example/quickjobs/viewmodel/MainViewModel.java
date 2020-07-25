@@ -8,9 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.repos.MainRepository;
+import com.example.quickjobs.repos.MainRepository;
 import com.example.quickjobs.model.source.UserSource;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainViewModel extends AndroidViewModel {
 

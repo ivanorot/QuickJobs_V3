@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.repos;
+package com.example.quickjobs.repos;
 
 import android.content.Context;
 import android.location.Location;

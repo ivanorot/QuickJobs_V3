@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.repos.SplashRepository;
+import com.example.quickjobs.repos.SplashRepository;
 import com.google.android.gms.location.LocationAvailability;
 
 public class SplashViewModel extends AndroidViewModel {

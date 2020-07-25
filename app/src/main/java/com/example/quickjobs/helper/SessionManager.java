@@ -1,9 +1,7 @@
-package com.example.quickjobs.model.helper;
+package com.example.quickjobs.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.annotation.StringRes;
 
 public class SessionManager {
 

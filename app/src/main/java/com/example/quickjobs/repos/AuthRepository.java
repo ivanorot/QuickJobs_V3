@@ -1,20 +1,11 @@
-package com.example.quickjobs.model.repos;
+package com.example.quickjobs.repos;
 
-import android.util.Log;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.model.source.UserSource;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AuthRepository {

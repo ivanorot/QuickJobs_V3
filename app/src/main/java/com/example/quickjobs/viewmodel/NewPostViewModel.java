@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.QuickJob;
-import com.example.quickjobs.model.repos.MainRepository;
+import com.example.quickjobs.repos.MainRepository;
 
 public class NewPostViewModel extends AndroidViewModel {
 

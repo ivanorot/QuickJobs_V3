@@ -10,12 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.viewmodel.MainViewModel;
 
 public class HomeFragment extends Fragment {
     private final String TAG = "HomeFragment";
-    MainViewModel mainViewModel;
-
+     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.helper.ExceptionHandler;
+import com.example.quickjobs.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,9 +15,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserSource {
     private final String USER_COLLECTION_NAME = "users";
@@ -46,7 +43,6 @@ public class UserSource {
             }
         }
         return Instance;
-
     }
     ////
 

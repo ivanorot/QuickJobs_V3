@@ -1,9 +1,7 @@
-package com.example.quickjobs.model.helper;
+package com.example.quickjobs.helper;
 
 
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 public class ExceptionHandler {
 
