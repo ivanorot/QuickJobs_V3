@@ -1,9 +1,9 @@
 package com.example.quickjobs.view.jobs;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Bundle;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.viewmodel.NewPostViewModel;
