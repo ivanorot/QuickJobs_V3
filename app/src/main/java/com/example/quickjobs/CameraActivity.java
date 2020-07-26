@@ -42,7 +42,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private static int REQUESTED_CODE_PERMISSIONS = 10;
     private static String[] REQUIRED_PERSMISSIONS = {Manifest.permission.CAMERA};
-    private ExecutorService initCameraExecutor;
+    private ExecutorService cameraExecutor;
     private PreviewView previewView;
     private ProcessCameraProvider cameraProvider;
 
@@ -51,14 +51,18 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera2);
+        image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
+        cameraExecutor = Executors.newSingleThreadExecutor();
 
-        cameraPermission();
         previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
 
-        image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
+        cameraPermission();
+
+
+
         setButtonClickListener();
 
-        ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
+
 
 
     }
@@ -73,12 +77,12 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void setButtonClickListener(){
-        if(image_capture_Button!=null){
             image_capture_Button.setOnClickListener(takePhoto());
-        }
+
     }
 
     private View.OnClickListener takePhoto(){
+        imageCapture = new ImageCapture.Builder().build();
 
         imageCapture.takePicture(ContextCompat.getMainExecutor(this), new ImageCapture.OnImageCapturedCallback() {
             @Override
