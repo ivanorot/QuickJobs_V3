@@ -1,35 +1,34 @@
 
 package com.example.quickjobs;
 
-        import android.Manifest;
-        import android.content.pm.PackageManager;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.os.Bundle;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.Toast;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
-        import androidx.annotation.NonNull;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.camera.core.Camera;
-        import androidx.camera.core.CameraSelector;
-        import androidx.camera.core.ImageCapture;
-        import androidx.camera.core.ImageProxy;
-        import androidx.camera.core.Preview;
-        import androidx.camera.lifecycle.ProcessCameraProvider;
-        import androidx.camera.view.PreviewView;
-        import androidx.core.app.ActivityCompat;
-        import androidx.core.content.ContextCompat;
-        import androidx.lifecycle.LifecycleOwner;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 
-        import com.example.quickjobs.R;
-        import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFuture;
 
-        import java.nio.ByteBuffer;
-        import java.util.concurrent.ExecutionException;
-        import java.util.concurrent.ExecutorService;
-        import java.util.concurrent.Executors;
+import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 //import android.Manifest
 
@@ -38,7 +37,7 @@ public class CameraActivity extends AppCompatActivity {
     private Preview cameraPreview;
     private ImageCapture imageCapture;
     private Camera camera;
-    private Button image_capture_Button;
+    private ImageButton image_capture_Button;
     private Bitmap images[] = new Bitmap[10];
 
     private static int REQUESTED_CODE_PERMISSIONS = 10;
@@ -51,12 +50,12 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera2);
 
         cameraPermission();
-        previewView.findViewById(R.id.cameraActivity_FrameLayout);
+        previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
 
-        image_capture_Button.findViewById(R.id.cameraActivity_capture_imageButton);
+        image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
         setButtonClickListener();
 
         ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();

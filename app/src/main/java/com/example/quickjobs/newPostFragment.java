@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -85,17 +84,15 @@ public class newPostFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
-        nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
-        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
-        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
-        newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
+
+        InitfindViews(v);
+
         newPostTitle.addTextChangedListener(newPostInputWatcher);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraSession = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraSession, pic_id);
+                Intent cameraSession = new Intent(v.getContext(), CameraActivity.class);
+                startActivity(cameraSession);
             }
         });
 
@@ -134,6 +131,14 @@ public class newPostFragment extends Fragment {
 
         }
     };
+
+    private void InitfindViews(View v){
+        nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
+        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
+        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
+        newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
+        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
+    }
 
 
 }
