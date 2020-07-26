@@ -9,16 +9,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.view.auth.AuthActivity;
-import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
-
-import io.reactivex.observers.DisposableCompletableObserver;
 
 /**
  * A simple {@link Fragment} subclass.
