@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 //import android.Manifest
 
 public class CameraActivity extends AppCompatActivity {
+    private final String TAG = "CameraActivity";
     private Preview cameraPreview;
     private ImageCapture imageCapture;
     private Camera camera;
@@ -155,11 +156,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private void bindPreview(){
         cameraPreview = new Preview.Builder().build();
-        CameraSelector camerSelector = new CameraSelector.Builder()
+        CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
-        cameraPreview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
-        camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, camerSelector, cameraPreview);
+        cameraPreview.setSurfaceProvider(previewView.createSurfaceProvider());
+        camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, cameraPreview);
 
     }
 
