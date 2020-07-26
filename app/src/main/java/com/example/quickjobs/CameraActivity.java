@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -44,13 +45,15 @@ public class CameraActivity extends AppCompatActivity {
     private static String[] REQUIRED_PERSMISSIONS = {Manifest.permission.CAMERA};
     private ExecutorService cameraExecutor;
     private PreviewView previewView;
-    private ProcessCameraProvider cameraProvider;
+
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera2);
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
         cameraExecutor = Executors.newSingleThreadExecutor();
 
@@ -120,12 +123,13 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void startCamera(){
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+
 
         cameraProviderFuture.addListener(()->{
             try {
-                cameraProvider = cameraProviderFuture.get();
-                bindPreview();
+
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider);
 
             }
             catch(ExecutionException |InterruptedException e){
@@ -158,14 +162,19 @@ public class CameraActivity extends AppCompatActivity {
         return true;
     }
 
-    private void bindPreview(){
+    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider1){
         cameraPreview = new Preview.Builder().build();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
-        cameraPreview.setSurfaceProvider(previewView.createSurfaceProvider());
-        camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, cameraPreview);
-
+        try {
+            cameraProvider1.unbindAll();
+            cameraPreview.setSurfaceProvider(previewView.createSurfaceProvider());
+            camera = cameraProvider1.bindToLifecycle((LifecycleOwner) this, cameraSelector, cameraPreview);
+        }
+        catch(Exception e){
+            Log.e(TAG, "Use case binding failed");
+        }
     }
 
 
