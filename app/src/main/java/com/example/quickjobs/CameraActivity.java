@@ -55,7 +55,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera2);
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
-        cameraExecutor = Executors.newSingleThreadExecutor();
+
 
         previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
 
@@ -64,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
         setButtonClickListener();
-
+        cameraExecutor = Executors.newSingleThreadExecutor();
 
 
 
