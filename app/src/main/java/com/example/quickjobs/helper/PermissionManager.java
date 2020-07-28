@@ -29,7 +29,6 @@ public class PermissionManager {
         return false;
     }
 
-
     public void checkPermission(Context context, String permission, PermissionAskListnener listnener){
         final String TAG = "checkPermission";
         if(shouldAskPermission(context, permission)){
@@ -55,28 +54,10 @@ public class PermissionManager {
         }
     }
 
-    public void checkPermissionUpdate(Context context, String permission, PermissionUpdateListener lisener){
-        String TAG = "checkPermissionUpdate";
-        Log.println(Log.ERROR, TAG, "" + ContextCompat.checkSelfPermission(context, permission));
-
-        if(ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED){
-            lisener.onPermissionGranted();
-        }
-        else{
-            lisener.onPermissionDenied();
-        }
-
-    }
-
     public interface PermissionAskListnener{
         void onNeedPermission();
         void onPermssionPreviouslyDenied();
         void onPermissionPreviouslyDeniedWithNeverAskAgain();
         void onPermissionGranted();
-    }
-
-    public interface PermissionUpdateListener{
-        void onPermissionGranted();
-        void onPermissionDenied();
     }
 }

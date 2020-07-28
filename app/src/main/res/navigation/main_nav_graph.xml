@@ -5,11 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/myJobsFragment"
-        android:name="com.example.quickjobs.view.jobs.MyJobsFragment"
-        android:label="fragment_my_jobs"
-        tools:layout="@layout/fragment_my_jobs"/>
-    <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.example.quickjobs.view.profile.MyProfileFragment"
         android:label="fragment_my_profile"
@@ -32,14 +27,14 @@
             android:id="@+id/action_homeFragment_to_myProfileFragment"
             app:destination="@id/myProfileFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_myJobsFragment"
-            app:destination="@id/myJobsFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_newPostActivity"
             app:destination="@id/newPostActivity" />
         <action
             android:id="@+id/action_homeFragment_to_anonymousUserProfileFragment"
             app:destination="@id/anonymousUserProfileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myJobFragment"
+            app:destination="@id/myJobFragment" />
     </fragment>
     <activity
         android:id="@+id/newPostActivity"
@@ -51,4 +46,9 @@
         android:name="com.example.quickjobs.view.auth.AnonymousUserRestrictedFragment"
         android:label="fragment_anonymous_user_profile"
         tools:layout="@layout/fragment_anonymous_user_restricted" />
+    <fragment
+        android:id="@+id/myJobFragment"
+        android:name="com.example.quickjobs.MyJobFragment"
+        android:label="fragment_my_job"
+        tools:layout="@layout/fragment_my_job" />
 </navigation>

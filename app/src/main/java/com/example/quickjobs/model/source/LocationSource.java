@@ -135,15 +135,15 @@ public class LocationSource extends FusedLocationProviderClient {
                     locationMutableLiveData.setValue(location);
                 }
             });
-            removeLocationUpdates(locationCallback);
+
+            removeLocationUpdates(locationCallback).addOnCompleteListener(removeLocation -> {
+                if(removeLocation.isSuccessful()){
+                    Log.println(Log.ERROR, TAG, "location callback removed");
+                }
+            });
+
         }
 
         return locationMutableLiveData;
-    }
-
-    public void disableLocationUpdates(){
-        if(locationCallback != null){
-            removeLocationUpdates(locationCallback);
-        }
     }
 }

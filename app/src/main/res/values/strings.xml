@@ -28,4 +28,6 @@
     <string name="permission_denied_dialog_title">Permission Denied</string>
     <string name="permission_denied_dialog_message_location">enable location from settings</string>
 
+    <string name="loading_data">loading...</string>
+
 </resources>

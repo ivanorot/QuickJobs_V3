@@ -76,7 +76,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.github.blocoio:faker:1.2.8'
 }
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }

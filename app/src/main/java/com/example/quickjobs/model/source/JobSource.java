@@ -7,6 +7,7 @@ import com.example.quickjobs.helper.ExceptionHandler;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JobSource {
@@ -35,13 +36,11 @@ public class JobSource {
     }
 
 
-    public MutableLiveData<List<QuickJob>> getQuickJobsNearUserLocation(double longitude, double latitude, int distance){
+    public MutableLiveData<List<QuickJob>> getQuickJobsNearUserLocation(double longitude, double latitude, int maxDistance){
         MutableLiveData<List<QuickJob>> jobs = new MutableLiveData<>();
 
-        jobBoard.whereGreaterThanOrEqualTo("longitude", getMinLongitudeByDistance(longitude, distance))
-                .whereLessThanOrEqualTo("longitude", getMaxLongitudeByDistance(longitude, distance))
-                .whereGreaterThanOrEqualTo("latitude", getMinLatitudeByDistance(latitude, distance))
-                .whereLessThanOrEqualTo("latitude", getMaxLatitudeByDistance(latitude, distance))
+        jobBoard.whereGreaterThanOrEqualTo("longitude", getMinLongitudeByDistance(longitude, maxDistance))
+                .whereLessThanOrEqualTo("longitude", getMaxLongitudeByDistance(longitude, maxDistance))
                 .addSnapshotListener((snapShot, exception) -> {
                     if(snapShot != null){
                         List<QuickJob> temp = snapShot.toObjects(QuickJob.class);
@@ -49,6 +48,7 @@ public class JobSource {
                     }
                     else{
                         final String TAG = "getQuickJobsNearUserLocation";
+                        jobs.postValue(new ArrayList<>());
                         ExceptionHandler.consumeException(TAG, exception);
                     }
                 });

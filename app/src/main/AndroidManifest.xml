@@ -16,7 +16,8 @@
         <activity
             android:name=".view.settings.SettingsActivity"
             android:label="@string/title_activity_settings"/>
-        <activity android:name=".view.splash.SplashActivity">
+        <activity android:name=".view.splash.SplashActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

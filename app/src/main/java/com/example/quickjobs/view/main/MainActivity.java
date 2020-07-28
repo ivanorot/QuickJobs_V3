@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.auth.AuthActivity;
+import com.example.quickjobs.view.jobs.NewPostActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -124,6 +125,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void goToAuthActivity(){
         Intent intent = new Intent(MainActivity.this, AuthActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goToNewPostActivity(){
+        Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
         startActivity(intent);
         finish();
     }

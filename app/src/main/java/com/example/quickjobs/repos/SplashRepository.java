@@ -6,12 +6,15 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.model.beans.QuickJob;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.model.source.JobSource;
 import com.example.quickjobs.model.source.LocationSource;
 import com.example.quickjobs.model.source.UserSource;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class SplashRepository{
     private static SplashRepository Instance;
@@ -64,4 +67,7 @@ public class SplashRepository{
         return userSource.updateUserLocationDataAndPersist(location);
     }
 
+    public MutableLiveData<List<QuickJob>> getJobsBasedOnUserLocation(double longitude, double latitude, int maxDistance){
+        return jobSource.getQuickJobsNearUserLocation(longitude, latitude, maxDistance);
+    }
 }
