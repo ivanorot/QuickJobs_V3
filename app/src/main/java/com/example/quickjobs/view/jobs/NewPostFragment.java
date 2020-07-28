@@ -71,7 +71,13 @@ public class NewPostFragment extends Fragment {
         if (requestCode == pic_id) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
             pic1.setImageBitmap(pic);
-
+            /*
+            ******
+            ******
+            TODO: OnActivityResult code
+            ******
+            *****
+            */
         }
     }
 
