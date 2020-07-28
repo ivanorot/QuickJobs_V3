@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.viewmodel.NewPostViewModel;
@@ -48,20 +48,16 @@ public class NewPostFragment extends Fragment {
 
         newPostViewModel = new ViewModelProvider(requireActivity()).get(NewPostViewModel.class);
 
-        newPostViewModel.shouldNavigate().observe(getViewLifecycleOwner(), user -> navigate(user, v));
+      //  newPostViewModel.shouldNavigate().observe(getViewLifecycleOwner(), user -> navigate(user, v));
 
-        nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
-        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
-        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
-        newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
+        InitfindViews(v);
+
         newPostTitle.addTextChangedListener(newPostInputWatcher);
-        nextButton.setOnClickListener(ignore -> {});
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraSession = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraSession, pic_id);
+                Intent cameraSession = new Intent(v.getContext(), CameraActivity.class);
+                startActivity(cameraSession);
             }
         });
 
@@ -75,7 +71,13 @@ public class NewPostFragment extends Fragment {
         if (requestCode == pic_id) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
             pic1.setImageBitmap(pic);
-
+            /*
+            ******
+            ******
+            TODO: OnActivityResult code
+            ******
+            *****
+            */
         }
     }
 
@@ -92,7 +94,7 @@ public class NewPostFragment extends Fragment {
 
             mTitleText = newPostTitle.getText().toString();
             nextButton.setEnabled(!mTitleText.isEmpty());
-
+            nextButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.newPostPartTwoFragment));
         }
 
         @Override
@@ -101,10 +103,13 @@ public class NewPostFragment extends Fragment {
         }
     };
 
-    public void navigate(Boolean shouldNavigate, View view){
-
-        if(shouldNavigate){
-            newPostViewModel.setShouldNavigate(false);
-        }
+    private void InitfindViews(View v){
+        nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
+        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
+        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
+        newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
+        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
     }
+
+
 }

@@ -5,6 +5,21 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
     <fragment
+        android:id="@+id/myJobsFragment"
+        android:name="com.example.quickjobs.view.jobs.MyJobsFragment"
+        android:label="fragment_my_jobs"
+        tools:layout="@layout/fragment_my_jobs">
+        <action
+            android:id="@+id/action_myJobsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_myJobsFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_myJobsFragment_to_newPostActivity"
+            app:destination="@id/newPostActivity" />
+    </fragment>
+    <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.example.quickjobs.view.profile.MyProfileFragment"
         android:label="fragment_my_profile"
@@ -12,6 +27,15 @@
         <action
             android:id="@+id/action_myProfileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_myJobsFragment"
+            app:destination="@id/myJobsFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_newPostActivity"
+            app:destination="@id/newPostActivity" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"

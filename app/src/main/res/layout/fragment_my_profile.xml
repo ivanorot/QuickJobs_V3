@@ -8,168 +8,11 @@
     android:background="#EDE7F6 "
     tools:context=".view.profile.MyProfileFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/myProfile_ScrollView"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:visibility="gone">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/myProfile_CardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            app:cardBackgroundColor="#D1C4E9 "
-            app:cardCornerRadius="8dp"
-            app:contentPadding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/myProfile_profileinfo_linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/myProfile_edit_basic_info_Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:backgroundTint="#673AB7  "
-                    android:src="@drawable/baseline_edit_black_18"
-                    android:tint="#EDE7F6 "
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/myProfile_pic" />
-
-                <ImageView
-                    android:id="@+id/myProfile_pic"
-                    android:layout_width="164dp"
-                    android:layout_height="164dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:src="@drawable/baseline_account_box_black_48"
-                    android:tint="#673AB7 "
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/myProfile_Last_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptLast_text"
-                    app:layout_constraintStart_toStartOf="@+id/myProfile_Name_text"
-                    tools:text="Last" />
-
-                <TextView
-                    android:id="@+id/myProfile_email_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptEmail_text"
-                    app:layout_constraintStart_toStartOf="@+id/myProfile_Last_text"
-                    tools:text="myprofile@email.com" />
-
-                <TextView
-                    android:id="@+id/myProfile_promptName_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="First Name:"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/myProfile_pic" />
-
-                <TextView
-                    android:id="@+id/myProfile_promptLast_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Last Name:"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="@+id/myProfile_promptName_text"
-                    app:layout_constraintTop_toBottomOf="@+id/myProfile_promptName_text" />
-
-                <TextView
-                    android:id="@+id/myProfile_promptEmail_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Email:"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/myProfile_promptLast_text"
-                    app:layout_constraintTop_toBottomOf="@+id/myProfile_promptLast_text" />
-
-                <TextView
-                    android:id="@+id/myProfile_Name_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginLeft="24dp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptName_text"
-                    app:layout_constraintStart_toEndOf="@+id/myProfile_promptName_text"
-                    tools:text="First" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/myProfile_bio_cardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            app:cardBackgroundColor="#D1C4E9 "
-            app:cardCornerRadius="8dp"
-            app:contentPadding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myProfile_CardView">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/myProfile_bio_linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/myProfile_promptbio_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:text="Bio:"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/myProfile_bioContent_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/myProfile_promptbio_text"
-                    tools:text="This is my bio." />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <FrameLayout
         android:id="@+id/myProfile_signin_FrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/myProfile_signin_ConstraintLayout"
@@ -178,9 +21,9 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/myProfile_signin_CardView"
-                android:layout_width="320dp"
-                android:layout_height="120dp"
-                app:cardBackgroundColor="#d4bff9  "
+                android:layout_width="280dp"
+                android:layout_height="160dp"
+                app:cardBackgroundColor="#E3E3E3"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -188,38 +31,209 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.38">
 
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:text="You are not Signed In."
+                    android:textAlignment="viewStart"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <Button
                         android:id="@+id/myProfile_signin_button"
-                        android:layout_width="150dp"
-                        android:layout_height="80dp"
-                        android:backgroundTint="#6002EE"
-                        android:text="Sign In"
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:backgroundTint="#4E4D4E"
+                        android:text="Sign in to your Account"
                         android:textColor="#FFFFFF"
                         android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        app:layout_constraintStart_toStartOf="parent" />
 
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sign in to your Account"
-                        android:textColor="#021aee"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="@+id/myProfile_signin_button"
-                        app:layout_constraintStart_toStartOf="@+id/myProfile_signin_button"
-                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/myProfile_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/myProfile_basicInfo_ConstraintLayout"
+                android:layout_width="409dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/myProfile_CardView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#D1C4E9 "
+                    app:cardCornerRadius="8dp"
+                    app:contentPadding="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/myProfile_profileinfo_linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:id="@+id/myProfile_edit_basic_info_Button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:backgroundTint="#673AB7  "
+                            android:src="@drawable/baseline_edit_black_18"
+                            android:tint="#EDE7F6 "
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/myProfile_pic" />
+
+                        <ImageView
+                            android:id="@+id/myProfile_pic"
+                            android:layout_width="164dp"
+                            android:layout_height="164dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="32dp"
+                            android:src="@drawable/baseline_account_box_black_48"
+                            android:tint="#673AB7 "
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/myProfile_Last_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptLast_text"
+                            app:layout_constraintStart_toStartOf="@+id/myProfile_Name_text"
+                            tools:text="Last" />
+
+                        <TextView
+                            android:id="@+id/myProfile_email_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptEmail_text"
+                            app:layout_constraintStart_toStartOf="@+id/myProfile_Last_text"
+                            tools:text="myprofile@email.com" />
+
+                        <TextView
+                            android:id="@+id/myProfile_promptName_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="First Name:"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/myProfile_pic" />
+
+                        <TextView
+                            android:id="@+id/myProfile_promptLast_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Last Name:"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="@+id/myProfile_promptName_text"
+                            app:layout_constraintTop_toBottomOf="@+id/myProfile_promptName_text" />
+
+                        <TextView
+                            android:id="@+id/myProfile_promptEmail_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="Email:"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/myProfile_promptLast_text"
+                            app:layout_constraintTop_toBottomOf="@+id/myProfile_promptLast_text" />
+
+                        <TextView
+                            android:id="@+id/myProfile_Name_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="24dp"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/myProfile_promptName_text"
+                            app:layout_constraintStart_toEndOf="@+id/myProfile_promptName_text"
+                            tools:text="First" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/myProfile_bio_cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    app:cardBackgroundColor="#D1C4E9 "
+                    app:cardCornerRadius="8dp"
+                    app:contentPadding="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/myProfile_bio_linearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/myProfile_promptbio_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:text="Bio:"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/myProfile_bioContent_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/myProfile_promptbio_text"
+                            tools:text="This is my bio." />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

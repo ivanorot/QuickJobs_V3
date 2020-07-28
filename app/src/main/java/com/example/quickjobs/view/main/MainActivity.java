@@ -8,7 +8,9 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
@@ -19,12 +21,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FirebaseAuth.AuthStateListener {
+public class MainActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+    private final String TAG = "MainActivity";
     private final String USER = "user";
 
     private MainViewModel mainViewModel;
-
-    private User user;
+    private BottomNavigationView bottomNavigationView;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         initMainViewModel();
         initQuickJobsUser();
-        initBottomNavigationView();
+        initNavController();
 
     }
 
@@ -51,44 +54,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
     }
 
-    public void initBottomNavigationView(){
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+    public void initNavController(){
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        navController = Navigation.findNavController(this, R.id.navigationHostFragment);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-        Navigation.findNavController(this, R.id.navigationHostFragment).navigateUp();
-
-        if(user.isAnonymous() && menuItem.getItemId() != R.id.homeFragment){
-            Navigation.findNavController(this, R.id.navigationHostFragment).navigate(R.id.anonymousUserProfileFragment);
-            return true;
-        }
-
-        switch (menuItem.getItemId()){
-            case R.id.homeFragment:
-
-                Navigation.findNavController(this, R.id.navigationHostFragment).navigate(R.id.homeFragment);
-                return true;
-
-            case R.id.newPostFragment:
-                Navigation.findNavController(this, R.id.navigationHostFragment).navigate(R.id.newPostFragment);
-                return true;
-
-            case R.id.myJobsFragment:
-                Navigation.findNavController(this, R.id.navigationHostFragment).navigate(R.id.myJobsFragment);
-                return true;
-
-            case R.id.myProfileFragment:
-                Navigation.findNavController(this, R.id.navigationHostFragment).navigate(R.id.myProfileFragment);
-                return true;
-
-        }
-
-        return false;
-    }
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -98,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    //Double check from here down**********************************************************************************
     public void signOut(){
         FirebaseAuth.getInstance().signOut();
     }
@@ -129,11 +102,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         finish();
     }
 
-    private void goToNewPostActivity(){
-        Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
 
 }
