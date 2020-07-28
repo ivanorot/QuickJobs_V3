@@ -27,7 +27,10 @@
         android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@+id/cameraActivity_capture_imageButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone">
+
+    </androidx.viewpager2.widget.ViewPager2>
 
     <ImageButton
         android:id="@+id/cameraActivity_capture_imageButton"
@@ -36,9 +39,30 @@
         android:layout_marginBottom="16dp"
         android:background="@color/cardview_shadow_end_color"
         android:scaleType="fitXY"
+        android:src="@drawable/camera_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="500dp"
+        app:layout_constraintBottom_toTopOf="@+id/cameraActivity_ViewPager2"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/camera_button" />
+        app:layout_constraintTop_toTopOf="@+id/cameraActivity_viewFinder">
+
+        <ImageView
+            android:id="@+id/cameraActivity_imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/baseline_image_black_48"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
