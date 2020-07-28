@@ -105,6 +105,16 @@ public class CameraActivity extends AppCompatActivity {
                         saveImageIntoArray(bitmap);
                         displayImages();
                         image.close();
+                        /*NEEDS WORK
+                        *
+                        NEEDS WORK
+                        *
+                        TODO: NEEDS CODE FOR CAPTURE
+                        *
+                        NEEDS WORK
+                        *
+                        *
+                        NEEDS WORK*/
                     }
 
                     ;
