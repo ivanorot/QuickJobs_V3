@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cameraActivity_FrameLayout"
+    android:id="@+id/cameraActivity_CostraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alpha="0.6"
@@ -13,34 +13,55 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/cameraActivity_viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cameraActivity_ConstraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    </androidx.camera.view.PreviewView>
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/cameraActivity_ViewPager2"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/cameraActivity_capture_imageButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
-                android:id="@+id/cameraActivity_capture_imageButton"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="24dp"
-                android:background="@color/cardview_shadow_end_color"
-                android:scaleType="fitXY"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/camera_button" />
+    </androidx.viewpager2.widget.ViewPager2>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/cameraActivity_ViewPager2"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/cameraActivity_capture_imageButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/cameraActivity_capture_imageButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/cardview_shadow_end_color"
+        android:scaleType="fitXY"
+        android:src="@drawable/camera_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="500dp"
+        app:layout_constraintBottom_toTopOf="@+id/cameraActivity_ViewPager2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cameraActivity_viewFinder">
+
+        <ImageView
+            android:id="@+id/cameraActivity_imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/baseline_image_black_48"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
