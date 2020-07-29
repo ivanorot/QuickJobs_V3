@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     private final String USER = "user";
 
     private MainViewModel mainViewModel;
-    private BottomNavigationView bottomNavigationView;
-    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     public void initQuickJobsUser(){
         mainViewModel.initializeCurrentUser();
         mainViewModel.currentUserMutableLiveData.observe(this, currentUser -> {
-            user = currentUser;
             Log.println(Log.ERROR, USER, "Display Name: " + currentUser.getDisplayName());
             Log.println(Log.ERROR, USER, "Latitude: " + currentUser.getLatitude());
             Log.println(Log.ERROR, USER, "Longitude: " + currentUser.getLongitude());
@@ -55,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     }
 
     public void initNavController(){
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        navController = Navigation.findNavController(this, R.id.navigationHostFragment);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        NavController navController = Navigation.findNavController(this, R.id.navigationHostFragment);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 

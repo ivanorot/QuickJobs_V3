@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 
@@ -12,16 +14,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.helper.ExceptionHandler;
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class LocationSource extends FusedLocationProviderClient {
+public class LocationSource extends FusedLocationProviderClient{
     private final String TAG = "LocationSource";
     private static LocationSource Instance;
 
@@ -29,7 +37,6 @@ public class LocationSource extends FusedLocationProviderClient {
     public final int DEFAULT_FASTEST_INTERVAL = 10000;
     public final int DEFAULT_DISPLACEMENT = 3000;
 
-    private Observable<LocationResult> locationObservable;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
@@ -37,13 +44,10 @@ public class LocationSource extends FusedLocationProviderClient {
         super(context);
 
         locationRequest = LocationRequest.create();
-
         locationRequest.setInterval(DEFAULT_INTERVAL);
         locationRequest.setFastestInterval(DEFAULT_FASTEST_INTERVAL);
-
         locationRequest.setSmallestDisplacement(DEFAULT_DISPLACEMENT);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
 
     }
 
@@ -53,7 +57,6 @@ public class LocationSource extends FusedLocationProviderClient {
                 Instance = new LocationSource(context);
             }
         }
-
         return Instance;
     }
 
@@ -76,74 +79,47 @@ public class LocationSource extends FusedLocationProviderClient {
         locationRequest.setSmallestDisplacement(displacement);
     }
 
-    public MutableLiveData<LocationAvailability> getLocationAvailabilityMutableLiveData(Context context) {
-        MutableLiveData<LocationAvailability> locationAvailabilityMutableLiveData = new MutableLiveData<>();
+    public void enableLocationUpdates(Context context, LocationStateListener locationStateListener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            throw new IllegalStateException();
-        }
-
-        getLocationAvailability().addOnCompleteListener(locAvailableTask -> {
-            if (locAvailableTask.isSuccessful()) {
-                locationAvailabilityMutableLiveData.postValue(locAvailableTask.getResult());
-            } else {
-                if (locAvailableTask.getException() != null) {
-                    ExceptionHandler.consumeException(TAG, locAvailableTask.getException());
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    locationStateListener.onLocationChange(locationResult.getLastLocation());
                 }
-            }
-        });
 
-        return locationAvailabilityMutableLiveData;
-    }
-
-
-    public void observeLocationUpdatesContinousStream(Context context, Observer<LocationResult> locationResultObserver) {
-
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            locationObservable = Observable.create(source -> {
-                locationCallback = new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        Location location = locationResult.getLastLocation();
-                        Log.println(Log.ERROR, TAG, "latitude: " + location.getLatitude() + " longitude: " + location.getLongitude());
-                        source.onNext(locationResult);
-                    }
-                };
-
-                requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-
-            });
-
-            locationObservable.subscribe(locationResultObserver);
-        }
-
-    }
-
-    public MutableLiveData<Location> getSingleLocationMutableLiveData(Context context){
-        MutableLiveData<Location> locationMutableLiveData = new MutableLiveData<>();
-
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationCallback = new LocationCallback();
+                @Override
+                public void onLocationAvailability(LocationAvailability locationAvailability) {
+                    super.onLocationAvailability(locationAvailability);
+                    locationStateListener.onLocationAvailable(locationAvailability);
+                }
+            };
             requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-            getLastLocation().addOnCompleteListener(locationTask ->{
-                if(locationTask.isSuccessful()){
-                    Location location = locationTask.getResult();
-                    locationMutableLiveData.setValue(location);
-                }
-            });
+        }
+    }
 
-            removeLocationUpdates(locationCallback).addOnCompleteListener(removeLocation -> {
-                if(removeLocation.isSuccessful()){
-                    Log.println(Log.ERROR, TAG, "location callback removed");
+    public void getLocationAvailability(Context context, LocationStateListener locationStateListener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            getLocationAvailability().addOnCompleteListener(locationAvailability -> {
+                if (locationAvailability.isSuccessful() && locationAvailability.getResult() != null) {
+                    if (locationAvailability.getResult().isLocationAvailable()) {
+                        locationStateListener.onLocationAvailable(locationAvailability.getResult());
+                    }
                 }
             });
+        }
+    }
+
+    public void getSingleLocationMutableLiveData(Context context, LocationStateListener locationStateListener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            getLastLocation().addOnCompleteListener(location -> locationStateListener.onLocationChange(location.getResult()));
 
         }
-
-        return locationMutableLiveData;
     }
 }

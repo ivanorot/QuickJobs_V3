@@ -18,11 +18,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.helper.ExceptionHandler;
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.helper.PermissionManager;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
@@ -30,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements LocationStateListener {
     private TextView textView;
     private final int LOCATION_REQUEST_ID = 180;
     private final String TAG = "SplashActivity";
@@ -68,14 +70,17 @@ public class SplashActivity extends AppCompatActivity {
         splashViewModel.isUserAnonymousOrAuthenticatedLiveData.observe(this, user -> {
 //            anonymous user registered with this phone is signed in and returning
             if(user.isAuthenticated() && user.isAnonymous()) {
-               setCurrentUserAsAnonymous(user);
+                Log.println(Log.ERROR, TAG, "checkIfUserIsAnonymousAndAuthenticated -> setCurrentUserAsAnonymous");
+                setCurrentUserAsAnonymous(user);
            }
 //            registered user is returing to app
             else if(user.isAuthenticated() && !user.isAnonymous()){
+                Log.println(Log.ERROR, TAG, "checkIfUserIsAnonymousAndAuthenticated -> getUserFromDatabase");
                 getUserFromDatabase(user.getUid());
             }
 //            possible first time user
             else{
+                Log.println(Log.ERROR, TAG, "checkIfUserIsAnonymousAndAuthenticated -> signInAnonymously");
                 signInAnonymously();
             }
         });
@@ -86,9 +91,11 @@ public class SplashActivity extends AppCompatActivity {
         splashViewModel.authenticatedUserLiveData.observe(this, user -> {
             Log.println(Log.ERROR, TAG, "signInAnonymously");
             if(user == null){
+                Log.println(Log.ERROR, TAG, "signInAnonymously -> goToAuthActivity");
                 goToAuthActivity();
             }
             else{
+                Log.println(Log.ERROR, TAG, "signInAnonymously -> setCurrentUserAsAnonymous");
                 setCurrentUserAsAnonymous(user);
             }
         });
@@ -98,11 +105,12 @@ public class SplashActivity extends AppCompatActivity {
     private void setCurrentUserAsAnonymous(User anonymousUser){
         splashViewModel.setAnonymousUser(anonymousUser);
         splashViewModel.authenticatedUserLiveData.observe(this, user -> {
-            Log.println(Log.ERROR, TAG, "setCurrentUserAsAnonymous");
             if(user == null){
-                dialogForFailedAuthentication("Authentication Failed", "Error while authenticating. Please try again.");
+                Log.println(Log.ERROR, TAG, "setCurrentUserAsAnonymous -> dialogForFailedAuthentication");
+                dialogForFailedAuthentication();
             }
             else{
+                Log.println(Log.ERROR, TAG, "setCurrentUserAsAnonymous -> checkIfUserLocationIsAvailable");
                 checkIfUserLocationIsAvailable();
             }
         });
@@ -114,9 +122,11 @@ public class SplashActivity extends AppCompatActivity {
         splashViewModel.authenticatedUserLiveData.observe(this, user ->{
             Log.println(Log.ERROR, TAG, "getUserFromDatabase");
             if(user == null){
-                dialogForFailedAuthentication("Authentication Failed", "Error while authenticating. Please try again.");
+                Log.println(Log.ERROR, TAG, "getUserFromDatabase -> dialogForFailedAuthentication");
+                dialogForFailedAuthentication();
             }
             else{
+                Log.println(Log.ERROR, TAG, "getUserFromDatabase -> checkIfUserLocationIsAvailable");
                 checkIfUserLocationIsAvailable();
             }
         });
@@ -129,22 +139,44 @@ public class SplashActivity extends AppCompatActivity {
         permissionManager.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionAskListnener() {
             @Override
             public void onNeedPermission() {
+                Log.println(Log.ERROR, TAG, "Requesting location permission");
                 ActivityCompat.requestPermissions(SplashActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
             }
 
             @Override
             public void onPermssionPreviouslyDenied() {
+                Log.println(Log.ERROR, TAG, "informing user why we need location services");
                 showLocationRationale();
             }
 
             @Override
             public void onPermissionPreviouslyDeniedWithNeverAskAgain() {
-                dialogForSettings("Permission Denied", "Now you must allow location access from settings.");
+                Log.println(Log.ERROR, TAG, "sending user to settings to change location permission");
+                dialogForSettings();
             }
 
             @Override
             public void onPermissionGranted() {
+                Log.println(Log.ERROR, TAG, "checkLocationPermission -> onPermissionGranted -> checkIfLocationIsAvailable");
+                splashViewModel.enableLocationUpdates(getApplicationContext(), SplashActivity.this);
                 checkIfLocationIsAvailable();
+            }
+        });
+    }
+
+    private void checkPermissionResults(){
+        Log.println(Log.ERROR, TAG, "Checking permission results");
+        permissionManager.handlePermissionRequestResults(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionRequestResultListener() {
+            @Override
+            public void onPermissionGranted() {
+//              todo set loading bar visible
+                splashViewModel.enableLocationUpdates(getApplicationContext(), SplashActivity.this);
+                checkIfLocationIsAvailable();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                checkLocationPermission();
             }
         });
     }
@@ -152,7 +184,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        checkLocationPermission();
+        checkPermissionResults();
     }
 
     private void checkIfUserLocationIsAvailable(){
@@ -160,55 +192,40 @@ public class SplashActivity extends AppCompatActivity {
         splashViewModel.checkIfCurrentUserHasLocationPersisted();
         splashViewModel.authenticatedUserLiveData.observe(this, user -> {
             if(user.hasLocationAvailable()){
-                getQuickJobsBasedOnUserLocation(user.getLongitude(), user.getLatitude());
                 Log.println(Log.ERROR, TAG, "hasLocationAvailable");
+                getQuickJobsBasedOnUserLocation(user.getLongitude(), user.getLatitude());
             }
             else{
-                checkLocationPermission();
                 Log.println(Log.ERROR, TAG, "!hasLocationAvailable");
+                checkLocationPermission();
             }
         });
     }
 
     private void checkIfLocationIsAvailable(){
-        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this);
-        splashViewModel.locationAvailabilityLiveData.observe(SplashActivity.this, locationAvailability -> {
-            if(locationAvailability.isLocationAvailable()){
-                Log.println(Log.ERROR, TAG, "location is available");
-                retrieveUserCurrentLocation();
-            }
-            else{
-//                TODO start loading screen until location is supplied exit the app after 5-10 seconds with error message
-//                dialogForFailedLocation("Location Services", "Unable to extract location. You may try restarting.");
-                final boolean IS_FIRST_ATTEMPT = true;
-                migrateToLocationLoadingScreenUntilLocationIsAvailable(IS_FIRST_ATTEMPT);
-            }
-        });
+//      TODO start loading screen until location is supplied exit the app after 5-10 seconds with error message.
+        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
     }
 
-    private void retrieveUserCurrentLocation(){
-        splashViewModel.getCurrentLocationFromLocationSource(this);
-        splashViewModel.locationResultLiveData.observe(this, this::updateUserLocationAndPersistToCloud);
+    @Override
+    public void onLocationAvailable(LocationAvailability locationAvailability) {
+        Log.println(Log.ERROR, TAG, "onLocationAvailable: locationAvailability");
+        splashViewModel.getCurrentLocationFromLocationSource(this, this);
     }
 
-    public void migrateToLocationLoadingScreenUntilLocationIsAvailable(boolean firstAttempt){
-        textView.setVisibility(View.GONE);
-        splashViewModel.setShouldMakeLoadingScreenVisible(true);
-        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this);
+    @Override
+    public void onLocationNotAvailable() {
+        Log.println(Log.ERROR, TAG, "onLocationNotAvailable: locationNotAvailable");
+        if(textView.getVisibility() != View.GONE){
+            textView.setVisibility(View.GONE);
+            splashViewModel.setShouldMakeLoadingScreenVisible(true);
+        }
+        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
+    }
 
-        splashViewModel.locationAvailabilityLiveData.observe(this, locationAvailability -> {
-            if(locationAvailability.isLocationAvailable()){
-                textView.setVisibility(View.VISIBLE);
-                splashViewModel.setShouldMakeLoadingScreenVisible(false);
-                retrieveUserCurrentLocation();
-            }
-            else{
-                migrateToLocationLoadingScreenUntilLocationIsAvailable(false);
-                if(!firstAttempt){
-                    dialogForForceClose("Location Unavailable", "could not extract your location. Try Again Later");
-                }
-            }
-        });
+    @Override
+    public void onLocationChange(Location locationResults) {
+        getQuickJobsBasedOnUserLocation(locationResults.getLongitude(), locationResults.getLatitude());
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
@@ -226,12 +243,7 @@ public class SplashActivity extends AppCompatActivity {
         Log.println(Log.ERROR, TAG, "Latitude: " + latitude);
         splashViewModel.getJobsBasedOnUserLocation(longitude, latitude, MAX_DISTANCE);
         splashViewModel.jobsBasedOnUserLocation.observe(this, jobs -> {
-            if(jobs.size() != NO_JOBS){
-                goToMainActivity();
-            }else
-            {
-                dialogForFailedJobs("Error finding jobs", "retry later");
-            }
+            goToMainActivity();
         });
     }
 
@@ -244,74 +256,67 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
                 })
                 .setPositiveButton("RETRY", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
                     ActivityCompat.requestPermissions(SplashActivity.this, new String[]
                             { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
-                    checkLocationPermission();
                 }).show();
     }
 
-    private void dialogForSettings(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title)
-                .setMessage(message)
+    private void dialogForSettings(){
+        new AlertDialog.Builder(this).setTitle("Permission Denied")
+                .setMessage("Now you must allow location access from settings.")
                 .setCancelable(false)
                 .setNegativeButton("NOT NOW", ((dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     finish();
                 }))
                 .setPositiveButton("SETTINGS", (dialogInterface, i) -> {
-                    goToSettings();
                     dialogInterface.dismiss();
+                    goToSettings();
                 }).show();
     }
 
-    private void dialogForFailedAuthentication(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title)
-                .setMessage(message)
+    private void dialogForFailedAuthentication(){
+        new AlertDialog.Builder(this).setTitle("Authentication Failed")
+                .setMessage("Error while authenticating. Please try again.")
                 .setCancelable(false)
                 .setNegativeButton("CONTINUE", (dialogInterface, i) -> {
-                    signInAnonymously();
                     dialogInterface.dismiss();
+                    signInAnonymously();
                 })
                 .setPositiveButton("SIGN IN", (dialogInterface, i) -> {
-                    goToAuthActivity();
                     dialogInterface.dismiss();
+                    goToAuthActivity();
                 }).show();
     }
 
-    private void dialogForFailedJobs(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title)
-                .setMessage(message)
+    private void dialogForFailedJobs(){
+        new AlertDialog.Builder(this).setTitle("Error finding jobs")
+                .setMessage("retry later")
                 .setCancelable(false)
-                .setNegativeButton("Exit", (dialogInterface, i) -> {
-                    goToMainActivity();
-
+                .setNegativeButton("LEAVE", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    finish();
                 })
-                .setPositiveButton("Retry", (dialogInterface, i) -> {
-                    goToMainActivity();
+                .setPositiveButton("RETRY", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    splashViewModel.authenticatedUserLiveData.observe(this, user -> {
+                        getQuickJobsBasedOnUserLocation(user.getLongitude(), user.getLatitude());
+                    });
                 })
                 .show();
     }
 
-    private void dialogForFailedLocation(String title, String message){
-        new AlertDialog.Builder(this).setTitle(title)
-                .setMessage(message)
+    private void dialogBeforeForClose(){
+        new AlertDialog.Builder(this).setTitle("Permission Denied")
+                .setMessage("")
                 .setCancelable(false)
                 .setNegativeButton("RETRY", (dialogInterface, i) -> {
-
+                    checkLocationPermission();
                 })
-                .setPositiveButton("ENTER", (dialogInterface, i) -> {
-
-                }).show();
-    }
-
-    private void dialogForForceClose(String title , String message){
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(false)
                 .setPositiveButton("CONTINUE", (dialogInterface, i) -> {
                     finish();
-                });
+                }).show();
     }
 
     /*

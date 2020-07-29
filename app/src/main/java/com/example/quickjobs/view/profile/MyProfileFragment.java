@@ -77,21 +77,17 @@ public class MyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_my_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         findInitViews();
 
-        signin_Button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent authIntent = new Intent(v.getContext(), AuthActivity.class);
-                startActivity(authIntent);
-
-            }
+        signin_Button.setOnClickListener(ignore -> {
+            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
+            startActivity(authIntent);
         });
 
 
-        return v;
+        return view;
     }
 
     public void initMainViewModel(){
@@ -99,8 +95,8 @@ public class MyProfileFragment extends Fragment {
     }
 
     private void initAuthentication(){
-        mainViewModel.isUserAnonymousMutableLiveData().observe(this, isUserAnonymous->{
-            if(isUserAnonymous==false){
+        mainViewModel.currentUserMutableLiveData.observe(this, currentUser->{
+            if(!currentUser.isAnonymous()){
                 signin_FrameLayout.setVisibility(View.GONE);
                 myprofile_ScrollView.setVisibility(View.VISIBLE);
                 getProfileInfo();

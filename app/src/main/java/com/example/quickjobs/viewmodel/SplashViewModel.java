@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.model.beans.QuickJob;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.repos.SplashRepository;
@@ -55,16 +56,20 @@ public class SplashViewModel extends AndroidViewModel {
         authenticatedUserLiveData = splashRepository.signInAnonymously();
     }
 
-    public void checkIfUserHasLocationAvailable(Context context){
-        locationAvailabilityLiveData = splashRepository.checkIfLocationIsAvailable(context);
+    public void checkIfUserHasLocationAvailable(Context context, LocationStateListener locationStateListener){
+        splashRepository.checkIfLocationIsAvailable(context,locationStateListener);
     }
 
     public void checkIfCurrentUserHasLocationPersisted(){
         authenticatedUserLiveData = splashRepository.checkIfCurrentUserHasLocationPersisted();
     }
 
-    public void getCurrentLocationFromLocationSource(Context context){
-        locationResultLiveData = splashRepository.getCurrentLocationFromLocationSource(context);
+    public void enableLocationUpdates(Context context, LocationStateListener locationStateListener){
+        splashRepository.enableLocationUpdates(context, locationStateListener);
+    }
+
+    public void getCurrentLocationFromLocationSource(Context context, LocationStateListener locationStateListener){
+        splashRepository.getCurrentLocationFromLocationSource(context, locationStateListener);
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){

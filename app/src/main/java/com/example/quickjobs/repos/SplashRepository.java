@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.helper.PermissionManager;
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.model.beans.QuickJob;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.model.source.JobSource;
@@ -49,18 +51,20 @@ public class SplashRepository{
         return userSource.firebaseAnonymousSignIn();
     }
 
-    public MutableLiveData<LocationAvailability> checkIfLocationIsAvailable(Context context){
-        return locationSource.getLocationAvailabilityMutableLiveData(context);
+    public void checkIfLocationIsAvailable(Context context, LocationStateListener listener){
+        locationSource.getLocationAvailability(context, listener);
     }
 
     public MutableLiveData<User> checkIfCurrentUserHasLocationPersisted(){
         return userSource.getCurrentUserMutableLiveData();
     }
 
-    public MutableLiveData<Location> getCurrentLocationFromLocationSource(Context context){
-        Log.println(Log.ERROR, TAG, "updateUserLocationAndPersistToCloud");
+    public void enableLocationUpdates(Context context, LocationStateListener locationStateListener){
+        locationSource.enableLocationUpdates(context, locationStateListener);
+    }
 
-        return locationSource.getSingleLocationMutableLiveData(context);
+    public void getCurrentLocationFromLocationSource(Context context, LocationStateListener locationStateListener){
+        locationSource.getSingleLocationMutableLiveData(context, locationStateListener);
     }
 
     public MutableLiveData<User> updateUserLocationAndPersist(Location location){

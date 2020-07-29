@@ -54,10 +54,23 @@ public class PermissionManager {
         }
     }
 
+    public void handlePermissionRequestResults(Context context, String permission, PermissionRequestResultListener listener){
+        if(shouldAskPermission(context, permission)){
+            listener.onPermissionDenied();
+        }else{
+            listener.onPermissionGranted();
+        }
+    }
+
     public interface PermissionAskListnener{
         void onNeedPermission();
         void onPermssionPreviouslyDenied();
         void onPermissionPreviouslyDeniedWithNeverAskAgain();
         void onPermissionGranted();
+    }
+
+    public interface PermissionRequestResultListener{
+        void onPermissionGranted();
+        void onPermissionDenied();
     }
 }
