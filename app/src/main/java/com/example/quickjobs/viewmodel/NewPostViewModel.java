@@ -25,7 +25,7 @@ public class NewPostViewModel extends AndroidViewModel {
         mainRepository = MainRepository.getInstance();
     }
 
-    MutableLiveData<Boolean> currentUser = new MutableLiveData<>();
+    public MutableLiveData<Boolean> currentUser = new MutableLiveData<>();
 
     public LiveData<Boolean> shouldNavigate(){
         return currentUser;

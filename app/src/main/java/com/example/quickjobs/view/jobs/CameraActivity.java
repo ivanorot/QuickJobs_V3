@@ -11,16 +11,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.example.quickjobs.R;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -62,7 +63,7 @@ public class CameraActivity extends AppCompatActivity {
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
-        imageview = (ImageView) findViewById(R.id.cameraActivity_imageView);
+       // imageview = (ImageView) findViewById(R.id.cameraActivity_imageView);
 
 
         previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
@@ -93,18 +94,22 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), "Button works.", Toast.LENGTH_SHORT).show();
-                imageCapture = new ImageCapture.Builder().build();
-                cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle((LifecycleOwner)v.getContext(), cameraSelector, imageCapture, cameraPreview);
+
+
                 imageCapture.takePicture(cameraExecutor, new ImageCapture.OnImageCapturedCallback() {
                     @Override
                     public void onCaptureSuccess(@NonNull ImageProxy image) {
-                        super.onCaptureSuccess(image);
-                        Toast.makeText(v.getContext(), "Image Capture papaw.", Toast.LENGTH_SHORT).show();
+                       super.onCaptureSuccess(image);
+                       Toast.makeText(v.getContext(), "Image Capture papaw.", Toast.LENGTH_SHORT).show();
                         Bitmap bitmap = convertImageProxytoBitmap(image);
                         saveImageIntoArray(bitmap);
                         displayImages();
                         image.close();
+
+
+
+
+
                         /*NEEDS WORK
                         *
                         NEEDS WORK
@@ -115,6 +120,13 @@ public class CameraActivity extends AppCompatActivity {
                         *
                         *
                         NEEDS WORK*/
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        super.onError(exception);
+                        Toast.makeText(v.getContext(), "ke pedo k pedo.", Toast.LENGTH_SHORT).show();
+
                     }
 
                     ;
@@ -198,14 +210,21 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void bindPreview() {
-        cameraPreview = new Preview.Builder().build();
+        cameraPreview = new Preview.Builder()
+                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+                .build();
+        imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY).build();
+
+
         cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
         try {
             Toast.makeText(this, "Binding.", Toast.LENGTH_SHORT).show();
             cameraProvider.unbindAll();
-            camera = cameraProvider.bindToLifecycle(this, cameraSelector, cameraPreview);
+            cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, cameraPreview);
+
+
             previewView.setPreferredImplementationMode(PreviewView.ImplementationMode.TEXTURE_VIEW);
             cameraPreview.setSurfaceProvider(previewView.createSurfaceProvider());
 
