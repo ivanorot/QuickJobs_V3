@@ -79,7 +79,7 @@ public class MyProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
-        findInitViews();
+        findInitViews(view);
 
         signin_Button.setOnClickListener(ignore -> {
             Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
@@ -104,10 +104,10 @@ public class MyProfileFragment extends Fragment {
         });
     }
 
-    private void findInitViews(){
-        signin_FrameLayout.findViewById(R.id.myProfile_signin_FrameLayout);
-        myprofile_ScrollView.findViewById(R.id.myProfile_ScrollView);
-        signin_Button.findViewById(R.id.myProfile_signin_button);
+    private void findInitViews(View v){
+        signin_FrameLayout = (FrameLayout) v.findViewById(R.id.myProfile_signin_FrameLayout);
+        myprofile_ScrollView = (ScrollView) v.findViewById(R.id.myProfile_ScrollView);
+        signin_Button = (Button) v.findViewById(R.id.myProfile_signin_button);
     }
 
     private void getProfileInfo(){

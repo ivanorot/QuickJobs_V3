@@ -3,7 +3,6 @@ package com.example.quickjobs.view.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.auth.AuthActivity;
-import com.example.quickjobs.view.jobs.NewPostActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
