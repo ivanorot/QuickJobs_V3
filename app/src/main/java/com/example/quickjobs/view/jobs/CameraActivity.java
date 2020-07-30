@@ -1,4 +1,5 @@
 package com.example.quickjobs.view.jobs;
+
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,6 +27,8 @@ import androidx.core.content.ContextCompat;
 import com.example.quickjobs.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -48,6 +51,8 @@ public class CameraActivity extends AppCompatActivity {
     private PreviewView previewView;
     private ProcessCameraProvider cameraProvider;
     private CameraSelector cameraSelector;
+    private OutputStream outputStream;
+    private ImageCapture.Metadata metadata;
 
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -63,7 +68,7 @@ public class CameraActivity extends AppCompatActivity {
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         image_capture_Button = (ImageButton) findViewById(R.id.cameraActivity_capture_imageButton);
-       // imageview = (ImageView) findViewById(R.id.cameraActivity_imageView);
+        imageview = (ImageView) findViewById(R.id.cameraActivity_imageView);
 
 
         previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
@@ -95,22 +100,39 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), "Button works.", Toast.LENGTH_SHORT).show();
 
+                outputStream = new ByteArrayOutputStream();
+                metadata = new ImageCapture.Metadata();
+                ImageCapture.OutputFileOptions outputOptions =
+                        new ImageCapture.OutputFileOptions
+                                .Builder(outputStream)
+                                .setMetadata(metadata)
+                                .build();
 
-                imageCapture.takePicture(cameraExecutor, new ImageCapture.OnImageCapturedCallback() {
+                imageCapture.takePicture(outputOptions, cameraExecutor, new ImageCapture.OnImageSavedCallback() {
                     @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+
+                      //  byte bytes[] = new byte[].equals(outputStream);
+                        //  ByteBuffer buffer = new ByteBuffer().
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        Toast.makeText(v.getContext(), "ke pedo k pedo.", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+ /*                   @Override
                     public void onCaptureSuccess(@NonNull ImageProxy image) {
                        super.onCaptureSuccess(image);
-                       Toast.makeText(v.getContext(), "Image Capture papaw.", Toast.LENGTH_SHORT).show();
+
                         Bitmap bitmap = convertImageProxytoBitmap(image);
                         saveImageIntoArray(bitmap);
                         displayImages();
                         image.close();
 
-
-
-
-
-                        /*NEEDS WORK
+                        *//*NEEDS WORK
                         *
                         NEEDS WORK
                         *
@@ -119,15 +141,9 @@ public class CameraActivity extends AppCompatActivity {
                         NEEDS WORK
                         *
                         *
-                        NEEDS WORK*/
+                        NEEDS WORK*//*
                     }
-
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        super.onError(exception);
-                        Toast.makeText(v.getContext(), "ke pedo k pedo.", Toast.LENGTH_SHORT).show();
-
-                    }
+*/
 
                     ;
                 });
@@ -210,15 +226,19 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void bindPreview() {
+       //Intitial build of CameraSelector, Preview, and ImageCapture
         cameraPreview = new Preview.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .build();
-        imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY).build();
-
-
+        imageCapture = new ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+                .build();
         cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
+
+
         try {
             Toast.makeText(this, "Binding.", Toast.LENGTH_SHORT).show();
             cameraProvider.unbindAll();

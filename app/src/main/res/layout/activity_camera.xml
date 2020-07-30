@@ -43,6 +43,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/cameraActivity_imageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/cameraActivity_capture_imageButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/baseline_image_black_48" />
+
             <ImageButton
                 android:id="@+id/cameraActivity_capture_imageButton"
                 android:layout_width="100dp"

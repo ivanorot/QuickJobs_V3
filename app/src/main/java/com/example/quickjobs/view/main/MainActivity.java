@@ -43,9 +43,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     public void initQuickJobsUser(){
         mainViewModel.initializeCurrentUser();
         mainViewModel.currentUserMutableLiveData.observe(this, currentUser -> {
-            Log.println(Log.ERROR, USER, "Display Name: " + currentUser.getDisplayName());
-            Log.println(Log.ERROR, USER, "Latitude: " + currentUser.getLatitude());
-            Log.println(Log.ERROR, USER, "Longitude: " + currentUser.getLongitude());
+
+                Log.println(Log.ERROR, USER, "Display Name: " + currentUser.getDisplayName());
+                Log.println(Log.ERROR, USER, "Latitude: " + currentUser.getLatitude());
+                Log.println(Log.ERROR, USER, "Longitude: " + currentUser.getLongitude());
+
         });
     }
 
