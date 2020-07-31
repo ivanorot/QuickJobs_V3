@@ -2,7 +2,6 @@ package com.example.quickjobs.view.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +38,7 @@ public class MyProfileFragment extends Fragment {
     Button signin_Button;
 
     private final int SETTINGS_REQUEST_CODE = 101;
+    private final int AUTH_REQUEST_CODE = 102;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,6 +79,7 @@ public class MyProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         initMainViewModel();
         initAuthentication();
     }
@@ -87,32 +89,50 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
-
+        initAuthentication();
         findInitViews(view);
         setHasOptionsMenu(true);
+        //Toast.makeText(getActivity(), "onCreateView method", Toast.LENGTH_SHORT).show();
 
-        signin_Button.setOnClickListener(ignore -> {
-            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
-            startActivity(authIntent);
-        });
+
 
 
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initAuthentication();
+
     }
 
     public void initMainViewModel(){
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
 
+    //*****************************************************************************************************************
     private void initAuthentication(){
-        mainViewModel.currentUserMutableLiveData.observe(this, currentUser->{
+        Toast.makeText(getActivity(), "Authentication method", Toast.LENGTH_SHORT).show();
+        mainViewModel.currentUserMutableLiveData.observeForever(currentUser->{
             if(!currentUser.isAnonymous()){
+                Toast.makeText(getActivity(), "is signed in", Toast.LENGTH_SHORT).show();
                 signin_FrameLayout.setVisibility(View.GONE);
                 myprofile_ScrollView.setVisibility(View.VISIBLE);
                 getProfileInfo();
             }
+            else {
+                Toast.makeText(getActivity(), "is not signed in", Toast.LENGTH_SHORT).show();
+                signin_Button.setOnClickListener(ignore -> {
+                    Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
+                    startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+                });
+            }
         });
     }
+
+    //*******************************************************************************************************
 
     private void findInitViews(View v){
         signin_FrameLayout = (FrameLayout) v.findViewById(R.id.myProfile_signin_FrameLayout);
@@ -147,6 +167,7 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        initAuthentication();
 
     }
 }
