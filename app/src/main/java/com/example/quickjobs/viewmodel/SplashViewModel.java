@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.helper.PermissionManager;
 import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.model.beans.QuickJob;
 import com.example.quickjobs.model.beans.User;
@@ -20,13 +21,10 @@ import java.util.List;
 public class SplashViewModel extends AndroidViewModel {
     private final String TAG = "SplashViewModel";
     private SplashRepository splashRepository;
+    private PermissionManager permissionManager;
 
     public LiveData<User> authenticatedUserLiveData;
     public LiveData<User> isUserAnonymousOrAuthenticatedLiveData;
-
-    public LiveData<LocationAvailability> locationAvailabilityLiveData;
-
-    public LiveData<Location> locationResultLiveData;
 
     public LiveData<List<QuickJob>> jobsBasedOnUserLocation;
 
@@ -36,6 +34,8 @@ public class SplashViewModel extends AndroidViewModel {
         super(application);
 
         splashRepository = new SplashRepository(application);
+        permissionManager = new PermissionManager(application);
+
         shouldMakeLoadingScreenVisible = new MutableLiveData<>(false);
 
     }
@@ -80,12 +80,20 @@ public class SplashViewModel extends AndroidViewModel {
         jobsBasedOnUserLocation = splashRepository.getJobsBasedOnUserLocation(longitude, latitude, maxDistance);
     }
 
+    public void enableSnapshotListeners(){
+        splashRepository.enableSnapshotListeners();
+    }
+
     public LiveData<Boolean> shouldMakeLoadingScreenVisible(){
         return shouldMakeLoadingScreenVisible;
     }
 
     public void setShouldMakeLoadingScreenVisible(Boolean loadFirstAttempt){
         shouldMakeLoadingScreenVisible.setValue(loadFirstAttempt);
+    }
+
+    public void checkPermission(){
+
     }
 
 }

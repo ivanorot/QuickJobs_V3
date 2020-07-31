@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.QuickJob;
+import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.repos.MainRepository;
 
 public class NewPostViewModel extends AndroidViewModel {
@@ -19,16 +20,16 @@ public class NewPostViewModel extends AndroidViewModel {
     MutableLiveData<QuickJob> quickJob = new MutableLiveData<>();
     MutableLiveData<QuickJob> completedJob = new MutableLiveData<>();
 
+    public LiveData<User> currentUser;
+
     public NewPostViewModel(@NonNull Application application) {
         super(application);
 
         mainRepository = MainRepository.getInstance();
     }
 
-    public MutableLiveData<Boolean> currentUser = new MutableLiveData<>();
-
-    public LiveData<Boolean> shouldNavigate(){
-        return currentUser;
+    public void initCurrentUser(){
+        currentUser = mainRepository.getCurrentUserMutableLiveData();
     }
 
     public LiveData<Boolean> getIsJobPostComplete() {
@@ -37,10 +38,6 @@ public class NewPostViewModel extends AndroidViewModel {
 
     public void setIsJobPostComplete(Boolean inIsJobPostComplete) {
         isJobPostComplete.setValue(inIsJobPostComplete);
-    }
-
-    public void setShouldNavigate(Boolean user){
-        currentUser.setValue(user);
     }
 
 }

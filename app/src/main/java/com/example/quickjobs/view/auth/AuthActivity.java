@@ -36,6 +36,8 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
+        Log.println(Log.ERROR, TAG, "Auth");
+
         initAuthViewModel();
         launchAuthentication();
 

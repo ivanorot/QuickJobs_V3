@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
@@ -14,9 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
-public class UserSource {
+public class UserSource implements EventListener<DocumentSnapshot> {
     private final String USER_COLLECTION_NAME = "users";
     private final String TAG = "UserSource";
 
@@ -29,11 +32,15 @@ public class UserSource {
 //  Authentication
     private User currentUser;
 
+
+//  Observable
+    private MutableLiveData<User> currentUserMutableLiveData;
     /*
 
      */
     private UserSource(FirebaseFirestore firebaseFirestore) {
         userCollectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
+        currentUserMutableLiveData = new MutableLiveData<>();
     }
 
     public static UserSource getInstance(FirebaseFirestore firebaseFirestore) {
@@ -46,6 +53,34 @@ public class UserSource {
     }
     ////
 
+    public void enableCurrentUserDocumentSnapshotListener(){
+        if(currentUser != null && !currentUser.isAnonymous()){
+            userCollectionReference.document(currentUser.getUid()).addSnapshotListener(this);
+        }
+    }
+
+    public void disableCurrentUserDocumentSnapshotListener(){
+        if(currentUser != null && !currentUser.isAnonymous()) {
+            userCollectionReference.document(currentUser.getUid()).addSnapshotListener(this).remove();
+        }
+    }
+
+    @Override
+    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+        if(error != null){
+            ExceptionHandler.consumeException(TAG, error);
+        }
+        else{
+            if(value != null){
+                currentUser = value.toObject(User.class);
+
+            }
+        }
+
+        if(currentUser != null){
+            currentUserMutableLiveData.setValue(currentUser);
+        }
+    }
 
     /*
 
@@ -111,6 +146,7 @@ public class UserSource {
                 }
             }
         });
+
 
         return userMutableLiveData;
     }
@@ -227,4 +263,16 @@ public class UserSource {
 
         return new MutableLiveData<>(currentUser);
     }
+
+    public void updateUserEmailInFirestore(String email){
+        userCollectionReference.document(currentUser.getUid()).update("emailAddress", email).addOnCompleteListener(updateEmailTask -> {
+           if(updateEmailTask.isSuccessful()){
+               currentUser.setEmailAddress(email);
+               currentUserMutableLiveData.setValue(currentUser);
+           }
+        });
+    }
+
+
+
 }

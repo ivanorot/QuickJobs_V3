@@ -1,0 +1,121 @@
+<PreferenceScreen
+    app:key="account_preferences"
+    android:fragment="com.example.quickjobs.view.settings.AccountSettingsFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/account_settings_account_settings_title">
+        <Preference
+            app:key="@string/account_settings_create_account_key"
+            app:title="@string/account_settings_create_account"
+            />
+        <Preference
+            app:key="@string/account_settings_reset_email_key"
+            app:title="@string/account_settings_update_email"
+            app:isPreferenceVisible="false"
+            app:fragment="com.example.quickjobs.view.settings.ResetCredentialsFragment"
+            />
+        <Preference
+            app:key="@string/account_settings_reset_password_key"
+            app:title="@string/account_settings_update_password"
+            app:isPreferenceVisible="false"
+            app:fragment="com.example.quickjobs.view.settings.ResetCredentialsFragment"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_general_title">
+        <SwitchPreference
+            app:key="@string/account_settings_dark_mode_key"
+            app:title="@string/account_settings_dark_mode"
+            app:switchTextOn="@string/on"
+            app:switchTextOff="@string/off"
+            app:summary="Dark Mode Conserves Battery"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_manage_subscription_title">
+        <Preference
+            app:key="@string/account_settings_subscription_type_display_key"
+            app:title="@string/account_settings_membership_type"/>
+        <Preference
+            app:key="@string/account_settings__upgrade_subscription_type_display_key"
+            app:title="@string/account_settings_membership_upgrade"
+            app:fragment="com.example.quickjobs.view.settings.UpgradeMembershipFragment"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_language_title">
+        <ListPreference
+            app:title="@string/account_settings_language"
+            app:entries="@array/supported_languages_entries"
+            app:entryValues="@array/supported_languages_entries"
+            app:defaultValue="@string/account_settings_language_default_value"
+            app:fragment="com.example.quickjobs.view.settings.LanguageFragment"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_notification_title">
+        <Preference
+            app:title="@string/account_settings_push_notifications"
+            app:fragment="com.example.quickjobs.view.settings.PushNotificationsFragment"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_data_usage_title">
+        <SwitchPreference
+            app:title="@string/account_settings_location_updates"
+            app:switchTextOff="@string/low"
+            app:switchTextOn="@string/normal"
+            app:summaryOn="@string/account_settings_location_updates_summary_on"
+            app:summaryOff="@string/account_settings_location_updates_summary_off"/>
+        <SwitchPreference
+            app:title="@string/account_settings_picture_quality"
+            app:switchTextOff="@string/low"
+            app:switchTextOn="@string/normal"
+            app:summaryOn="@string/account_settings_picture_quality_summary_on"
+            app:summaryOff="@string/account_settings_picture_quality_summary_off"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/account_settings_about_us_title">
+
+        <Preference
+            app:key="@string/about_us_private_policy_key"
+            app:title="@string/account_settings_private_policy"
+            app:fragment="com.example.quickjobs.view.settings.AboutUsFragment"
+            />
+        <Preference
+            app:key="@string/about_us_terms_of_service_key"
+            app:title="@string/account_settings_terms_of_service"
+            app:fragment="com.example.quickjobs.view.settings.AboutUsFragment"/>
+        <Preference
+            app:key="@string/about_us_feed_back_key"
+            app:title="@string/account_settings_feed_back"
+            app:fragment="com.example.quickjobs.view.settings.AboutUsFragment"/>
+        <Preference
+            app:key="@string/about_us_help_center_key"
+            app:title="@string/account_settings_help_center"
+            app:fragment="com.example.quickjobs.view.settings.AboutUsFragment"/>
+        <Preference
+            app:key="@string/about_us_follow_us_on_twitter_key"
+            app:title="@string/account_settings_follow_us_on_twitter"
+            app:fragment="com.example.quickjobs.view.settings.AboutUsFragment"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:isPreferenceVisible="false"
+        >
+        <Preference
+            app:key="@string/account_settings_sign_out_key"
+            app:title="@string/account_settings_sign_out"
+            app:isPreferenceVisible="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:isPreferenceVisible="false">
+        <Preference
+            app:key="@string/account_settings_delete_account_key"
+            app:title="@string/account_settings_delete_account"
+            app:isPreferenceVisible="false"
+            app:fragment="com.example.quickjobs.view.settings.AccountManagementFragment"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

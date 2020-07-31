@@ -1,58 +1,93 @@
 package com.example.quickjobs.view.settings;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.view.splash.SplashActivity;
+import com.example.quickjobs.viewmodel.SettingsViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity implements
-        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, FirebaseAuth.AuthStateListener {
 
-    private static final String TITLE_TAG = "settingsActivityTitle";
+    private SharedPreferences userPreferences;
+    private String prefName = "MY_PREF";
+
+    private static String TITLE_TAG = "accountSettingsTitle";
+    private SettingsViewModel settingsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-        if (savedInstanceState == null) {
+        setContentView(R.layout.activity_settings);
+
+        FirebaseAuth.getInstance().addAuthStateListener(this);
+        initViewModel();
+        initSettingsFragment(savedInstanceState);
+        initActionBar();
+
+    }
+
+    private void initViewModel(){
+        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        settingsViewModel.initCurrentUser();
+        settingsViewModel.currentUserLiveData.observe(this, currentUser ->{
+//            c
+        });
+    }
+
+    private void initSettingsFragment(Bundle savedInstanceState){
+        if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings, new HeaderFragment())
+                    .replace(R.id.account_preferences, new AccountSettingsFragment())
                     .commit();
-        } else {
+        } else
+        {
             setTitle(savedInstanceState.getCharSequence(TITLE_TAG));
         }
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    @Override
-                    public void onBackStackChanged() {
-                        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                            setTitle(R.string.title_activity_settings);
-                        }
-                    }
-                });
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            if(getSupportFragmentManager().getBackStackEntryCount() == 0){
+                setTitle(R.string.account_settings_title);
+            }
+        });
+    }
+
+    private void initActionBar(){
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Save current activity title so we can set it again after a configuration change
         outState.putCharSequence(TITLE_TAG, getTitle());
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (getSupportFragmentManager().popBackStackImmediate()) {
+        if(getSupportFragmentManager().popBackStackImmediate()){
             return true;
         }
         return super.onSupportNavigateUp();
@@ -60,43 +95,33 @@ public class SettingsActivity extends AppCompatActivity implements
 
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
-        // Instantiate the new Fragment
         final Bundle args = pref.getExtras();
         final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
                 getClassLoader(),
                 pref.getFragment());
+
         fragment.setArguments(args);
-        fragment.setTargetFragment(caller, 0);
-        // Replace the existing Fragment with the new Fragment
+        fragment.setTargetFragment(caller,0);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.settings, fragment)
+                .replace(R.id.account_preferences, fragment)
                 .addToBackStack(null)
                 .commit();
         setTitle(pref.getTitle());
+
         return true;
     }
 
-    public static class HeaderFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.header_preferences, rootKey);
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        Log.println(Log.ERROR, "onAuthStateChanged","signing user out");
+        if(firebaseAuth.getCurrentUser() == null){
+            goToSplashScreen();
         }
     }
 
-    public static class MessagesFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.messages_preferences, rootKey);
-        }
-    }
-
-    public static class SyncFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.sync_preferences, rootKey);
-        }
+    public void goToSplashScreen(){
+        Intent intent = new Intent(SettingsActivity.this, SplashActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

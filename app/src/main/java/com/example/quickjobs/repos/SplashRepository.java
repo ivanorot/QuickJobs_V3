@@ -74,4 +74,8 @@ public class SplashRepository{
     public MutableLiveData<List<QuickJob>> getJobsBasedOnUserLocation(double longitude, double latitude, int maxDistance){
         return jobSource.getQuickJobsNearUserLocation(longitude, latitude, maxDistance);
     }
+
+    public void enableSnapshotListeners(){
+        userSource.enableCurrentUserDocumentSnapshotListener();
+    }
 }

@@ -17,21 +17,8 @@ public class NewPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
         newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
-/*        Toast.makeText(this, "Atleast it reads this", Toast.LENGTH_SHORT);
-        newPostViewModel.currentUser.observe(this, currentUser-> {
-                    if (currentUser) {
-                        Toast.makeText(this, "Creating Layout", Toast.LENGTH_SHORT);
+        newPostViewModel.currentUser.observe(this, currentUser -> {
 
-                    }
-                    else{
-                        Intent authIntent = new Intent(this, AuthActivity.class);
-                        startActivity(authIntent);
-                        Toast.makeText(this, "NOPE", Toast.LENGTH_SHORT);
-                    }
-
-                });*/
-
-
-
+        });
    }
 }

@@ -2,18 +2,25 @@ package com.example.quickjobs.view.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.view.auth.AuthActivity;
+import com.example.quickjobs.view.settings.SettingsActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
 
 /**
@@ -29,6 +36,8 @@ public class MyProfileFragment extends Fragment {
     private ScrollView myprofile_ScrollView;
 
     Button signin_Button;
+
+    private final int SETTINGS_REQUEST_CODE = 101;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,6 +89,7 @@ public class MyProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         findInitViews(view);
+        setHasOptionsMenu(true);
 
         signin_Button.setOnClickListener(ignore -> {
             Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
@@ -112,5 +122,31 @@ public class MyProfileFragment extends Fragment {
 
     private void getProfileInfo(){
         //TODO: Fill myProfile with user info
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.profile_action_bar_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.accountSettingsCog){
+            goToAccountSettings();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void goToAccountSettings(){
+        Intent intent = new Intent(requireActivity(), SettingsActivity.class);
+        startActivityForResult(intent, SETTINGS_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

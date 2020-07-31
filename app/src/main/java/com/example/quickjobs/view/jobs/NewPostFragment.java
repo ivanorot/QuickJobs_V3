@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.view.camera.CameraActivity;
 import com.example.quickjobs.viewmodel.NewPostViewModel;
 
 

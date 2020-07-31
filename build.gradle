@@ -32,6 +32,7 @@ ext {
     rxandroid = "2.1.1"
     rxjava = '2.2.19'
     rxbinding = "3.0.0"
+    preference_version = "1.1.1"
 }
 
 task clean(type: Delete) {

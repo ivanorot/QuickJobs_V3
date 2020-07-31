@@ -1,4 +1,4 @@
-package com.example.quickjobs.view;
+package com.example.quickjobs.view.jobs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

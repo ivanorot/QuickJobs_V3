@@ -87,6 +87,10 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.github.blocoio:faker:1.2.8'
+
+    implementation 'com.google.android.material:material:1.1.0'
+
+    implementation "androidx.preference:preference:$preference_version"
 }
 repositories {
     mavenCentral()

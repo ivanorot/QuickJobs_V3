@@ -127,6 +127,7 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
             }
             else{
                 Log.println(Log.ERROR, TAG, "getUserFromDatabase -> checkIfUserLocationIsAvailable");
+                enableSnapshotListeners();
                 checkIfUserLocationIsAvailable();
             }
         });
@@ -140,7 +141,8 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
             @Override
             public void onNeedPermission() {
                 Log.println(Log.ERROR, TAG, "Requesting location permission");
-                ActivityCompat.requestPermissions(SplashActivity.this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
+                ActivityCompat.requestPermissions(SplashActivity.this,
+                        new String[] { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
             }
 
             @Override
@@ -166,10 +168,10 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
 
     private void checkPermissionResults(){
         Log.println(Log.ERROR, TAG, "Checking permission results");
+
         permissionManager.handlePermissionRequestResults(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionRequestResultListener() {
             @Override
             public void onPermissionGranted() {
-//              todo set loading bar visible
                 splashViewModel.enableLocationUpdates(getApplicationContext(), SplashActivity.this);
                 checkIfLocationIsAvailable();
             }
@@ -203,7 +205,6 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
     }
 
     private void checkIfLocationIsAvailable(){
-//      TODO start loading screen until location is supplied exit the app after 5-10 seconds with error message.
         splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
     }
 
@@ -218,14 +219,16 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
         Log.println(Log.ERROR, TAG, "onLocationNotAvailable: locationNotAvailable");
         if(textView.getVisibility() != View.GONE){
             textView.setVisibility(View.GONE);
+
             splashViewModel.setShouldMakeLoadingScreenVisible(true);
+
         }
         splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
     }
 
     @Override
     public void onLocationChange(Location locationResults) {
-        getQuickJobsBasedOnUserLocation(locationResults.getLongitude(), locationResults.getLatitude());
+        updateUserLocationAndPersistToCloud(locationResults);
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
@@ -238,13 +241,14 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
 
     public void getQuickJobsBasedOnUserLocation(double longitude, double latitude){
         final int MAX_DISTANCE = 25;
-        final int NO_JOBS = 0;
-        Log.println(Log.ERROR, TAG, "Longitude: " + longitude);
-        Log.println(Log.ERROR, TAG, "Latitude: " + latitude);
         splashViewModel.getJobsBasedOnUserLocation(longitude, latitude, MAX_DISTANCE);
         splashViewModel.jobsBasedOnUserLocation.observe(this, jobs -> {
             goToMainActivity();
         });
+    }
+
+    public void enableSnapshotListeners(){
+        splashViewModel.enableSnapshotListeners();
     }
 
     private void showLocationRationale(){
@@ -287,35 +291,6 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
                 .setPositiveButton("SIGN IN", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     goToAuthActivity();
-                }).show();
-    }
-
-    private void dialogForFailedJobs(){
-        new AlertDialog.Builder(this).setTitle("Error finding jobs")
-                .setMessage("retry later")
-                .setCancelable(false)
-                .setNegativeButton("LEAVE", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    finish();
-                })
-                .setPositiveButton("RETRY", (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    splashViewModel.authenticatedUserLiveData.observe(this, user -> {
-                        getQuickJobsBasedOnUserLocation(user.getLongitude(), user.getLatitude());
-                    });
-                })
-                .show();
-    }
-
-    private void dialogBeforeForClose(){
-        new AlertDialog.Builder(this).setTitle("Permission Denied")
-                .setMessage("")
-                .setCancelable(false)
-                .setNegativeButton("RETRY", (dialogInterface, i) -> {
-                    checkLocationPermission();
-                })
-                .setPositiveButton("CONTINUE", (dialogInterface, i) -> {
-                    finish();
                 }).show();
     }
 

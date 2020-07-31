@@ -3,6 +3,8 @@ package com.example.quickjobs.view.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class MainActivity extends AppCompatActivity{
     private final String TAG = "MainActivity";
     private final String USER = "user";
 
@@ -43,9 +45,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     public void initQuickJobsUser(){
         mainViewModel.initializeCurrentUser();
         mainViewModel.currentUserMutableLiveData.observe(this, currentUser -> {
-            Log.println(Log.ERROR, USER, "Display Name: " + currentUser.getDisplayName());
-            Log.println(Log.ERROR, USER, "Latitude: " + currentUser.getLatitude());
-            Log.println(Log.ERROR, USER, "Longitude: " + currentUser.getLongitude());
         });
     }
 
@@ -55,48 +54,15 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser == null){
-            signInAnonymously();
-        }
-    }
-
-    //Double check from here down**********************************************************************************
-    public void signOut(){
-        FirebaseAuth.getInstance().signOut();
-    }
-
-    private void signInAnonymously(){
-        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(anonTask ->
-        {
-            if(anonTask.isSuccessful()){
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if(firebaseUser != null){
-                    User user = new User(firebaseUser);
-                    user.setDisplayName("anonymous user");
-                    user.setAnonymous(true);
-                    mainViewModel.setCurrentUserAnonymous(user);
-                }
-                else{
-                    goToAuthActivity();
-                }
-            }
-            else{
-                goToAuthActivity();
-            }
-        });
-    }
-
     private void goToAuthActivity(){
         Intent intent = new Intent(MainActivity.this, AuthActivity.class);
         startActivity(intent);
         finish();
     }
 
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 }

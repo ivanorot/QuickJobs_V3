@@ -9,4 +9,21 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <array name="supported_languages_entries">
+        <item>English</item>
+        <item>Spanish</item>
+    </array>
+    <string-array name="supported_languages_values">
+        <item>English</item>
+        <item>Spanish</item>
+    </string-array>
+
+    <string-array name="sign_out_values">
+        <item>Sign Out</item>
+    </string-array>
+
+    <array name="sign_out_entries">
+        <item>Sign Out</item>
+    </array>
 </resources>

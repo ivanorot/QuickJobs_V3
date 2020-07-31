@@ -1,9 +1,14 @@
-package com.example.quickjobs.view.jobs;
+package com.example.quickjobs.view.camera;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,6 +29,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.helper.PermissionManager;
+import com.example.quickjobs.view.splash.SplashActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.nio.ByteBuffer;
@@ -52,6 +59,12 @@ public class CameraActivity extends AppCompatActivity {
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
+    /*
+    Joseph Permission Manager
+     */
+    private final int CAMERA_REQUEST_ID = 201;
+    PermissionManager permissionManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +82,7 @@ public class CameraActivity extends AppCompatActivity {
         previewView = (PreviewView) findViewById(R.id.cameraActivity_viewFinder);
 
 
-        cameraPermission();
+        checkCameraPermission();
 
 
         setButtonClickListener();
@@ -183,18 +196,7 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUESTED_CODE_PERMISSIONS) {
-            if (allPermissionGranted()) {
-                startCamera();
-            } else {
-                Toast.makeText(this, "Permission not granted by user.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+
 
     private boolean allPermissionGranted() {
         int permissions_count = REQUIRED_PERSMISSIONS.length;
@@ -233,5 +235,99 @@ public class CameraActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+    }
+
+    /*
+    Joseph Permission Architecture
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        checkPermissionResults();
+    }
+
+    private void initPermissionManger(){
+        permissionManager = new PermissionManager(getApplicationContext());
+    }
+
+    private void checkCameraPermission(){
+        initPermissionManger();
+        permissionManager.checkPermission(this, Manifest.permission.CAMERA, new PermissionManager.PermissionAskListnener() {
+            @Override
+            public void onNeedPermission() {
+                Log.println(Log.ERROR, TAG, "Requesting location permission");
+                ActivityCompat.requestPermissions(CameraActivity.this,
+                        new String[] { Manifest.permission.CAMERA}, CAMERA_REQUEST_ID);
+            }
+
+            @Override
+            public void onPermssionPreviouslyDenied() {
+                Log.println(Log.ERROR, TAG, "informing user why we need location services");
+                showRationale();
+            }
+
+            @Override
+            public void onPermissionPreviouslyDeniedWithNeverAskAgain() {
+                Log.println(Log.ERROR, TAG, "sending user to settings to change location permission");
+                dialogForSettings();
+            }
+
+            @Override
+            public void onPermissionGranted() {
+                Log.println(Log.ERROR, TAG, "checkLocationPermission -> onPermissionGranted -> checkIfLocationIsAvailable");
+                startCamera();
+            }
+        });
+    }
+
+    private void checkPermissionResults(){
+        permissionManager.handlePermissionRequestResults(getApplicationContext(), Manifest.permission.CAMERA, new PermissionManager.PermissionRequestResultListener() {
+            @Override
+            public void onPermissionGranted() {
+                startCamera();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                checkCameraPermission();
+            }
+        });
+    }
+
+    private void showRationale(){
+        new AlertDialog.Builder(this).setTitle("Permission Denied")
+                .setMessage("Without this permission this app is unable to find jobs. Are you sure you want to Deny this message")
+                .setCancelable(false)
+                .setNegativeButton("IM SURE", (dialogInterface, i ) -> {
+                    dialogInterface.dismiss();
+                    finish();
+                })
+                .setPositiveButton("RETRY", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    ActivityCompat.requestPermissions(CameraActivity.this, new String[]
+                            { Manifest.permission.CAMERA}, CAMERA_REQUEST_ID);
+                }).show();
+    }
+
+    private void dialogForSettings(){
+        new AlertDialog.Builder(this).setTitle("Permission Denied")
+                .setMessage("Now you must allow location access from settings.")
+                .setCancelable(false)
+                .setNegativeButton("NOT NOW", ((dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    finish();
+                }))
+                .setPositiveButton("SETTINGS", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    goToSettings();
+                }).show();
+    }
+
+    private void goToSettings(){
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.parse("package:" + getPackageName());
+        intent.setData(uri);
+        startActivity(intent);
     }
 }
