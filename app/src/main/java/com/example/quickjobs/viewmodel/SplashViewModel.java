@@ -92,8 +92,12 @@ public class SplashViewModel extends AndroidViewModel {
         shouldMakeLoadingScreenVisible.setValue(loadFirstAttempt);
     }
 
-    public void checkPermission(){
+    public void register(LocationStateListener locationStateListener){
+        splashRepository.register(locationStateListener);
+    }
 
+    public void unregister(LocationStateListener locationStateListener){
+        splashRepository.unregister(locationStateListener);
     }
 
 }

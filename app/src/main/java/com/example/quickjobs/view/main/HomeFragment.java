@@ -1,9 +1,11 @@
 package com.example.quickjobs.view.main;
 
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.interfaces.LocationStateListener;
+import com.example.quickjobs.viewmodel.MainViewModel;
+import com.google.android.gms.location.LocationAvailability;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements LocationStateListener {
     private final String TAG = "HomeFragment";
      
     @Override
@@ -29,7 +34,8 @@ public class HomeFragment extends Fragment {
 
 
     public void initMainViewModel(){
-
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.register(this);
     }
 
 
@@ -47,5 +53,20 @@ public class HomeFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLocationAvailable(LocationAvailability locationAvailability) {
+
+    }
+
+    @Override
+    public void onLocationChange(Location location) {
+        Log.println(Log.ERROR, TAG, location.getLatitude() + " ");
+    }
+
+    @Override
+    public void onLocationNotAvailable() {
+
     }
 }

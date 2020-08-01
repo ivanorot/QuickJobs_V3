@@ -1,21 +1,27 @@
 package com.example.quickjobs.view.jobs;
 
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.interfaces.LocationStateListener;
+import com.example.quickjobs.viewmodel.MainViewModel;
+import com.google.android.gms.location.LocationAvailability;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MyJobFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyJobFragment extends Fragment {
+public class MyJobFragment extends Fragment implements LocationStateListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +67,28 @@ public class MyJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_job, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_job, container, false);
+
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        mainViewModel.register(this);
+
+        return view;
+    }
+
+    @Override
+    public void onLocationAvailable(LocationAvailability locationAvailability) {
+
+    }
+
+    @Override
+    public void onLocationChange(Location locationResults) {
+        String TAG = "MyJobFragment";
+        Log.println(Log.ERROR, TAG, locationResults.getLatitude() + " ");
+    }
+
+    @Override
+    public void onLocationNotAvailable() {
+
     }
 }

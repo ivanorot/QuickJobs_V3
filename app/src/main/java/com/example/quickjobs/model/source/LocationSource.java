@@ -40,6 +40,8 @@ public class LocationSource extends FusedLocationProviderClient{
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
+    List<LocationStateListener> locationStateListeners;
+
     private LocationSource(@NonNull Context context) {
         super(context);
 
@@ -49,6 +51,16 @@ public class LocationSource extends FusedLocationProviderClient{
         locationRequest.setSmallestDisplacement(DEFAULT_DISPLACEMENT);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        locationStateListeners = new ArrayList<>();
+
+    }
+
+    public void register(LocationStateListener locationStateListener){
+        locationStateListeners.add(locationStateListener);
+    }
+
+    public void unregister(LocationStateListener locationStateListener){
+        locationStateListeners.remove(locationStateListener);
     }
 
     public static LocationSource getInstance(Context context) {
@@ -87,13 +99,16 @@ public class LocationSource extends FusedLocationProviderClient{
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     super.onLocationResult(locationResult);
-                    locationStateListener.onLocationChange(locationResult.getLastLocation());
+                    Log.println(Log.ERROR, TAG, locationResult.getLastLocation() + "");
+                    for(LocationStateListener temp : locationStateListeners){
+                        temp.onLocationChange(locationResult.getLastLocation());
+                    }
                 }
 
                 @Override
                 public void onLocationAvailability(LocationAvailability locationAvailability) {
                     super.onLocationAvailability(locationAvailability);
-                    locationStateListener.onLocationAvailable(locationAvailability);
+//                    locationStateListener.onLocationAvailable(locationAvailability);
                 }
             };
             requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());

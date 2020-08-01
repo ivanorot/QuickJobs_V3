@@ -50,9 +50,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
         settingsViewModel.currentUserLiveData.observe(this, currentUser -> {
-            if(!currentUser.isAnonymous()){
-                show();
-            }
+
         });
     }
 

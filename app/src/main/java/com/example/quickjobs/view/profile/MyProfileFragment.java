@@ -1,6 +1,7 @@
 package com.example.quickjobs.view.profile;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,16 +20,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.settings.SettingsActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
+import com.google.android.gms.location.LocationAvailability;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MyProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements LocationStateListener {
     private final String TAG = "MyProfile";
     private MainViewModel mainViewModel;
 
@@ -91,6 +94,8 @@ public class MyProfileFragment extends Fragment {
         findInitViews(view);
         setHasOptionsMenu(true);
 
+        mainViewModel.register(this);
+
         signin_Button.setOnClickListener(ignore -> {
             Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
             startActivity(authIntent);
@@ -147,6 +152,21 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onLocationAvailable(LocationAvailability locationAvailability) {
+
+    }
+
+    @Override
+    public void onLocationChange(Location locationResults) {
+        Log.println(Log.ERROR, TAG, locationResults.getLatitude() + " ");
+    }
+
+    @Override
+    public void onLocationNotAvailable() {
 
     }
 }

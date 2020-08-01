@@ -78,4 +78,12 @@ public class SplashRepository{
     public void enableSnapshotListeners(){
         userSource.enableCurrentUserDocumentSnapshotListener();
     }
+
+    public void register(LocationStateListener locationStateListener){
+        locationSource.register(locationStateListener);
+    }
+
+    public void unregister(LocationStateListener locationStateListener){
+        locationSource.unregister(locationStateListener);
+    }
 }

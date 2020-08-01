@@ -51,6 +51,8 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
         initPermissionManager();
         checkIfUserIsAnonymousAndAuthenticated();
 
+        splashViewModel.register(this);
+
     }
 
     private void initSplashViewModel(){
@@ -299,12 +301,14 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
      */
 
     private void goToAuthActivity(){
+        splashViewModel.unregister(this);
         Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void goToMainActivity(){
+        splashViewModel.unregister(this);
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

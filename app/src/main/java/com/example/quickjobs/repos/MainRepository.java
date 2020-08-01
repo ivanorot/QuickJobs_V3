@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.interfaces.LocationStateListener;
 import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.model.source.JobSource;
 import com.example.quickjobs.model.source.LocationSource;
@@ -47,5 +48,9 @@ public class MainRepository {
 
     public void addAnonymousUserToSource(User anonymousUser){
         userSource.addAnonymousUserToLiveData(anonymousUser);
+    }
+
+    public void register(LocationStateListener locationStateListener){
+        locationSource.register(locationStateListener);
     }
 }
