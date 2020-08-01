@@ -24,6 +24,6 @@ public class SettingsViewModel extends AndroidViewModel {
     }
 
     public void resetCurrentUserEmailAndPersistToCloud(String Email){
-//        settingsRepository.
+        //settingsRepository.
     }
 }
