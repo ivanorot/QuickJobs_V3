@@ -16,17 +16,17 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.helper.Constants;
+import com.example.quickjobs.helper.Enumerations;
 import com.example.quickjobs.view.splash.SplashActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity implements
-        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, FirebaseAuth.AuthStateListener {
-
-    private SharedPreferences userPreferences;
-    private String prefName = "MY_PREF";
-
+        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback, FirebaseAuth.AuthStateListener{
     private static String TITLE_TAG = "accountSettingsTitle";
+
+
     private SettingsViewModel settingsViewModel;
 
     @Override
@@ -45,8 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
         settingsViewModel.currentUserLiveData.observe(this, currentUser ->{
-//            c
-        });
+        });;
     }
 
     private void initSettingsFragment(Bundle savedInstanceState){

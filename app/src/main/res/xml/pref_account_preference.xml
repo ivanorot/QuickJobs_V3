@@ -28,6 +28,7 @@
             app:title="@string/account_settings_dark_mode"
             app:switchTextOn="@string/on"
             app:switchTextOff="@string/off"
+            android:defaultValue="false"
             app:summary="Dark Mode Conserves Battery"/>
     </PreferenceCategory>
 
@@ -36,7 +37,7 @@
             app:key="@string/account_settings_subscription_type_display_key"
             app:title="@string/account_settings_membership_type"/>
         <Preference
-            app:key="@string/account_settings__upgrade_subscription_type_display_key"
+            app:key="@string/account_settings_upgrade_subscription_type_display_key"
             app:title="@string/account_settings_membership_upgrade"
             app:fragment="com.example.quickjobs.view.settings.UpgradeMembershipFragment"
             />
@@ -60,15 +61,19 @@
 
     <PreferenceCategory app:title="@string/account_settings_data_usage_title">
         <SwitchPreference
+            app:key="@string/account_settings_location_updates_key"
             app:title="@string/account_settings_location_updates"
             app:switchTextOff="@string/low"
             app:switchTextOn="@string/normal"
+            android:defaultValue="true"
             app:summaryOn="@string/account_settings_location_updates_summary_on"
             app:summaryOff="@string/account_settings_location_updates_summary_off"/>
         <SwitchPreference
+            android:key="@string/account_settings_image_resolution_key"
             app:title="@string/account_settings_picture_quality"
             app:switchTextOff="@string/low"
             app:switchTextOn="@string/normal"
+            android:defaultValue="true"
             app:summaryOn="@string/account_settings_picture_quality_summary_on"
             app:summaryOff="@string/account_settings_picture_quality_summary_off"
             />

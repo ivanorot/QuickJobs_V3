@@ -2,11 +2,8 @@ package com.example.quickjobs.view.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -14,12 +11,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity{
     private final String TAG = "MainActivity";

@@ -4,24 +4,25 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.source.JobSource;
-import com.example.quickjobs.model.source.LocationSource;
-import com.example.quickjobs.model.source.UserSource;
+import com.example.quickjobs.model.User;
+import com.example.quickjobs.source.LocationSource;
+import com.example.quickjobs.source.SharedPreferencesManager;
+import com.example.quickjobs.source.UserSource;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SettingsRepository {
     private static SettingsRepository Instance;
 
     private UserSource userSource;
-    private JobSource jobSource;
     private LocationSource locationSource;
+
+    private SharedPreferencesManager sharedPreferencesManager;
 
     private SettingsRepository(Context context){
         userSource = UserSource.getInstance(FirebaseFirestore.getInstance());
-        jobSource = JobSource.getInstance(FirebaseFirestore.getInstance());
-//        locationSource = LocationSource.getInstance(context);
+        locationSource = LocationSource.getInstance(context);
 
+        sharedPreferencesManager = SharedPreferencesManager.getInstance(context);
     }
 
 
@@ -38,8 +39,12 @@ public class SettingsRepository {
         return userSource.getCurrentUserMutableLiveData();
     }
 
-    public void updateUserEmailInFirestore(){
-//        userSource.updateUserEmailInFirestore();
+    public void loadDefaultSettings(Context context){
+        locationSource.setDefaultSettings(context);
+    }
+
+    public void loadLowFrequencySettings(Context context){
+        locationSource.setLowFrequencySettings(context);
     }
 
 }

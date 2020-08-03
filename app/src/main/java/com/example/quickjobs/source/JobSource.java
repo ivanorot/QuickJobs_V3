@@ -1,8 +1,8 @@
-package com.example.quickjobs.model.source;
+package com.example.quickjobs.source;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.model.beans.QuickJob;
+import com.example.quickjobs.model.QuickJob;
 import com.example.quickjobs.helper.ExceptionHandler;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;

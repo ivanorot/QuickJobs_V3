@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.source;
+package com.example.quickjobs.source;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;

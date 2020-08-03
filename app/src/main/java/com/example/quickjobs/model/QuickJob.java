@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.beans;
+package com.example.quickjobs.model;
 
 import java.util.ArrayList;
 import java.util.List;

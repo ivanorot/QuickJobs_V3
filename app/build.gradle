@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.quickjobs"
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -65,7 +65,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
 
-    implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
     implementation 'com.google.firebase:firebase-core:17.4.4'
     implementation 'com.google.firebase:firebase-auth:19.3.2'
     implementation 'com.google.firebase:firebase-firestore:21.5.0'

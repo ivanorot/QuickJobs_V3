@@ -4,11 +4,11 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.interfaces.LocationStateListener;
-import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.source.JobSource;
-import com.example.quickjobs.model.source.LocationSource;
-import com.example.quickjobs.model.source.UserSource;
+import com.example.quickjobs.interfaces.LocationChangeListener;
+import com.example.quickjobs.model.User;
+import com.example.quickjobs.source.JobSource;
+import com.example.quickjobs.source.LocationSource;
+import com.example.quickjobs.source.UserSource;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainRepository {
@@ -50,7 +50,7 @@ public class MainRepository {
         userSource.addAnonymousUserToLiveData(anonymousUser);
     }
 
-    public void register(LocationStateListener locationStateListener){
-        locationSource.register(locationStateListener);
+    public void register(LocationChangeListener locationChangeListener){
+        locationSource.registerLocationChangeListener(locationChangeListener);
     }
 }

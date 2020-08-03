@@ -1,42 +1,35 @@
 package com.example.quickjobs.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.quickjobs.source.SharedPreferencesManager;
+
 public class SessionManager {
 
-    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
+
+
+    private SharedPreferencesManager sharedPreferencesManager;
 
     private final String MY_REF = "my_preferences";
 
     public SessionManager(Context context){
-        sharedPreferences = context.getSharedPreferences(MY_REF, Context.MODE_PRIVATE);
+        sharedPreferencesManager = SharedPreferencesManager.getInstance(context);
     }
 
     public void firstTimeAsking(String permission, boolean isFirstTimeAsking){
-        doEdit();
-        sharedPreferencesEditor.putBoolean(permission, isFirstTimeAsking);
-        doCommit();
+        sharedPreferencesManager.updatePermissionPreferences(permission, isFirstTimeAsking);
     }
 
     public boolean isFirstTimeAsking(String permission){
-        return sharedPreferences.getBoolean(permission, true);
+        return sharedPreferencesManager.getValueFromPermissionPreferences(permission, true);
     }
 
-    private void doEdit(){
-        if(sharedPreferencesEditor == null){
-            synchronized (SharedPreferences.Editor.class){
-                sharedPreferencesEditor = sharedPreferences.edit();
-            }
-        }
-    }
-
-    private void doCommit(){
-        if(sharedPreferencesEditor != null){
-            sharedPreferencesEditor.commit();
-            sharedPreferencesEditor = null;
-
+    public void firstTimeAsking(String[] permissions, boolean isFirstTimeAsking){
+        for(String permission: permissions){
+            sharedPreferencesManager.updatePermissionPreferences(permission, isFirstTimeAsking);
         }
     }
 }

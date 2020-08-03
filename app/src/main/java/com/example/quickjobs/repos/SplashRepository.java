@@ -2,18 +2,15 @@ package com.example.quickjobs.repos;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.helper.PermissionManager;
-import com.example.quickjobs.interfaces.LocationStateListener;
-import com.example.quickjobs.model.beans.QuickJob;
-import com.example.quickjobs.model.beans.User;
-import com.example.quickjobs.model.source.JobSource;
-import com.example.quickjobs.model.source.LocationSource;
-import com.example.quickjobs.model.source.UserSource;
-import com.google.android.gms.location.LocationAvailability;
+import com.example.quickjobs.interfaces.LocationChangeListener;
+import com.example.quickjobs.model.QuickJob;
+import com.example.quickjobs.model.User;
+import com.example.quickjobs.source.JobSource;
+import com.example.quickjobs.source.LocationSource;
+import com.example.quickjobs.source.UserSource;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -51,20 +48,12 @@ public class SplashRepository{
         return userSource.firebaseAnonymousSignIn();
     }
 
-    public void checkIfLocationIsAvailable(Context context, LocationStateListener listener){
-        locationSource.getLocationAvailability(context, listener);
-    }
-
     public MutableLiveData<User> checkIfCurrentUserHasLocationPersisted(){
         return userSource.getCurrentUserMutableLiveData();
     }
 
-    public void enableLocationUpdates(Context context, LocationStateListener locationStateListener){
-        locationSource.enableLocationUpdates(context, locationStateListener);
-    }
-
-    public void getCurrentLocationFromLocationSource(Context context, LocationStateListener locationStateListener){
-        locationSource.getSingleLocationMutableLiveData(context, locationStateListener);
+    public void enableLocationUpdates(Context context){
+        locationSource.enableLocationUpdates(context);
     }
 
     public MutableLiveData<User> updateUserLocationAndPersist(Location location){
@@ -79,11 +68,11 @@ public class SplashRepository{
         userSource.enableCurrentUserDocumentSnapshotListener();
     }
 
-    public void register(LocationStateListener locationStateListener){
-        locationSource.register(locationStateListener);
+    public void register(LocationChangeListener locationChangeListener){
+        locationSource.registerLocationChangeListener(locationChangeListener);
     }
 
-    public void unregister(LocationStateListener locationStateListener){
-        locationSource.unregister(locationStateListener);
+    public void unregister(LocationChangeListener locationChangeListener){
+        locationSource.unregisterLocationChangeListener(locationChangeListener);
     }
 }

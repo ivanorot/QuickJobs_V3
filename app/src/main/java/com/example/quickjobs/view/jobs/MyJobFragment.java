@@ -12,16 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.interfaces.LocationStateListener;
+import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationResult;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MyJobFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyJobFragment extends Fragment implements LocationStateListener {
+public class MyJobFragment extends Fragment implements LocationChangeListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,18 +78,7 @@ public class MyJobFragment extends Fragment implements LocationStateListener {
     }
 
     @Override
-    public void onLocationAvailable(LocationAvailability locationAvailability) {
-
-    }
-
-    @Override
-    public void onLocationChange(Location locationResults) {
-        String TAG = "MyJobFragment";
-        Log.println(Log.ERROR, TAG, locationResults.getLatitude() + " ");
-    }
-
-    @Override
-    public void onLocationNotAvailable() {
+    public void onLocationChange(LocationResult locationResults) {
 
     }
 }

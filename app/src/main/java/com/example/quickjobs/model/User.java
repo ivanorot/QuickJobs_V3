@@ -1,4 +1,4 @@
-package com.example.quickjobs.model.beans;
+package com.example.quickjobs.model;
 
 import android.location.Address;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class    User implements Serializable {
+public class User implements Serializable {
 
     private  String uid;
 

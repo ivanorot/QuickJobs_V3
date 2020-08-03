@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.repos.AuthRepository;
 import com.firebase.ui.auth.IdpResponse;
 

@@ -36,7 +36,9 @@
     <string name="account_settings_reset_password_key">reset_password</string>
     <string name="account_settings_dark_mode_key">dark_mode</string>
     <string name="account_settings_subscription_type_display_key">subscription_type_display</string>
-    <string name="account_settings__upgrade_subscription_type_display_key">upgrade_subscription_type_display</string>
+    <string name="account_settings_upgrade_subscription_type_display_key">upgrade_subscription_type_display</string>
+    <string name="account_settings_location_updates_key">location_updates</string>
+    <string name="account_settings_image_resolution_key">image_resolution</string>
     <string name="account_settings_sign_out_key">sign_out</string>
     <string name="about_us_private_policy_key">private_policy</string>
     <string name="about_us_terms_of_service_key">terms_of_service</string>

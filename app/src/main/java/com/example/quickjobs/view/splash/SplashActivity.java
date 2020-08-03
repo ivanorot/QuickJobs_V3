@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,22 +16,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.ExceptionHandler;
-import com.example.quickjobs.interfaces.LocationStateListener;
-import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.interfaces.LocationChangeListener;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.helper.PermissionManager;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.android.gms.location.LocationResult;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-
-public class SplashActivity extends AppCompatActivity implements LocationStateListener {
+public class SplashActivity extends AppCompatActivity implements LocationChangeListener {
     private TextView textView;
     private final int LOCATION_REQUEST_ID = 180;
     private final String TAG = "SplashActivity";
@@ -139,7 +131,8 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
     check if location permmision has been granted
      */
     private void checkLocationPermission(){
-        permissionManager.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionAskListnener() {
+        permissionManager.checkPermission(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
+        , new PermissionManager.PermissionAskListnener() {
             @Override
             public void onNeedPermission() {
                 Log.println(Log.ERROR, TAG, "Requesting location permission");
@@ -162,8 +155,7 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
             @Override
             public void onPermissionGranted() {
                 Log.println(Log.ERROR, TAG, "checkLocationPermission -> onPermissionGranted -> checkIfLocationIsAvailable");
-                splashViewModel.enableLocationUpdates(getApplicationContext(), SplashActivity.this);
-                checkIfLocationIsAvailable();
+                splashViewModel.enableLocationUpdates(SplashActivity.this);
             }
         });
     }
@@ -171,11 +163,12 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
     private void checkPermissionResults(){
         Log.println(Log.ERROR, TAG, "Checking permission results");
 
-        permissionManager.handlePermissionRequestResults(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionRequestResultListener() {
+        permissionManager.handlePermissionRequestResults(this,
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                new PermissionManager.PermissionRequestResultListener() {
             @Override
             public void onPermissionGranted() {
-                splashViewModel.enableLocationUpdates(getApplicationContext(), SplashActivity.this);
-                checkIfLocationIsAvailable();
+                splashViewModel.enableLocationUpdates(SplashActivity.this);
             }
 
             @Override
@@ -206,31 +199,11 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
         });
     }
 
-    private void checkIfLocationIsAvailable(){
-        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
-    }
-
     @Override
-    public void onLocationAvailable(LocationAvailability locationAvailability) {
-        Log.println(Log.ERROR, TAG, "onLocationAvailable: locationAvailability");
-        splashViewModel.getCurrentLocationFromLocationSource(this, this);
-    }
-
-    @Override
-    public void onLocationNotAvailable() {
-        Log.println(Log.ERROR, TAG, "onLocationNotAvailable: locationNotAvailable");
-        if(textView.getVisibility() != View.GONE){
-            textView.setVisibility(View.GONE);
-
-            splashViewModel.setShouldMakeLoadingScreenVisible(true);
-
+    public void onLocationChange(LocationResult locationResults) {
+        if(locationResults.getLastLocation() != null){
+            updateUserLocationAndPersistToCloud(locationResults.getLastLocation());
         }
-        splashViewModel.checkIfUserHasLocationAvailable(SplashActivity.this, this);
-    }
-
-    @Override
-    public void onLocationChange(Location locationResults) {
-        updateUserLocationAndPersistToCloud(locationResults);
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
@@ -320,37 +293,6 @@ public class SplashActivity extends AppCompatActivity implements LocationStateLi
         Uri uri = Uri.parse("package:" + getPackageName());
         intent.setData(uri);
         startActivity(intent);
-    }
-
-    private void initializeDatabaseAsTestingEvironment(){
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setHost("9090")
-                .build();
-
-        Log.println(Log.ERROR, TAG, settings.getHost());
-
-        FirebaseFirestore instance = FirebaseFirestore.getInstance();
-
-        instance.setFirestoreSettings(settings);
-
-        populateLocalizedFirestoreWithFakeData();
-    }
-
-    private void populateLocalizedFirestoreWithFakeData(){
-        final String user_data_path = "/Users/mortonsworld/Documents/GitHub/QuickJobs_V3/firestore_testing/user_test_data.csv";
-        final String EXCEPTION_TAG = "populateLocalizedFirestoreWithFakeData ";
-        String line = "";
-        try{
-            File file = new File(user_data_path);
-            Scanner scanner = new Scanner(file);
-
-            while(scanner.hasNext()){
-                Log.println(Log.ERROR, TAG, scanner.next());
-            }
-
-        } catch (IOException exception){
-            ExceptionHandler.consumeException(EXCEPTION_TAG, exception);
-        }
     }
 
 }

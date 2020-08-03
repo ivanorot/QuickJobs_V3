@@ -16,11 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.interfaces.LocationStateListener;
+import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationResult;
 
-public class HomeFragment extends Fragment implements LocationStateListener {
+public class HomeFragment extends Fragment implements LocationChangeListener {
     private final String TAG = "HomeFragment";
      
     @Override
@@ -56,17 +57,7 @@ public class HomeFragment extends Fragment implements LocationStateListener {
     }
 
     @Override
-    public void onLocationAvailable(LocationAvailability locationAvailability) {
-
-    }
-
-    @Override
-    public void onLocationChange(Location location) {
-        Log.println(Log.ERROR, TAG, location.getLatitude() + " ");
-    }
-
-    @Override
-    public void onLocationNotAvailable() {
+    public void onLocationChange(LocationResult locationResults) {
 
     }
 }

@@ -10,11 +10,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.helper.PermissionManager;
-import com.example.quickjobs.interfaces.LocationStateListener;
-import com.example.quickjobs.model.beans.QuickJob;
-import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.interfaces.LocationChangeListener;
+import com.example.quickjobs.model.QuickJob;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.repos.SplashRepository;
-import com.google.android.gms.location.LocationAvailability;
 
 import java.util.List;
 
@@ -56,20 +55,12 @@ public class SplashViewModel extends AndroidViewModel {
         authenticatedUserLiveData = splashRepository.signInAnonymously();
     }
 
-    public void checkIfUserHasLocationAvailable(Context context, LocationStateListener locationStateListener){
-        splashRepository.checkIfLocationIsAvailable(context,locationStateListener);
-    }
-
     public void checkIfCurrentUserHasLocationPersisted(){
         authenticatedUserLiveData = splashRepository.checkIfCurrentUserHasLocationPersisted();
     }
 
-    public void enableLocationUpdates(Context context, LocationStateListener locationStateListener){
-        splashRepository.enableLocationUpdates(context, locationStateListener);
-    }
-
-    public void getCurrentLocationFromLocationSource(Context context, LocationStateListener locationStateListener){
-        splashRepository.getCurrentLocationFromLocationSource(context, locationStateListener);
+    public void enableLocationUpdates(Context context){
+        splashRepository.enableLocationUpdates(context);
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
@@ -92,12 +83,12 @@ public class SplashViewModel extends AndroidViewModel {
         shouldMakeLoadingScreenVisible.setValue(loadFirstAttempt);
     }
 
-    public void register(LocationStateListener locationStateListener){
-        splashRepository.register(locationStateListener);
+    public void register(LocationChangeListener locationChangeListener){
+        splashRepository.register(locationChangeListener);
     }
 
-    public void unregister(LocationStateListener locationStateListener){
-        splashRepository.unregister(locationStateListener);
+    public void unregister(LocationChangeListener locationChangeListener){
+        splashRepository.unregister(locationChangeListener);
     }
 
 }

@@ -29,6 +29,27 @@ public class PermissionManager {
         return false;
     }
 
+    public boolean shouldAskPermission(Context context, String[] permissions){
+        if(shouldAskPermission()){
+            for(String permission : permissions){
+                int permissionResult = ActivityCompat.checkSelfPermission(context, permission);
+                if(permissionResult != PackageManager.PERMISSION_GRANTED){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean shouldShowRequestRational(Context context, String[] permissions){
+        for(String permission: permissions){
+            if(ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity) context, permission)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void checkPermission(Context context, String permission, PermissionAskListnener listnener){
         final String TAG = "checkPermission";
         if(shouldAskPermission(context, permission)){
@@ -54,8 +75,38 @@ public class PermissionManager {
         }
     }
 
+    public void checkPermission(Context context, String[] permissions, PermissionAskListnener listnener){
+        if(shouldAskPermission(context, permissions)){
+            if(shouldShowRequestRational(context, permissions)){
+                listnener.onPermssionPreviouslyDenied();
+            }
+            else{
+                for (String permission : permissions){
+                    if(sessionManager.isFirstTimeAsking(permission)){
+                        sessionManager.firstTimeAsking(permissions, false);
+                        listnener.onNeedPermission();
+                        return;
+                    }
+                    else{
+                        listnener.onPermissionPreviouslyDeniedWithNeverAskAgain();
+                    }
+                }
+            }
+        }else{
+            listnener.onPermissionGranted();
+        }
+    }
+
     public void handlePermissionRequestResults(Context context, String permission, PermissionRequestResultListener listener){
         if(shouldAskPermission(context, permission)){
+            listener.onPermissionDenied();
+        }else{
+            listener.onPermissionGranted();
+        }
+    }
+
+    public void handlePermissionRequestResults(Context context, String[] permissions, PermissionRequestResultListener listener){
+        if(shouldAskPermission(context, permissions)){
             listener.onPermissionDenied();
         }else{
             listener.onPermissionGranted();

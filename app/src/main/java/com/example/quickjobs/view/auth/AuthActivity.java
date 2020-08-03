@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.AuthViewModel;
 import com.firebase.ui.auth.AuthUI;

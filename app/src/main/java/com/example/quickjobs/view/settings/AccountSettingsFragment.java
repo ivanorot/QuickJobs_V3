@@ -1,5 +1,6 @@
 package com.example.quickjobs.view.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,6 +13,8 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.helper.Constants;
+import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -22,35 +25,66 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     Preference createAccount;
     Preference resetEmail;
     Preference resetPassword;
+    SwitchPreference darkMode;
+    SwitchPreference locationUpdateSwitch;
+    SwitchPreference imageResolution;
     Preference signOut;
     Preference deleteAccount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initViewModelAndCurrentUser();
+
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.pref_account_preference, rootKey);
         getPreferenceManager().setOnPreferenceTreeClickListener(this);
+        initViewModelAndCurrentUser();
         initPreferences();
+
     }
 
-    public void initPreferences(){
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_CONFIGURATION, darkMode.isChecked());
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_LOCATION, locationUpdateSwitch.isChecked());
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_RESOLUTION, imageResolution.isChecked());
+    }
+
+    private void initPreferences(){
         createAccount = findPreference(getString(R.string.account_settings_create_account_key));
         resetEmail = findPreference(getString(R.string.account_settings_reset_email_key));
         resetPassword = findPreference(getString(R.string.account_settings_reset_password_key));
+        darkMode = findPreference(getString(R.string.account_settings_dark_mode_key));
+        locationUpdateSwitch = findPreference(getString(R.string.account_settings_location_updates_key));
+        imageResolution = findPreference(getString(R.string.account_settings_image_resolution_key));
         signOut = findPreference(getString(R.string.account_settings_sign_out_key));
         deleteAccount = findPreference(getString(R.string.account_settings_delete_account_key));
+
+        boolean isDarkModeOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_CONFIGURATION, false);
+        boolean isLocationOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_LOCATION, true);
+        boolean isFullImageResolutionOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_RESOLUTION, true);
+
+        Log.println(Log.ERROR, TAG, "Is dark mode on " + isDarkModeOn);
+        Log.println(Log.ERROR, TAG, "Is location on " + isLocationOn);
+        Log.println(Log.ERROR, TAG, "Is full resolution on " + isLocationOn);
+
+        darkMode.setChecked(isDarkModeOn);
+        locationUpdateSwitch.setChecked(isLocationOn);
+        imageResolution.setChecked(isFullImageResolutionOn);
+
     }
 
-    public void initViewModelAndCurrentUser(){
+    private void initViewModelAndCurrentUser(){
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
         settingsViewModel.currentUserLiveData.observe(this, currentUser -> {
-
+            if(!currentUser.isAnonymous()){
+                show();
+            }
         });
     }
 
@@ -80,22 +114,35 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     public boolean onPreferenceTreeClick(Preference preference) {
 
         if(preference.getKey()!= null){
-            if(preference.getKey().equals(getString(R.string.account_settings_sign_out_key))){
-                Log.println(Log.ERROR, TAG, preference.getKey());
-                signCurrentUserOut();
+            if(preference.getKey().equals(createAccount.getKey())){
+                goToAuthActivity();
                 return true;
-            }else if(preference.getKey().equals(getString(R.string.account_settings_dark_mode_key))){
+            }
+            if(preference.getKey().equals(darkMode.getKey())){
                 Log.println(Log.ERROR, TAG, preference.getKey());
                 SwitchPreference switchPreference = (SwitchPreference) preference;
                 changeConfigurationMode(switchPreference);
+                return true;
             }
+            if(preference.getKey().equals(locationUpdateSwitch.getKey())){
+                SwitchPreference switchPreference = (SwitchPreference) preference;
+                changeLocationUpdateFrequency(switchPreference);
+                return true;
+            }
+            if(preference.getKey().equals(imageResolution.getKey())){
+                SwitchPreference switchPreference = (SwitchPreference) preference;
+                changeImageResolution(switchPreference);
+                return true;
+            }
+            if(preference.getKey().equals(signOut.getKey())){
+                Log.println(Log.ERROR, TAG, preference.getKey());
+                signCurrentUserOut();
+                return true;
+            }
+
         }
 
         return super.onPreferenceTreeClick(preference);
-    }
-
-    public void resetUserEmailAndPersistToCloud(CharSequence email){
-
     }
 
     public void changeConfigurationMode(SwitchPreference switchPreference){
@@ -107,19 +154,25 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    public void changeLocationUpdateFrequency(){
-
+    public void changeLocationUpdateFrequency(SwitchPreference switchPreference){
+        if(switchPreference.isChecked()){
+            settingsViewModel.loadDefaultSettings(requireActivity());
+        }else{
+            settingsViewModel.loadLowFrequencySettings(requireActivity());
+        }
     }
 
-    public void changeImageResolution(){
-
+    public void changeImageResolution(SwitchPreference switchPreference){
+//        todo change image resolution in camera activiy
     }
 
     public void signCurrentUserOut(){
         FirebaseAuth.getInstance().signOut();
     }
 
-    public void pauseCurrentUserAccount(){
-
+    public void goToAuthActivity(){
+        Intent intent = new Intent(requireActivity(), AuthActivity.class);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }
