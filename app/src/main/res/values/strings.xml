@@ -112,6 +112,7 @@
     <string name="reset_credentials_enter_new_email">enter new email</string>
     <string name="reset_credentials_enter_password">enter password</string>
     <string name="reset_credentials_enter_new_password">new password</string>
+    <string name="splash_screen_title">Splash Screen</string>
 
     <!--Account Settings End-->
 

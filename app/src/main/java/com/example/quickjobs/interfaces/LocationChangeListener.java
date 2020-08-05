@@ -7,4 +7,5 @@ import com.google.android.gms.location.LocationResult;
 
 public interface LocationChangeListener {
     void onLocationChange(LocationResult locationResults);
+    void onLocationAvailability(LocationAvailability locationAvailability);
 }

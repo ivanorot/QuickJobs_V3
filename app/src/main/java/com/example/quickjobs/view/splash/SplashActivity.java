@@ -2,19 +2,28 @@ package com.example.quickjobs.view.splash;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.example.quickjobs.R;
 import com.example.quickjobs.helper.Constants;
@@ -25,6 +34,7 @@ import com.example.quickjobs.source.SharedPreferencesManager;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationResult;
 
 public class SplashActivity extends AppCompatActivity implements LocationChangeListener {
@@ -35,6 +45,9 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
     private SplashViewModel splashViewModel;
     private PermissionManager permissionManager;
 
+
+    private ProgressBar loadingProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +56,6 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         initSplashViewModel();
         initPermissionManager();
         checkIfUserIsAnonymousAndAuthenticated();
-
-
     }
 
     private void initSharedPreferences(){
@@ -219,6 +230,13 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         }
     }
 
+    @Override
+    public void onLocationAvailability(LocationAvailability locationAvailability) {
+        if(!locationAvailability.isLocationAvailable()){
+            dialogForFailedLocation();
+        }
+    }
+
     public void updateUserLocationAndPersistToCloud(Location location){
         Log.println(Log.ERROR, TAG, "updateUserLocationAndPersistToCloud");
         splashViewModel.updateUserLocationAndPersistToCloud(location);
@@ -230,13 +248,43 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
     public void getQuickJobsBasedOnUserLocation(double longitude, double latitude){
         final int MAX_DISTANCE = 25;
         splashViewModel.getJobsBasedOnUserLocation(longitude, latitude, MAX_DISTANCE);
-        splashViewModel.jobsBasedOnUserLocation.observe(this, jobs -> {
-            goToMainActivity();
-        });
+        splashViewModel.jobsBasedOnUserLocation.observe(this, jobs ->
+            goToMainActivity());
     }
 
     public void enableSnapshotListeners(){
         splashViewModel.enableSnapshotListeners();
+    }
+
+
+    public void loadProgressBar(){
+        loadingProgressBar = findViewById(R.id.contentLoadingProgressBar);
+        loadingProgressBar.setProgress(0);
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        CountDownTimer countDownTimer = new CountDownTimer(10000, 1000) {
+            int increment = 0;
+            @Override
+            public void onTick(long l) {
+                increment++;
+                loadingProgressBar.setProgress((int) increment * 100 *  (10000/1000));
+            }
+
+            @Override
+            public void onFinish() {
+                loadingProgressBar.setVisibility(View.GONE);
+                checkIfUserLocationHasBeenFound();
+            }
+        };
+
+        countDownTimer.start();
+    }
+
+    public void checkIfUserLocationHasBeenFound(){
+        splashViewModel.authenticatedUserLiveData.observe(this, user->{
+            if(user.getLongitude() > 180.0 && user.getLatitude() > 180.0){
+                dialogForFailedLocationLast();
+            }
+        });
     }
 
     private void showLocationRationale(){
@@ -252,6 +300,31 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
                     ActivityCompat.requestPermissions(SplashActivity.this, new String[]
                             { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
                 }).show();
+    }
+
+    private void dialogForFailedLocation(){
+        new AlertDialog.Builder(this).setTitle("Location Unavailable")
+                .setMessage("Now you must allow location access from settings.")
+                .setCancelable(false)
+                .setNegativeButton("TRY AGAIN", ((dialogInterface, i) -> {
+                    checkLocationPermission();
+                    finish();
+                }))
+                .setPositiveButton("CONTINUE", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    loadProgressBar();
+                }).show();
+    }
+
+    private void dialogForFailedLocationLast(){
+        new AlertDialog.Builder(this).setTitle("Location Unavailable")
+                .setMessage("Now you must allow location access from settings.")
+                .setCancelable(false)
+                .setNegativeButton("TRY LATER", ((dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    finish();
+                }))
+                .show();
     }
 
     private void dialogForSettings(){
@@ -306,6 +379,24 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         Uri uri = Uri.parse("package:" + getPackageName());
         intent.setData(uri);
         startActivity(intent);
+    }
+
+
+    private class LocationAsyncTaskLoader extends AsyncTaskLoader{
+
+
+        public LocationAsyncTaskLoader(@NonNull Context context) {
+            super(context);
+        }
+
+        @Nullable
+        @Override
+        public Object loadInBackground() {
+
+            return null;
+        }
+
+
     }
 
 }
