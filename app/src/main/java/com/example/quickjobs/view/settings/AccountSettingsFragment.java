@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -18,18 +19,17 @@ import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class AccountSettingsFragment extends PreferenceFragmentCompat implements PreferenceManager.OnPreferenceTreeClickListener{
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
+
+public class AccountSettingsFragment extends PreferenceFragmentCompat implements PreferenceManager.OnPreferenceTreeClickListener, Preference.OnPreferenceChangeListener {
     private final String TAG = "AccountSettingsFragment";
     private SettingsViewModel settingsViewModel;
 
-    Preference createAccount;
-    Preference resetEmail;
-    Preference resetPassword;
     SwitchPreference darkMode;
     SwitchPreference locationUpdateSwitch;
     SwitchPreference imageResolution;
-    Preference signOut;
-    Preference deleteAccount;
+    ListPreference languages;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,113 +39,90 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.pref_account_preference, rootKey);
         getPreferenceManager().setOnPreferenceTreeClickListener(this);
-        initViewModelAndCurrentUser();
-        initPreferences();
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_CONFIGURATION, darkMode.isChecked());
-        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_LOCATION, locationUpdateSwitch.isChecked());
-        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_RESOLUTION, imageResolution.isChecked());
+        initViewModelAndCurrentUser(rootKey);
     }
 
     private void initPreferences(){
-        createAccount = findPreference(getString(R.string.account_settings_create_account_key));
-        resetEmail = findPreference(getString(R.string.account_settings_reset_email_key));
-        resetPassword = findPreference(getString(R.string.account_settings_reset_password_key));
         darkMode = findPreference(getString(R.string.account_settings_dark_mode_key));
         locationUpdateSwitch = findPreference(getString(R.string.account_settings_location_updates_key));
         imageResolution = findPreference(getString(R.string.account_settings_image_resolution_key));
-        signOut = findPreference(getString(R.string.account_settings_sign_out_key));
-        deleteAccount = findPreference(getString(R.string.account_settings_delete_account_key));
+        languages = findPreference(getString(R.string.account_settings_language_key));
 
         boolean isDarkModeOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_CONFIGURATION, false);
         boolean isLocationOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_LOCATION, true);
         boolean isFullImageResolutionOn = settingsViewModel.retrieveUserPreference(Constants.USER_PREFERENCE_RESOLUTION, true);
-
-        Log.println(Log.ERROR, TAG, "Is dark mode on " + isDarkModeOn);
-        Log.println(Log.ERROR, TAG, "Is location on " + isLocationOn);
-        Log.println(Log.ERROR, TAG, "Is full resolution on " + isLocationOn);
+        String currentLanguageValue = languages.getValue();
 
         darkMode.setChecked(isDarkModeOn);
         locationUpdateSwitch.setChecked(isLocationOn);
         imageResolution.setChecked(isFullImageResolutionOn);
+        languages.setSummary(currentLanguageValue);
+        languages.setOnPreferenceChangeListener(this);
 
     }
 
-    private void initViewModelAndCurrentUser(){
+    private void initViewModelAndCurrentUser(String rootKey){
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
         settingsViewModel.currentUserLiveData.observe(this, currentUser -> {
-            if(!currentUser.isAnonymous()){
-                show();
+            if(currentUser.isAnonymous()){
+                setPreferencesFromResource(R.xml.pref_account_preference_anonymous, rootKey);
             }
+            else{
+                setPreferencesFromResource(R.xml.pref_account_preference, rootKey);
+            }
+            initPreferences();
         });
-    }
-
-    private void show(){
-        if(createAccount != null){
-            createAccount.setVisible(false);
-        }
-
-        if(resetEmail != null){
-            resetEmail.setVisible(true);
-        }
-
-        if(resetPassword != null){
-            resetPassword.setVisible(true);
-        }
-
-        if(signOut != null){
-            signOut.setVisible(true);
-        }
-
-        if(deleteAccount != null){
-            deleteAccount.setVisible(true);
-        }
     }
 
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
 
-        if(preference.getKey()!= null){
-            if(preference.getKey().equals(createAccount.getKey())){
+        if(preference.hasKey()){
+            Log.println(Log.ERROR, TAG, preference.getKey());
+            if(preference.getKey().equals(getString(R.string.account_settings_create_account_key))){
                 goToAuthActivity();
                 return true;
             }
-            if(preference.getKey().equals(darkMode.getKey())){
+            if(preference.getKey().equals(getString(R.string.account_settings_dark_mode_key))){
                 Log.println(Log.ERROR, TAG, preference.getKey());
                 SwitchPreference switchPreference = (SwitchPreference) preference;
                 changeConfigurationMode(switchPreference);
                 return true;
             }
-            if(preference.getKey().equals(locationUpdateSwitch.getKey())){
+            if(preference.getKey().equals(getString(R.string.account_settings_location_updates_key))){
                 SwitchPreference switchPreference = (SwitchPreference) preference;
                 changeLocationUpdateFrequency(switchPreference);
                 return true;
             }
-            if(preference.getKey().equals(imageResolution.getKey())){
+            if(preference.getKey().equals(getString(R.string.account_settings_image_resolution_key))){
                 SwitchPreference switchPreference = (SwitchPreference) preference;
                 changeImageResolution(switchPreference);
                 return true;
             }
-            if(preference.getKey().equals(signOut.getKey())){
+            if(preference.getKey().equals(getString(R.string.account_settings_sign_out_key))){
                 Log.println(Log.ERROR, TAG, preference.getKey());
                 signCurrentUserOut();
                 return true;
             }
 
         }
-
         return super.onPreferenceTreeClick(preference);
     }
 
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if(preference.getKey().equals(getString(R.string.account_settings_language_key))){
+            ListPreference listPreference = (ListPreference) preference;
+            changeAppDefaultLanguage(listPreference, (String) newValue);
+            return true;
+        }
+        return false;
+    }
+
     public void changeConfigurationMode(SwitchPreference switchPreference){
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_CONFIGURATION, switchPreference.isChecked());
         if(switchPreference.isChecked()){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
@@ -154,7 +131,13 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
+    private void changeAppDefaultLanguage(ListPreference listPreference, String lanuage){
+        settingsViewModel.saveUserPreference(Constants.USER_LANGUAGE_PREFERENCE_NAME, listPreference.getValue());
+        listPreference.setSummary(lanuage);
+    }
+
     public void changeLocationUpdateFrequency(SwitchPreference switchPreference){
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_LOCATION, switchPreference.isChecked());
         if(switchPreference.isChecked()){
             settingsViewModel.loadDefaultSettings(requireActivity());
         }else{
@@ -163,6 +146,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     }
 
     public void changeImageResolution(SwitchPreference switchPreference){
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_RESOLUTION, switchPreference.isChecked());
 //        todo change image resolution in camera activiy
     }
 

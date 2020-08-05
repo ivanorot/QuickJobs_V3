@@ -12,13 +12,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.helper.Constants;
 import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.model.User;
 import com.example.quickjobs.helper.PermissionManager;
+import com.example.quickjobs.source.SharedPreferencesManager;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
@@ -37,18 +40,28 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        textView = findViewById(R.id.splashScreenTV);
-
         initSplashViewModel();
         initPermissionManager();
         checkIfUserIsAnonymousAndAuthenticated();
 
-        splashViewModel.register(this);
 
+    }
+
+    private void initSharedPreferences(){
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(getApplication());
+        boolean isDarkModeOn = sharedPreferencesManager.getValueFromUserPreferences(Constants.USER_PREFERENCE_CONFIGURATION, false);
+
+        Log.println(Log.ERROR, TAG, "SettingDarkMode " + isDarkModeOn);
+
+        if(isDarkModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
     }
 
     private void initSplashViewModel(){
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
+        splashViewModel.register(this);
+        splashViewModel.loadUserAccountPreferences();
     }
 
     private void initPermissionManager(){

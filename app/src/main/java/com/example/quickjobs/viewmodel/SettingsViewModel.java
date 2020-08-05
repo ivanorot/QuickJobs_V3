@@ -40,6 +40,10 @@ public class SettingsViewModel extends AndroidViewModel {
         sharedPreferencesManager.updateUserPreferences(preferenceKey, preferenceState);
     }
 
+    public void saveUserPreference(String preferenceKey, String preferenceState){
+        sharedPreferencesManager.updateUserPreferences(preferenceKey, preferenceState);
+    }
+
     public Boolean retrieveUserPreference(String preferenceKey, Boolean defaultValue){
         return sharedPreferencesManager.getValueFromUserPreferences(preferenceKey, defaultValue);
     }

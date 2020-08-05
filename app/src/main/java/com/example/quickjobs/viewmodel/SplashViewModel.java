@@ -3,17 +3,22 @@ package com.example.quickjobs.viewmodel;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.helper.Constants;
 import com.example.quickjobs.helper.PermissionManager;
 import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.model.QuickJob;
 import com.example.quickjobs.model.User;
 import com.example.quickjobs.repos.SplashRepository;
+import com.example.quickjobs.source.SharedPreferencesManager;
 
 import java.util.List;
 
@@ -21,6 +26,7 @@ public class SplashViewModel extends AndroidViewModel {
     private final String TAG = "SplashViewModel";
     private SplashRepository splashRepository;
     private PermissionManager permissionManager;
+    private SharedPreferencesManager sharedPreferencesManager;
 
     public LiveData<User> authenticatedUserLiveData;
     public LiveData<User> isUserAnonymousOrAuthenticatedLiveData;
@@ -34,7 +40,7 @@ public class SplashViewModel extends AndroidViewModel {
 
         splashRepository = new SplashRepository(application);
         permissionManager = new PermissionManager(application);
-
+        sharedPreferencesManager = SharedPreferencesManager.getInstance(application);
         shouldMakeLoadingScreenVisible = new MutableLiveData<>(false);
 
     }
@@ -89,6 +95,14 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void unregister(LocationChangeListener locationChangeListener){
         splashRepository.unregister(locationChangeListener);
+    }
+
+    public void loadUserAccountPreferences(){
+        boolean isDarkModeOn = sharedPreferencesManager.getValueFromUserPreferences(Constants.USER_PREFERENCE_CONFIGURATION, false);
+        Log.println(Log.ERROR, TAG, "isDarkModeOn " + isDarkModeOn);
+        if(isDarkModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
     }
 
 }
