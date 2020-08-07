@@ -11,15 +11,18 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.quickjobs.R;
 import com.example.quickjobs.model.User;
 import com.example.quickjobs.view.main.MainActivity;
+import com.example.quickjobs.view.splash.SplashActivity;
 import com.example.quickjobs.viewmodel.AuthViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.data.model.UserCancellationException;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity{
     private final String TAG = "AuthActivity";
     private final String USER = "user";
 
@@ -48,12 +51,15 @@ public class AuthActivity extends AppCompatActivity {
         Log.println(Log.ERROR, TAG, "\n" + RESULT_OK);
         Log.println(Log.ERROR, TAG, "\n" + resultCode);
 
-        if(requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
-            Log.println(Log.ERROR, TAG, "\n same request code");
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-            if (response != null) {
-                Log.println(Log.ERROR, TAG, "\n not null response");
-                signInWithUsingDefault(response);
+        if(requestCode == RC_SIGN_IN){
+            if(resultCode == RESULT_OK){
+                IdpResponse response = IdpResponse.fromResultIntent(data);
+                if(response != null){
+                    signInWithUsingDefault(response);
+                }
+            }
+            if(resultCode == RESULT_CANCELED){
+                goToSplashActivity();
             }
         }
     }
@@ -104,8 +110,11 @@ public class AuthActivity extends AppCompatActivity {
     public void goToMainActivity(User user) {
         Log.println(Log.ERROR, TAG, "\n goToMain");
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-        intent.putExtra(USER, user);
-        Log.println(Log.ERROR, TAG, "\n intent Created");
+        startActivity(intent);
+        finish();
+    }
+    public void goToSplashActivity(){
+        Intent intent = new Intent(AuthActivity.this, SplashActivity.class);
         startActivity(intent);
         Log.println(Log.ERROR, TAG, "\n intent launched");
         finish();

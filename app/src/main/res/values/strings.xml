@@ -32,23 +32,32 @@
     <string name="off">Off</string>
 
     <string name="account_settings_create_account_key">create_account</string>
+    <string name="account_settings_reset_credentials_key">reset_credentials</string>
+    <string name="account_settings_confirm_reset_credentials_key">confirm_reset_credentials</string>
     <string name="account_settings_reset_email_key">reset_email</string>
     <string name="account_settings_reset_password_key">reset_password</string>
     <string name="account_settings_dark_mode_key">dark_mode</string>
     <string name="account_settings_subscription_type_display_key">subscription_type_display</string>
     <string name="account_settings_upgrade_subscription_type_display_key">upgrade_subscription_type_display</string>
+    <string name="account_settings_language_key">language</string>
+    <string name="account_settings_general_notifications_key">general_notifications</string>
+    <string name="account_settings_non_premium_jobs_push_notifications_key">non_premium_jobs</string>
+    <string name="account_settings_time_sensitive_jobs_push_notifications_key">time_sensitive</string>
+    <string name="account_settings_push_out_of_your_area_notifications_key">out_of_area_jobs</string>
+    <string name="account_settings_messages_push_notifications_key">messages</string>
+    <string name="account_settings_language_english_key">english</string>
+    <string name="account_settings_language_spanish_key">spanish</string>
     <string name="account_settings_location_updates_key">location_updates</string>
     <string name="account_settings_image_resolution_key">image_resolution</string>
     <string name="account_settings_sign_out_key">sign_out</string>
-    <string name="about_us_private_policy_key">private_policy</string>
-    <string name="about_us_terms_of_service_key">terms_of_service</string>
+    <string name="about_us_private_about_us">about_us</string>
     <string name="about_us_feed_back_key">feed_back</string>
     <string name="about_us_help_center_key">help_center</string>
     <string name="about_us_follow_us_on_twitter_key">follow_us_on_twitter</string>
     <string name="account_settings_delete_account_key">delete_account</string>
 
     <string name="account_settings_account_settings_title">Account Settings</string>
-    <string name="account_settings_create_account">Create Account</string>
+    <string name="account_settings_create_account">Create Account or Sign In</string>
     <string name="account_settings_update_email">Reset Email</string>
     <string name="account_settings_update_password">Reset Password</string>
 
@@ -67,20 +76,25 @@
 
     <string name="account_settings_notification_title">Notifications</string>
     <string name="account_settings_push_notifications">Push Notifications</string>
+    <string name="account_settings_push_notifications_key">push_notifications</string>
+    <string name="account_settings_general_push_notifications">General Reminders</string>
+    <string name="account_settings_non_premium_jobs_push_notifications">Non Premium Jobs</string>
+    <string name="account_settings_out_of_your_area_push_notifications">Jobs Out Of Area</string>
+    <string name="account_settings_time_sensitive_jobs_push_notifications">Time Sensitive</string>
+    <string name="account_settings_messages_push_notifications">Messages</string>
 
 
     <string name="account_settings_data_usage_title">Data Usage</string>
     <string name="account_settings_location_updates">Location Updates</string>
-    <string name="account_settings_location_updates_summary_off">Infrequent Location Updates</string>
-    <string name="account_settings_location_updates_summary_on">Normal Location Updates</string>
-    <string name="account_settings_picture_quality">Picture Quality</string>
-    <string name="account_settings_picture_quality_summary_off">Low Resolution Enabled</string>
-    <string name="account_settings_picture_quality_summary_on">High Resolution Enable</string>
+    <string name="account_settings_location_updates_summary_off">Off</string>
+    <string name="account_settings_location_updates_summary_on">On</string>
+    <string name="account_settings_picture_quality">Image Resolution</string>
+    <string name="account_settings_picture_quality_summary_off">Low</string>
+    <string name="account_settings_picture_quality_summary_on">High</string>
 
     <string name="account_settings_about_us_title">About Us</string>
 
-    <string name="account_settings_private_policy">Private Policy</string>
-    <string name="account_settings_terms_of_service">Terms of Service</string>
+    <string name="account_settings_about_us">About Us</string>
     <string name="account_settings_feed_back">FeedBack</string>
     <string name="account_settings_help_center">Help Center</string>
     <string name="account_settings_follow_us_on_twitter">Follow us on Twitter</string>
@@ -93,6 +107,12 @@
     <string name="delete_account_confirm_delete_account_key">delete_account</string>
     <string name="delete_account_confirm_password">Confirm Password</string>
     <string name="delete_account_confirm_delete_account">Delete</string>
+    <string name="reset_credentials_reset">reset</string>
+    <string name="reset_credentials_enter_current_email">enter current email</string>
+    <string name="reset_credentials_enter_new_email">enter new email</string>
+    <string name="reset_credentials_enter_password">enter password</string>
+    <string name="reset_credentials_enter_new_password">new password</string>
+    <string name="splash_screen_title">Splash Screen</string>
 
     <!--Account Settings End-->
 

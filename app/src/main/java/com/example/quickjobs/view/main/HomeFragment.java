@@ -21,7 +21,7 @@ import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationResult;
 
-public class HomeFragment extends Fragment implements LocationChangeListener {
+public class HomeFragment extends Fragment {
     private final String TAG = "HomeFragment";
      
     @Override
@@ -36,7 +36,6 @@ public class HomeFragment extends Fragment implements LocationChangeListener {
 
     public void initMainViewModel(){
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.register(this);
     }
 
 
@@ -54,10 +53,5 @@ public class HomeFragment extends Fragment implements LocationChangeListener {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onLocationChange(LocationResult locationResults) {
-
     }
 }

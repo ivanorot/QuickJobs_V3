@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/account_settings_push_notifications_key">
+        <SwitchPreference
+            android:key="@string/account_settings_general_notifications_key"
+            app:title="@string/account_settings_general_push_notifications"
+            app:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="@string/account_settings_non_premium_jobs_push_notifications_key"
+            app:title="@string/account_settings_non_premium_jobs_push_notifications"
+            app:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="@string/account_settings_time_sensitive_jobs_push_notifications_key"
+            app:title="@string/account_settings_time_sensitive_jobs_push_notifications"
+            app:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="@string/account_settings_push_out_of_your_area_notifications_key"
+            app:title="@string/account_settings_out_of_your_area_push_notifications"
+            app:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="@string/account_settings_messages_push_notifications_key"
+            app:title="@string/account_settings_messages_push_notifications"
+            app:defaultValue="true"/>
+    </PreferenceCategory>
+
+<!--todo add job types-->
 
 </PreferenceScreen>

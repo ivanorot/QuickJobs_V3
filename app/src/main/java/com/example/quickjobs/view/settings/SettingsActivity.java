@@ -18,6 +18,7 @@ import androidx.preference.PreferenceManager;
 import com.example.quickjobs.R;
 import com.example.quickjobs.helper.Constants;
 import com.example.quickjobs.helper.Enumerations;
+import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.view.splash.SplashActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity implements
         settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
         settingsViewModel.currentUserLiveData.observe(this, currentUser ->{
+            if(currentUser.isAnonymous()){
+            }
         });;
     }
 
@@ -112,8 +115,8 @@ public class SettingsActivity extends AppCompatActivity implements
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        Log.println(Log.ERROR, "onAuthStateChanged","signing user out");
         if(firebaseAuth.getCurrentUser() == null){
+            Log.println(Log.ERROR, "onAuthStateChanged","signing user out");
             goToSplashScreen();
         }
     }
@@ -123,4 +126,7 @@ public class SettingsActivity extends AppCompatActivity implements
         startActivity(intent);
         finish();
     }
+
+
+
 }

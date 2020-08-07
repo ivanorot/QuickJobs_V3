@@ -95,7 +95,10 @@ public class MyProfileFragment extends Fragment {
         setHasOptionsMenu(true);
         //Toast.makeText(getActivity(), "onCreateView method", Toast.LENGTH_SHORT).show();
 
-
+        signin_Button.setOnClickListener(ignore -> {
+            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
+            startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+        });
 
 
         return view;

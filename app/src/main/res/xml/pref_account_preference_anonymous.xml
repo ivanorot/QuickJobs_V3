@@ -6,16 +6,9 @@
 
     <PreferenceCategory app:title="@string/account_settings_account_settings_title">
         <Preference
-            app:key="@string/account_settings_reset_email_key"
-            app:title="@string/account_settings_update_email"
-            app:isPreferenceVisible="true"
-            app:fragment="com.example.quickjobs.view.settings.ResetEmailFragment"
+            app:key="@string/account_settings_create_account_key"
+            app:title="@string/account_settings_create_account"
             />
-        <Preference
-            app:key="@string/account_settings_reset_password_key"
-            app:title="@string/account_settings_update_password"
-            app:isPreferenceVisible="true"
-            app:fragment="com.example.quickjobs.view.settings.ResetPasswordFragment"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/account_settings_general_title">
@@ -27,17 +20,6 @@
             android:defaultValue="false"
             app:summaryOn="@string/account_settings_location_updates_summary_on"
             app:summaryOff="@string/account_settings_location_updates_summary_off"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/account_settings_manage_subscription_title">
-        <Preference
-            app:key="@string/account_settings_subscription_type_display_key"
-            app:title="@string/account_settings_membership_type"/>
-        <Preference
-            app:key="@string/account_settings_upgrade_subscription_type_display_key"
-            app:title="@string/account_settings_membership_upgrade"
-            app:fragment="com.example.quickjobs.view.settings.UpgradeMembershipFragment"
-            />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/account_settings_language_title">
@@ -91,23 +73,6 @@
             app:key="@string/about_us_help_center_key"
             app:title="@string/account_settings_help_center"
             app:fragment="com.example.quickjobs.view.settings.HelpCenterFragment"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:isPreferenceVisible="true">
-        <Preference
-            app:key="@string/account_settings_sign_out_key"
-            app:title="@string/account_settings_sign_out"
-            app:isPreferenceVisible="true"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:isPreferenceVisible="true">
-        <Preference
-            app:key="@string/account_settings_delete_account_key"
-            app:title="@string/account_settings_delete_account"
-            app:isPreferenceVisible="true"
-            app:fragment="com.example.quickjobs.view.settings.DeleteAccountFragment"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

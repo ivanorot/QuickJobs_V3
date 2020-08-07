@@ -47,6 +47,25 @@ public class LocationSource extends FusedLocationProviderClient {
 
         locationChangeListeners = new ArrayList<>();
 
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                Log.println(Log.ERROR, TAG, locationResult.getLastLocation() + "");
+                for(LocationChangeListener temp : locationChangeListeners){
+                    temp.onLocationChange(locationResult);
+                }
+            }
+
+            @Override
+            public void onLocationAvailability(LocationAvailability locationAvailability) {
+                super.onLocationAvailability(locationAvailability);
+                for(LocationChangeListener locationChangeListener: locationChangeListeners){
+                    locationChangeListener.onLocationAvailability(locationAvailability);
+                }
+            }
+        };
+
     }
 
     public void registerLocationChangeListener(LocationChangeListener locationChangeListener) {
@@ -110,24 +129,11 @@ public class LocationSource extends FusedLocationProviderClient {
     public void enableLocationUpdates(Context context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                    Log.println(Log.ERROR, TAG, locationResult.getLastLocation() + "");
-                    for(LocationChangeListener temp : locationChangeListeners){
-                        temp.onLocationChange(locationResult);
-                    }
-                }
-
-                @Override
-                public void onLocationAvailability(LocationAvailability locationAvailability) {
-                    super.onLocationAvailability(locationAvailability);
-                    Log.println(Log.ERROR, TAG, "Is Location Available" + locationAvailability.isLocationAvailable());
-                }
-            };
             requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
+    }
+
+    public void disableLocationUpdates(){
+        removeLocationUpdates(locationCallback);
     }
 }
