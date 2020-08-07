@@ -33,7 +33,7 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        Log.println(Log.ERROR, TAG, "Auth");
+        Log.println(Log.ERROR, TAG, "Auth ");
 
         initAuthViewModel();
         launchAuthentication();
@@ -45,10 +45,14 @@ public class AuthActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.println(Log.ERROR, TAG, "initiated");
+        Log.println(Log.ERROR, TAG, "\n" + RESULT_OK);
+        Log.println(Log.ERROR, TAG, "\n" + resultCode);
 
         if(requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
+            Log.println(Log.ERROR, TAG, "\n same request code");
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (response != null) {
+                Log.println(Log.ERROR, TAG, "\n not null response");
                 signInWithUsingDefault(response);
             }
         }
@@ -78,12 +82,15 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void signInWithUsingDefault(IdpResponse response){
+        Log.println(Log.ERROR, TAG, "\n signInWithUsingDefault");
         authViewModel.signInDefault(response);
         authViewModel.authenticatedUserLiveData.observe(this, user ->{
             if(user.isNew()){
+                Log.println(Log.ERROR, TAG, "\n  createNewUser");
                 createNewUser(user);
             }
             else{
+                Log.println(Log.ERROR, TAG, "\n goToMainActivity");
                 goToMainActivity(user);
             }
         });
@@ -95,9 +102,12 @@ public class AuthActivity extends AppCompatActivity {
         authViewModel.createdUserLiveData.observe(this, this::goToMainActivity);
     }
     public void goToMainActivity(User user) {
+        Log.println(Log.ERROR, TAG, "\n goToMain");
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         intent.putExtra(USER, user);
+        Log.println(Log.ERROR, TAG, "\n intent Created");
         startActivity(intent);
+        Log.println(Log.ERROR, TAG, "\n intent launched");
         finish();
     }
 }

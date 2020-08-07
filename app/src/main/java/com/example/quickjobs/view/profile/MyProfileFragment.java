@@ -81,7 +81,7 @@ public class MyProfileFragment extends Fragment {
         }
 
         initMainViewModel();
-        initAuthentication();
+      //  initAuthentication();
     }
 
     @Override
@@ -89,8 +89,9 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
-        initAuthentication();
+
         findInitViews(view);
+        initAuthentication();
         setHasOptionsMenu(true);
         //Toast.makeText(getActivity(), "onCreateView method", Toast.LENGTH_SHORT).show();
 
@@ -101,13 +102,6 @@ public class MyProfileFragment extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initAuthentication();
-
-    }
-
     public void initMainViewModel(){
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
@@ -115,21 +109,28 @@ public class MyProfileFragment extends Fragment {
     //*****************************************************************************************************************
     private void initAuthentication(){
         Toast.makeText(getActivity(), "Authentication method", Toast.LENGTH_SHORT).show();
-        mainViewModel.currentUserMutableLiveData.observeForever(currentUser->{
-            if(!currentUser.isAnonymous()){
-                Toast.makeText(getActivity(), "is signed in", Toast.LENGTH_SHORT).show();
-                signin_FrameLayout.setVisibility(View.GONE);
-                myprofile_ScrollView.setVisibility(View.VISIBLE);
-                getProfileInfo();
-            }
-            else {
-                Toast.makeText(getActivity(), "is not signed in", Toast.LENGTH_SHORT).show();
+            try {
+                if (!(mainViewModel.currentUserMutableLiveData.getValue().isAnonymous())) {
+                    Toast.makeText(getActivity(), "is signed in", Toast.LENGTH_SHORT).show();
+                    signin_FrameLayout.setVisibility(View.GONE);
+                    myprofile_ScrollView.setVisibility(View.VISIBLE);
+                    getProfileInfo();
+                } else {
+                    Toast.makeText(getActivity(), "is not signed in", Toast.LENGTH_SHORT).show();
+                    signin_Button.setOnClickListener(ignore -> {
+                        Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
+                        startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Null", Toast.LENGTH_SHORT).show();
                 signin_Button.setOnClickListener(ignore -> {
                     Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
                     startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+                    getActivity().finish();
                 });
             }
-        });
     }
 
     //*******************************************************************************************************

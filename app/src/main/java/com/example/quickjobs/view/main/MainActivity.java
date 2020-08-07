@@ -3,6 +3,7 @@ package com.example.quickjobs.view.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,8 +27,13 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toast.makeText(this, "checking MainViewModel", Toast.LENGTH_SHORT).show();
         initMainViewModel();
+
+        Toast.makeText(this, "checking QuickJobsUser", Toast.LENGTH_SHORT).show();
         initQuickJobsUser();
+
+        Toast.makeText(this, "checking NavController", Toast.LENGTH_SHORT).show();
         initNavController();
 
     }
