@@ -52,12 +52,16 @@ public class SplashRepository{
         return userSource.getCurrentUserMutableLiveData();
     }
 
-    public void enableLocationUpdates(Context context){
-        locationSource.enableLocationUpdates(context);
+    public void enableLocationUpdates(){
+        locationSource.enableLocationUpdates();
     }
 
     public MutableLiveData<User> updateUserLocationAndPersist(Location location){
         return userSource.updateUserLocationDataAndPersist(location);
+    }
+
+    public MutableLiveData<User>  updateUserWithMockLocationAndPersistToCloud(double latitude, double longitude){
+        return userSource.updateUserWithMockLocationDataAndPersistToCloud(latitude, longitude);
     }
 
     public MutableLiveData<List<QuickJob>> getJobsBasedOnUserLocation(double longitude, double latitude, int maxDistance){

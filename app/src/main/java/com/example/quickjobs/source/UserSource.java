@@ -7,9 +7,12 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.model.User;
 import com.example.quickjobs.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -19,7 +22,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-public class UserSource implements EventListener<DocumentSnapshot> {
+public class UserSource implements EventListener<DocumentSnapshot>, LocationChangeListener {
     private final String USER_COLLECTION_NAME = "users";
     private final String TAG = "UserSource";
 
@@ -146,11 +149,8 @@ public class UserSource implements EventListener<DocumentSnapshot> {
                 }
             }
         });
-
-
         return userMutableLiveData;
     }
-
 
     /*
 
@@ -185,8 +185,9 @@ public class UserSource implements EventListener<DocumentSnapshot> {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signInAnonymously().addOnCompleteListener(anonTask -> {
-
+            Log.println(Log.ERROR, TAG, "anonTask");
             if(anonTask.isSuccessful()){
+                Log.println(Log.ERROR, TAG, "signed user in as anonymous");
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
                 if(firebaseUser != null){
@@ -194,11 +195,17 @@ public class UserSource implements EventListener<DocumentSnapshot> {
                     user.setAnonymous(true);
                     anonUserMutableLiveData.postValue(user);
                 }
+            }else{
+//                todo set offline test
+                User user = new User();
+                user.setAnonymous(true);
+                anonUserMutableLiveData.postValue(user);
             }
         });
 
         return anonUserMutableLiveData;
     }
+
     /*
 
      */
@@ -258,7 +265,25 @@ public class UserSource implements EventListener<DocumentSnapshot> {
         else{
             currentUser.setLatitude(location.getLatitude());
             currentUser.setLongitude(location.getLongitude());
+        }
 
+        return new MutableLiveData<>(currentUser);
+    }
+
+    public MutableLiveData<User> updateUserWithMockLocationDataAndPersistToCloud(double latitude, double longitude){
+        if(!currentUser.isAnonymous()){
+            DocumentReference uidReference = userCollectionReference.document(currentUser.getUid());
+
+            currentUser.setLongitude(longitude);
+            currentUser.setLatitude(latitude);
+
+            uidReference.update("longitude", longitude);
+            uidReference.update("latitude", latitude);
+
+        }
+        else{
+            currentUser.setLatitude(latitude);
+            currentUser.setLongitude(longitude);
         }
 
         return new MutableLiveData<>(currentUser);
@@ -274,5 +299,13 @@ public class UserSource implements EventListener<DocumentSnapshot> {
     }
 
 
+    @Override
+    public void onLocationChange(LocationResult locationResults) {
 
+    }
+
+    @Override
+    public void onLocationAvailability(LocationAvailability locationAvailability) {
+
+    }
 }

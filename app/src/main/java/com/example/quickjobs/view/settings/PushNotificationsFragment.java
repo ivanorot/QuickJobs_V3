@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.Constants;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 

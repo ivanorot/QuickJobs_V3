@@ -39,12 +39,4 @@ public class SettingsRepository {
         return userSource.getCurrentUserMutableLiveData();
     }
 
-    public void loadDefaultSettings(Context context){
-        locationSource.setDefaultSettings(context);
-    }
-
-    public void loadLowFrequencySettings(Context context){
-        locationSource.setLowFrequencySettings(context);
-    }
-
 }

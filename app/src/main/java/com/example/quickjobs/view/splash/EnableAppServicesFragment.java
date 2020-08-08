@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.quickjobs.R;
 import com.example.quickjobs.viewmodel.SplashViewModel;
 
-public class LoadingDataFragment extends Fragment {
+public class EnableAppServicesFragment extends Fragment {
 
     SplashViewModel splashViewModel;
 
@@ -27,17 +29,22 @@ public class LoadingDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_loading_data, container, false);
+        View view = inflater.inflate(R.layout.fragment_enable_app_services, container, false);
 
 
-        splashViewModel.shouldMakeLoadingScreenVisible().observe(getViewLifecycleOwner(), makeVisible ->{
-            if(makeVisible){
-                view.setVisibility(View.VISIBLE);
+        CountDownTimer countDownTimer = new CountDownTimer(5000,1000) {
+            @Override
+            public void onTick(long l) {
+                Log.println(Log.ERROR, "EnableAppServices", "countDownTimer " + l);
             }
-            else{
-                view.setVisibility(View.GONE);
+
+            @Override
+            public void onFinish() {
+
             }
-        });
+        };
+
+        countDownTimer.start();
 
         return view;
     }

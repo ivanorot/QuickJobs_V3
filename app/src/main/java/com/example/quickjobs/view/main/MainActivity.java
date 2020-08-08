@@ -1,16 +1,20 @@
 package com.example.quickjobs.view.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.model.User;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,7 +42,13 @@ public class MainActivity extends AppCompatActivity{
 
     public void initQuickJobsUser(){
         mainViewModel.initializeCurrentUser();
-        mainViewModel.currentUserMutableLiveData.observe(this, currentUser -> {
+        mainViewModel.currentUserMutableLiveData.observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+
+            }
+
+
         });
     }
 
@@ -58,5 +68,13 @@ public class MainActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private class MyNavController extends NavController{
+        public MyNavController(@NonNull Context context) {
+            super(context);
+        }
+
+
     }
 }

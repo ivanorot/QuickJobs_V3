@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/splash_screen_nav_graph"
-    app:startDestination="@id/loadingDataFragment">
+    app:startDestination="@id/enableLocationServices">
 
     <fragment
-        android:id="@+id/loadingDataFragment"
-        android:name="com.example.quickjobs.view.splash.LoadingDataFragment"
-        android:label="fragment_loading_data"
-        tools:layout="@layout/fragment_loading_data" />
+        android:id="@+id/enableLocationServices"
+        android:name="com.example.quickjobs.view.splash.EnableLocationServicesFragment"
+        android:label="fragment_enable_location_services"
+        tools:layout="@layout/fragment_enable_location_services" />
 </navigation>

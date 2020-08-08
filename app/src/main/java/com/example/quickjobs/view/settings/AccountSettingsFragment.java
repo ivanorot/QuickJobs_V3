@@ -19,9 +19,6 @@ import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
-
 public class AccountSettingsFragment extends PreferenceFragmentCompat implements PreferenceManager.OnPreferenceTreeClickListener, Preference.OnPreferenceChangeListener {
     private final String TAG = "AccountSettingsFragment";
     private SettingsViewModel settingsViewModel;
@@ -139,9 +136,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     public void changeLocationUpdateFrequency(SwitchPreference switchPreference){
         settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_LOCATION, switchPreference.isChecked());
         if(switchPreference.isChecked()){
-            settingsViewModel.loadDefaultSettings(requireActivity());
         }else{
-            settingsViewModel.loadLowFrequencySettings(requireActivity());
         }
     }
 

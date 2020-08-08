@@ -16,14 +16,10 @@ public class User implements Serializable {
     private String emailAddress;
     private String displayName;
 
-    private String bio;
-
     private String phoneNumber;
 
     private double longitude = 200.0;
     private double latitude = 200.0;
-
-    private Address address;
 
     private List<QuickJob> myJobs;
     private List<String> photos;
