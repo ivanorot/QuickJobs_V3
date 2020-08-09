@@ -28,14 +28,6 @@ public class SettingsViewModel extends AndroidViewModel {
         currentUserLiveData = settingsRepository.getCurrentUserMutableLiveData();
     }
 
-    public void loadDefaultSettings(Context context){
-        settingsRepository.loadDefaultSettings(context);
-    }
-
-    public void loadLowFrequencySettings(Context context){
-        settingsRepository.loadLowFrequencySettings(context);
-    }
-
     public void saveUserPreference(String preferenceKey, Boolean preferenceState){
         sharedPreferencesManager.updateUserPreferences(preferenceKey, preferenceState);
     }

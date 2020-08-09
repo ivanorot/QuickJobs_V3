@@ -3,7 +3,12 @@ package com.example.quickjobs.source;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Looper;
+import android.os.Parcel;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,25 +24,25 @@ import com.google.android.gms.location.LocationResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationSource extends FusedLocationProviderClient {
+public class LocationSource extends FusedLocationProviderClient implements Runnable{
     private final String TAG = "LocationSource";
     private static LocationSource Instance;
 
-    public final int DEFAULT_INTERVAL = 15000;
-    public final int DEFAULT_FASTEST_INTERVAL = 10000;
-    public final int DEFAULT_DISPLACEMENT = 3000;
-
-    public final int LOW_FREQ_INTERVAL = 35000;
-    public final int LOW_FREQ_FASTEST_INTERVAL = 25000;
-    public final int LOW_FREQ_DISPLACEMENT = 5000;
+    public final int DEFAULT_INTERVAL = 150;
+    public final int DEFAULT_FASTEST_INTERVAL = 10;
+    public final int DEFAULT_DISPLACEMENT = 25;
 
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
     List<LocationChangeListener> locationChangeListeners;
 
+    Context mContext;
+    Thread locationUpdateThread;
+    private final String THREAD_NAME = "LocationUpdateThread";
     private LocationSource(@NonNull Context context) {
         super(context);
+        mContext = context;
 
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(DEFAULT_INTERVAL);
@@ -66,14 +71,9 @@ public class LocationSource extends FusedLocationProviderClient {
             }
         };
 
-    }
-
-    public void registerLocationChangeListener(LocationChangeListener locationChangeListener) {
-        locationChangeListeners.add(locationChangeListener);
-    }
-
-    public void unregisterLocationChangeListener(LocationChangeListener locationChangeListener) {
-        locationChangeListeners.remove(locationChangeListener);
+        locationUpdateThread = new Thread(this);
+        locationUpdateThread.setName(THREAD_NAME);
+        locationUpdateThread.setPriority(Thread.NORM_PRIORITY);
     }
 
     public static LocationSource getInstance(Context context) {
@@ -85,55 +85,28 @@ public class LocationSource extends FusedLocationProviderClient {
         return Instance;
     }
 
-    public void setDefaultSettings(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            locationRequest = LocationRequest.create();
-            locationRequest.setInterval(DEFAULT_INTERVAL);
-            locationRequest.setFastestInterval(DEFAULT_FASTEST_INTERVAL);
-            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            locationRequest.setSmallestDisplacement(DEFAULT_DISPLACEMENT);
-
-            requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        }
-
+    public void registerLocationChangeListener(LocationChangeListener locationChangeListener) {
+        locationChangeListeners.add(locationChangeListener);
     }
 
-    public void setLowFrequencySettings(Context context){
-        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-            locationRequest = LocationRequest.create();
-            locationRequest.setInterval(LOW_FREQ_INTERVAL);
-            locationRequest.setFastestInterval(LOW_FREQ_FASTEST_INTERVAL);
-            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            locationRequest.setSmallestDisplacement(LOW_FREQ_DISPLACEMENT);
-
-            requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        }
+    public void unregisterLocationChangeListener(LocationChangeListener locationChangeListener) {
+        locationChangeListeners.remove(locationChangeListener);
     }
 
-    public void setIntervalMaximun(int intervalMaximun) {
-        locationRequest.setInterval(intervalMaximun);
+    public void enableLocationUpdates(){
+        locationUpdateThread.start();
     }
 
-    public void setIntervalMinimum(int intervalMinimum) {
-        locationRequest.setFastestInterval(intervalMinimum);
-    }
-
-    public void setDisplacement(int displacement) {
-        locationRequest.setSmallestDisplacement(displacement);
-    }
-
-    public void enableLocationUpdates(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public void run() {
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
     }
 
     public void disableLocationUpdates(){
+        locationUpdateThread.stop();
         removeLocationUpdates(locationCallback);
     }
 }

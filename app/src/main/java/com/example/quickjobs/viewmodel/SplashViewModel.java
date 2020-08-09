@@ -25,7 +25,6 @@ import java.util.List;
 public class SplashViewModel extends AndroidViewModel {
     private final String TAG = "SplashViewModel";
     private SplashRepository splashRepository;
-    private PermissionManager permissionManager;
     private SharedPreferencesManager sharedPreferencesManager;
 
     public LiveData<User> authenticatedUserLiveData;
@@ -35,6 +34,8 @@ public class SplashViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> shouldMakeLoadingScreenVisible;
 
+    private PermissionManager permissionManager;
+
     public SplashViewModel(@NonNull Application application) {
         super(application);
 
@@ -42,6 +43,7 @@ public class SplashViewModel extends AndroidViewModel {
         permissionManager = new PermissionManager(application);
         sharedPreferencesManager = SharedPreferencesManager.getInstance(application);
         shouldMakeLoadingScreenVisible = new MutableLiveData<>(false);
+        permissionManager = new PermissionManager(application);
 
     }
 
@@ -65,12 +67,16 @@ public class SplashViewModel extends AndroidViewModel {
         authenticatedUserLiveData = splashRepository.checkIfCurrentUserHasLocationPersisted();
     }
 
-    public void enableLocationUpdates(Context context){
-        splashRepository.enableLocationUpdates(context);
+    public void enableLocationUpdates(){
+        splashRepository.enableLocationUpdates();
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
         authenticatedUserLiveData = splashRepository.updateUserLocationAndPersist(location);
+    }
+
+    public void updateUserWithMockLocationAndPersistToCloud(double latitude, double longitude){
+        authenticatedUserLiveData = splashRepository.updateUserWithMockLocationAndPersistToCloud(latitude, longitude);
     }
 
     public void getJobsBasedOnUserLocation(double longitude, double latitude, int maxDistance){
@@ -95,6 +101,10 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void unregister(LocationChangeListener locationChangeListener){
         splashRepository.unregister(locationChangeListener);
+    }
+
+    public PermissionManager getPermissionManager(){
+        return permissionManager;
     }
 
     public void loadUserAccountPreferences(){
