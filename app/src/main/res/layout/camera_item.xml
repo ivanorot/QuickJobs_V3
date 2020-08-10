@@ -6,13 +6,13 @@
     android:layout_height="100dp">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/cameraItem_imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/baseline_image_black_48" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/camera_item_imageButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/baseline_add_black_36" />

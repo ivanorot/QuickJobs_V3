@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -34,7 +33,6 @@ public class NewPostFragment extends Fragment {
     ImageButton galleryButton;
     EditText newPostTitle;
     String mTitleText;
-    ImageView pic1;
     private static final int pic_id = 123;
 
 
@@ -71,14 +69,6 @@ public class NewPostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == pic_id) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
-            pic1.setImageBitmap(pic);
-            /*
-            ******
-            ******
-            TODO: OnActivityResult code
-            ******
-            *****
-            */
         }
     }
 
@@ -109,7 +99,7 @@ public class NewPostFragment extends Fragment {
         cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
         galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
         newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
+        //pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
     }
 
 
