@@ -15,9 +15,7 @@ import com.example.quickjobs.view.splash.SplashActivity;
 import com.example.quickjobs.viewmodel.AuthViewModel;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.data.model.UserCancellationException;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +34,7 @@ public class AuthActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        Log.println(Log.ERROR, TAG, "Auth");
+        Log.println(Log.ERROR, TAG, "Auth ");
 
         initAuthViewModel();
         launchAuthentication();
@@ -48,6 +46,8 @@ public class AuthActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.println(Log.ERROR, TAG, "initiated");
+        Log.println(Log.ERROR, TAG, "\n" + RESULT_OK);
+        Log.println(Log.ERROR, TAG, "\n" + resultCode);
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
@@ -86,12 +86,15 @@ public class AuthActivity extends AppCompatActivity{
     }
 
     public void signInWithUsingDefault(IdpResponse response){
+        Log.println(Log.ERROR, TAG, "\n signInWithUsingDefault");
         authViewModel.signInDefault(response);
         authViewModel.authenticatedUserLiveData.observe(this, user ->{
             if(user.isNew()){
+                Log.println(Log.ERROR, TAG, "\n  createNewUser");
                 createNewUser(user);
             }
             else{
+                Log.println(Log.ERROR, TAG, "\n goToMainActivity");
                 goToMainActivity(user);
             }
         });
@@ -103,6 +106,7 @@ public class AuthActivity extends AppCompatActivity{
         authViewModel.createdUserLiveData.observe(this, this::goToMainActivity);
     }
     public void goToMainActivity(User user) {
+        Log.println(Log.ERROR, TAG, "\n goToMain");
         Intent intent = new Intent(AuthActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -110,6 +114,7 @@ public class AuthActivity extends AppCompatActivity{
     public void goToSplashActivity(){
         Intent intent = new Intent(AuthActivity.this, SplashActivity.class);
         startActivity(intent);
+        Log.println(Log.ERROR, TAG, "\n intent launched");
         finish();
     }
 }
