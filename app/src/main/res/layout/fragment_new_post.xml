@@ -152,81 +152,19 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/linearLayout3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="0dp"
-                            android:backgroundTint="#E0E0E0">
+                        <ImageView
+                            android:id="@+id/newPost_image1_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/baseline_image_black_48"
+                            android:visibility="gone" />
 
-                            <ImageView
-                                android:id="@+id/newPost_image1_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:scaleType="center"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <ImageView
-                                android:id="@+id/newPost_image2_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintBaseline_toBaselineOf="@+id/newPost_image1_imageView"
-                                app:layout_constraintStart_toEndOf="@+id/newPost_image1_imageView" />
-
-                            <ImageView
-                                android:id="@+id/newPost_image3_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintBaseline_toBaselineOf="@+id/newPost_image2_imageView"
-                                app:layout_constraintStart_toEndOf="@+id/newPost_image2_imageView" />
-
-                            <ImageView
-                                android:id="@+id/newPost_image4_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintBaseline_toBaselineOf="@+id/newPost_image3_imageView"
-                                app:layout_constraintStart_toEndOf="@+id/newPost_image3_imageView" />
-
-                            <ImageView
-                                android:id="@+id/newPost_image5_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/newPost_image1_imageView" />
-
-                            <ImageView
-                                android:id="@+id/newPost_image6_imageView"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:background="#9E9E9E"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_image_black_48"
-                                android:tint="#E0E0E0"
-                                app:layout_constraintStart_toEndOf="@+id/newPost_image5_imageView"
-                                app:layout_constraintTop_toBottomOf="@+id/newPost_image1_imageView" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <ImageButton
+                            android:id="@+id/newPost_imageButton1_imageButton"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:backgroundTint="@color/cardview_shadow_end_color"
+                            android:src="@drawable/baseline_add_black_36" />
                     </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
