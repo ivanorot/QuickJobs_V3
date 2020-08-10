@@ -109,7 +109,7 @@ public class SplashViewModel extends AndroidViewModel {
 
     public void loadUserAccountPreferences(){
         boolean isDarkModeOn = sharedPreferencesManager.getValueFromUserPreferences(Constants.USER_PREFERENCE_CONFIGURATION, false);
-        Log.println(Log.ERROR, TAG, "isDarkModeOn " + isDarkModeOn);
+        Log.println(Log.ERROR, TAG, "is dark mode on " + isDarkModeOn);
         if(isDarkModeOn){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }

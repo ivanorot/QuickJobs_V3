@@ -140,7 +140,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
                 DocumentSnapshot documentSnapshot = userTask.getResult();
                 if(documentSnapshot != null && documentSnapshot.exists()){
                     currentUser = documentSnapshot.toObject(User.class);
-                    userMutableLiveData.setValue(currentUser);
+                    userMutableLiveData.postValue(currentUser);
                 }
             }
             else{
@@ -184,6 +184,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
         MutableLiveData<User> anonUserMutableLiveData = new MutableLiveData<>();
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
         firebaseAuth.signInAnonymously().addOnCompleteListener(anonTask -> {
             Log.println(Log.ERROR, TAG, "anonTask");
             if(anonTask.isSuccessful()){
@@ -193,12 +194,13 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
                 if(firebaseUser != null){
                     User user = new User(firebaseUser);
                     user.setAnonymous(true);
+                    user.setAuthenticated(true);
                     anonUserMutableLiveData.postValue(user);
                 }
             }else{
-//                todo set offline test
                 User user = new User();
                 user.setAnonymous(true);
+                user.setAuthenticated(false);
                 anonUserMutableLiveData.postValue(user);
             }
         });
@@ -294,6 +296,14 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
            if(updateEmailTask.isSuccessful()){
                currentUser.setEmailAddress(email);
                currentUserMutableLiveData.setValue(currentUser);
+
+               FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+               FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+               if(firebaseUser != null){
+                   firebaseUser.updateEmail(email);
+                   firebaseAuth.updateCurrentUser(firebaseUser);
+               }
            }
         });
     }

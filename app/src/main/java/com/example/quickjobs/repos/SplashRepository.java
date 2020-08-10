@@ -1,5 +1,6 @@
 package com.example.quickjobs.repos;
 
+import android.app.Application;
 import android.content.Context;
 import android.location.Location;
 
@@ -26,7 +27,7 @@ public class SplashRepository{
     private JobSource jobSource;
     private LocationSource locationSource;
 
-    public SplashRepository(Context context){
+    public SplashRepository(Application context){
         userSource = UserSource.getInstance(FirebaseFirestore.getInstance());
         jobSource = JobSource.getInstance(FirebaseFirestore.getInstance());
         locationSource = LocationSource.getInstance(context);
@@ -53,7 +54,7 @@ public class SplashRepository{
     }
 
     public void enableLocationUpdates(){
-        locationSource.enableLocationUpdates();
+        locationSource.run();
     }
 
     public MutableLiveData<User> updateUserLocationAndPersist(Location location){

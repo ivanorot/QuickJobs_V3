@@ -141,27 +141,26 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
      */
 
     private void checkIfUserLocationIsAvailable(){
-        Log.println(Log.ERROR, TAG, "check If User Location Is Available");
+        Log.println(Log.ERROR, TAG, "check if user location is available");
         splashViewModel.checkIfCurrentUserHasLocationPersisted();
         splashViewModel.authenticatedUserLiveData.observe(this, user -> {
             if(user.hasLocationAvailable()){
-                Log.println(Log.ERROR, TAG, "hasLocationAvailable");
+                Log.println(Log.ERROR, TAG, "has location available");
                 getQuickJobsBasedOnUserLocation(user.getLongitude(), user.getLatitude());
             }
             else{
-                Log.println(Log.ERROR, TAG, "hasLocationAvailable");
+                Log.println(Log.ERROR, TAG, "Does not have location available");
                 checkLocationPermission();
             }
         });
     }
 
     private void checkLocationPermission(){
-        splashViewModel.getPermissionManager().checkPermission(this, Manifest.permission_group.LOCATION
-                , new PermissionManager.PermissionAskListnener() {
+        splashViewModel.getPermissionManager().checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionAskListnener() {
                     @Override
                     public void onNeedPermission() {
-                        Log.println(Log.ERROR, TAG, "Requesting location permission");
-                        ActivityCompat.requestPermissions(SplashActivity.this, new String[] {Manifest.permission_group.LOCATION}, LOCATION_REQUEST_ID);
+                        Log.println(Log.ERROR, TAG, "requesting location permission");
+                        ActivityCompat.requestPermissions(SplashActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
                     }
 
                     @Override
@@ -186,7 +185,37 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
 
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        boolean wasPermissionGranted = true;
+
+        for(int results : grantResults){
+            Log.println(Log.ERROR, TAG, "results " + results);
+        }
+
+        for(int permissionResult: grantResults){
+            if (permissionResult < 0) {
+                wasPermissionGranted = false;
+                break;
+            }
+        }
+
+        if(wasPermissionGranted){
+            splashViewModel.enableLocationUpdates();
+        }else{
+
+        }
+
+    }
+
+    @Override
     public void onLocationChange(LocationResult locationResults) {
+
+        for(Location location : locationResults.getLocations()){
+            Log.println(Log.ERROR, TAG, "Location Accuracy: " + location.getAccuracy());
+        }
+
         if(locationResults.getLastLocation() != null){
             updateUserLocationAndPersistToCloud(locationResults.getLastLocation());
         }
@@ -208,7 +237,7 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
     }
 
     public void updateUserWithMockLocationAndPersistToCloud(double latitude, double longitude){
-        Log.println(Log.ERROR, TAG, "updateUserLocationAndPersistToCloud");
+        Log.println(Log.ERROR, TAG, "Setting Mock Location");
         splashViewModel.updateUserWithMockLocationAndPersistToCloud(latitude, longitude);
         splashViewModel.authenticatedUserLiveData.observe(this, updatedUser -> {
             getQuickJobsBasedOnUserLocation(updatedUser.getLongitude(), updatedUser.getLatitude());
@@ -272,7 +301,7 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
                 })
                 .setPositiveButton("RETRY", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
-                    ActivityCompat.requestPermissions(this, new String[] {Manifest.permission_group.LOCATION}, LOCATION_REQUEST_ID);
+                    ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
                 }).show();
     }
 

@@ -1,19 +1,16 @@
 package com.example.quickjobs.source;
 
-import android.Manifest;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcel;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.quickjobs.helper.Constants;
 import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -33,16 +30,18 @@ public class LocationSource extends FusedLocationProviderClient implements Runna
     public final int DEFAULT_DISPLACEMENT = 25;
 
     private LocationRequest locationRequest;
+
+    private List<LocationChangeListener> locationChangeListeners;
+    private Thread locationUpdateThread;
+    private LocationRunnable locationRunnable;
+
+    private Handler locationUpdateHandler;
+
     private LocationCallback locationCallback;
 
-    List<LocationChangeListener> locationChangeListeners;
 
-    Context mContext;
-    Thread locationUpdateThread;
-    private final String THREAD_NAME = "LocationUpdateThread";
-    private LocationSource(@NonNull Context context) {
-        super(context);
-        mContext = context;
+    private LocationSource(@NonNull Application application) {
+        super(application);
 
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(DEFAULT_INTERVAL);
@@ -52,31 +51,10 @@ public class LocationSource extends FusedLocationProviderClient implements Runna
 
         locationChangeListeners = new ArrayList<>();
 
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                Log.println(Log.ERROR, TAG, locationResult.getLastLocation() + "");
-                for(LocationChangeListener temp : locationChangeListeners){
-                    temp.onLocationChange(locationResult);
-                }
-            }
 
-            @Override
-            public void onLocationAvailability(LocationAvailability locationAvailability) {
-                super.onLocationAvailability(locationAvailability);
-                for(LocationChangeListener locationChangeListener: locationChangeListeners){
-                    locationChangeListener.onLocationAvailability(locationAvailability);
-                }
-            }
-        };
-
-        locationUpdateThread = new Thread(this);
-        locationUpdateThread.setName(THREAD_NAME);
-        locationUpdateThread.setPriority(Thread.NORM_PRIORITY);
     }
 
-    public static LocationSource getInstance(Context context) {
+    public static LocationSource getInstance(Application context) {
         if (Instance == null) {
             synchronized (LocationSource.class) {
                 Instance = new LocationSource(context);
@@ -93,20 +71,55 @@ public class LocationSource extends FusedLocationProviderClient implements Runna
         locationChangeListeners.remove(locationChangeListener);
     }
 
-    public void enableLocationUpdates(){
-        locationUpdateThread.start();
-    }
-
     @Override
     public void run() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        enableLocationUpdates();
+    }
+
+    private void enableLocationUpdates(){
+
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                for(LocationChangeListener locationChangeListener: locationChangeListeners){
+                    locationChangeListener.onLocationChange(locationResult);
+                }
+            }
+
+            @Override
+            public void onLocationAvailability(LocationAvailability locationAvailability) {
+                super.onLocationAvailability(locationAvailability);
+                for(LocationChangeListener locationChangeListener: locationChangeListeners){
+                    locationChangeListener.onLocationAvailability(locationAvailability);
+                }
+            }
+        };
+
+    }
+
+    private void initThreadLooperAndHandler(){
+        Looper.prepare();
+        locationUpdateHandler = new Handler();
+        locationUpdateHandler.post(locationRunnable);
+        Looper.loop();
+    }
+
+    private class LocationRunnable implements Runnable{
+        @Override
+        public void run() {
+
         }
     }
 
-    public void disableLocationUpdates(){
-        locationUpdateThread.stop();
-        removeLocationUpdates(locationCallback);
+
+    private class LocationThread extends Thread {
+
+    }
+
+
+    private class LocationHandler extends Handler{
+
     }
 }

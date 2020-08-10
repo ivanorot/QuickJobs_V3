@@ -1,5 +1,6 @@
 package com.example.quickjobs.repos;
 
+import android.app.Application;
 import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
@@ -18,7 +19,7 @@ public class SettingsRepository {
 
     private SharedPreferencesManager sharedPreferencesManager;
 
-    private SettingsRepository(Context context){
+    private SettingsRepository(Application context){
         userSource = UserSource.getInstance(FirebaseFirestore.getInstance());
         locationSource = LocationSource.getInstance(context);
 
@@ -26,7 +27,7 @@ public class SettingsRepository {
     }
 
 
-    public static SettingsRepository getInstance(Context context){
+    public static SettingsRepository getInstance(Application context){
         if(Instance == null){
             synchronized (SettingsRepository.class){
                 Instance = new SettingsRepository(context);
