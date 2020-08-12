@@ -63,8 +63,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         Toast.makeText(context, "OnBindViewHolder", Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "position =" + position + "\n bitmaps size = " + bitmaps.size(), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onBindViewHolder: position = "+ position + " bitmap size = " + bitmaps.size());
-        if (bitmaps != null && bitmaps.size() == (position)) {
-            holder.image.setImageBitmap(bitmaps.get(position-1));
+        if (bitmaps != null && bitmaps.size() == (position+1)) {
+            holder.image.setImageBitmap(bitmaps.get(position));
             // Toast.makeText(context, "setOnClickListener", Toast.LENGTH_SHORT).show();
           /*  holder.addImage_Button.setOnClickListener(new View.OnClickListener() {
                 @Override
