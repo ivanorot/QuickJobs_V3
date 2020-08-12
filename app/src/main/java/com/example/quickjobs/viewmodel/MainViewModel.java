@@ -7,10 +7,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.interfaces.LocationChangeListener;
-import com.example.quickjobs.model.User;
-import com.example.quickjobs.repos.MainRepository;
-import com.example.quickjobs.source.UserSource;
+import com.example.quickjobs.model.interfaces.UserLocationCallback;
+import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.MainRepository;
+import com.example.quickjobs.model.source.UserSource;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -22,9 +22,8 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
 
-        mainRepository = MainRepository.getInstance();
+        mainRepository = MainRepository.getInstance(application);
         currentUserMutableLiveData = new MutableLiveData<>();
-
     }
 
     public void initializeCurrentUser(){
@@ -35,7 +34,7 @@ public class MainViewModel extends AndroidViewModel {
         mainRepository.addAnonymousUserToSource(user);
     }
 
-    public void register(LocationChangeListener locationChangeListener){
-        mainRepository.register(locationChangeListener);
+    public void register(UserLocationCallback userLocationCallback){
+        mainRepository.register(userLocationCallback);
     }
 }

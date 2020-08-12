@@ -1,18 +1,17 @@
-package com.example.quickjobs.source;
+package com.example.quickjobs.model.source;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.interfaces.LocationChangeListener;
-import com.example.quickjobs.model.User;
-import com.example.quickjobs.helper.ExceptionHandler;
+import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,49 +21,70 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-public class UserSource implements EventListener<DocumentSnapshot>, LocationChangeListener {
+public class UserSource implements EventListener<DocumentSnapshot>{
+    private final String USER_SOURCE_BACKGROUND_THREAD_NAME = "USER_SOURCE_BACKGROUND_THREAD";
     private final String USER_COLLECTION_NAME = "users";
     private final String TAG = "UserSource";
 
     private static UserSource Instance;
 
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private CollectionReference userCollectionReference;
+//  Threads
+    private HandlerThread userSourceHandlerThread_Background;
+    private Handler userSourceHandler_Background;
 
 //  Authentication
+    private DocumentReference currentUserDocument;
     private User currentUser;
 
 
-//  Observable
-    private MutableLiveData<User> currentUserMutableLiveData;
+//  LiveData
+    public MutableLiveData<User> currentUserMutableLiveData;
     /*
 
      */
-    private UserSource(FirebaseFirestore firebaseFirestore) {
-        userCollectionReference = firebaseFirestore.collection(USER_COLLECTION_NAME);
+    private UserSource() {
         currentUserMutableLiveData = new MutableLiveData<>();
+        initUserSourceThread();
+
     }
 
-    public static UserSource getInstance(FirebaseFirestore firebaseFirestore) {
+    public static UserSource getInstance() {
         if (Instance == null) {
             synchronized (UserSource.class) {
-                Instance = new UserSource(firebaseFirestore);
+                Instance = new UserSource();
             }
         }
         return Instance;
     }
-    ////
+
+    public void initUserSourceThread(){
+        userSourceHandlerThread_Background = new HandlerThread(USER_SOURCE_BACKGROUND_THREAD_NAME);
+        userSourceHandlerThread_Background.start();
+        userSourceHandler_Background = new Handler(userSourceHandlerThread_Background.getLooper());
+    }
+
+    public void terminateUserSourceThread(){
+        userSourceHandlerThread_Background.quitSafely();
+        try {
+
+            userSourceHandlerThread_Background.join();
+            userSourceHandlerThread_Background = null;
+            userSourceHandler_Background = null;
+
+        }catch (InterruptedException exception){
+            ExceptionHandler.consumeException(TAG, exception);
+        }
+    }
 
     public void enableCurrentUserDocumentSnapshotListener(){
         if(currentUser != null && !currentUser.isAnonymous()){
-            userCollectionReference.document(currentUser.getUid()).addSnapshotListener(this);
+            currentUserDocument.addSnapshotListener(this);
         }
     }
 
     public void disableCurrentUserDocumentSnapshotListener(){
         if(currentUser != null && !currentUser.isAnonymous()) {
-            userCollectionReference.document(currentUser.getUid()).addSnapshotListener(this).remove();
+            currentUserDocument.addSnapshotListener(this).remove();
         }
     }
 
@@ -75,13 +95,10 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
         }
         else{
             if(value != null){
+                currentUserDocument = value.getReference();
                 currentUser = value.toObject(User.class);
-
+                currentUserMutableLiveData.postValue(currentUser);
             }
-        }
-
-        if(currentUser != null){
-            currentUserMutableLiveData.setValue(currentUser);
         }
     }
 
@@ -127,7 +144,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
 
         if(anonymousUser != null){
             currentUser = anonymousUser;
-            currentUserMutableLiveData.setValue(currentUser);
+            currentUserMutableLiveData.postValue(currentUser);
         }
 
         return currentUserMutableLiveData;
@@ -135,7 +152,10 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
 
     public MutableLiveData<User> addAuthenticatedUserToLiveData(String inUid){
         MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
-        userCollectionReference.document(inUid).get().addOnCompleteListener(userTask -> {
+        currentUserDocument = FirebaseFirestore.getInstance().collection(USER_COLLECTION_NAME)
+                .document(inUid);
+
+        currentUserDocument.get().addOnCompleteListener(userTask -> {
             if(userTask.isSuccessful()){
                 DocumentSnapshot documentSnapshot = userTask.getResult();
                 if(documentSnapshot != null && documentSnapshot.exists()){
@@ -166,7 +186,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
                     currentUser = new User(firebaseUser);
                     currentUser.setNew(response.isNewUser());
                     currentUser.setCreated(true);
-                    authenicatedUserMutableLiveData.setValue(currentUser);
+                    authenicatedUserMutableLiveData.postValue(currentUser);
                 }
             }
             else{
@@ -214,6 +234,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
     public MutableLiveData<User> createUserInFireBaseIfNotExists(User authenticatedUser){
         MutableLiveData<User> newUserMutableLiveData = new MutableLiveData<>();
 
+        CollectionReference userCollectionReference = FirebaseFirestore.getInstance().collection(USER_COLLECTION_NAME);
         DocumentReference uidReference = userCollectionReference.document(authenticatedUser.getUid());
 
         uidReference.get().addOnCompleteListener(uidTask -> {
@@ -223,7 +244,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
                     uidReference.set(authenticatedUser).addOnCompleteListener(userCreationTask -> {
                         if(userCreationTask.isSuccessful()){
                             authenticatedUser.setCreated(true);
-                            newUserMutableLiveData.setValue(authenticatedUser);
+                            newUserMutableLiveData.postValue(authenticatedUser);
                         }
                         else {
                             if(userCreationTask.getException() != null){
@@ -255,6 +276,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
         double latitude = location.getLatitude();
 
         if(!currentUser.isAnonymous()){
+            CollectionReference userCollectionReference = FirebaseFirestore.getInstance().collection(USER_COLLECTION_NAME);
             DocumentReference uidReference = userCollectionReference.document(currentUser.getUid());
 
             currentUser.setLongitude(longitude);
@@ -274,6 +296,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
 
     public MutableLiveData<User> updateUserWithMockLocationDataAndPersistToCloud(double latitude, double longitude){
         if(!currentUser.isAnonymous()){
+            CollectionReference userCollectionReference = FirebaseFirestore.getInstance().collection(USER_COLLECTION_NAME);
             DocumentReference uidReference = userCollectionReference.document(currentUser.getUid());
 
             currentUser.setLongitude(longitude);
@@ -292,6 +315,7 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
     }
 
     public void updateUserEmailInFirestore(String email){
+        CollectionReference userCollectionReference = FirebaseFirestore.getInstance().collection(USER_COLLECTION_NAME);
         userCollectionReference.document(currentUser.getUid()).update("emailAddress", email).addOnCompleteListener(updateEmailTask -> {
            if(updateEmailTask.isSuccessful()){
                currentUser.setEmailAddress(email);
@@ -308,14 +332,4 @@ public class UserSource implements EventListener<DocumentSnapshot>, LocationChan
         });
     }
 
-
-    @Override
-    public void onLocationChange(LocationResult locationResults) {
-
-    }
-
-    @Override
-    public void onLocationAvailability(LocationAvailability locationAvailability) {
-
-    }
 }

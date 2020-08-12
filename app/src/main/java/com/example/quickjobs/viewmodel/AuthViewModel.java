@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.quickjobs.model.User;
-import com.example.quickjobs.repos.AuthRepository;
+import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.MainRepository;
 import com.firebase.ui.auth.IdpResponse;
 
 
 public class AuthViewModel extends AndroidViewModel {
     private final String TAG = "AuthViewModel";
-    private AuthRepository authRepository;
+    private MainRepository mainRepository;
 
     public LiveData<User> authenticatedUserLiveData;
     public LiveData<User> createdUserLiveData;
@@ -22,15 +22,15 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        authRepository = new AuthRepository();
+        mainRepository = MainRepository.getInstance(application);
     }
 
     public void signInDefault(IdpResponse firebaseResponse){
-        authenticatedUserLiveData = authRepository.firebaseGenericSignIn(firebaseResponse);
+        authenticatedUserLiveData = mainRepository.firebaseGenericSignIn(firebaseResponse);
     }
 
     public void createUser(User authenticatedUser){
-        createdUserLiveData = authRepository.createUserInFireBaseIfNotExists(authenticatedUser);
+        createdUserLiveData = mainRepository.createUserInFireBaseIfNotExists(authenticatedUser);
     }
 
 }

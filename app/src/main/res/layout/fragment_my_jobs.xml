@@ -5,7 +5,7 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.profile.MyJobsFragment">
+    tools:context=".view.jobs.MyJobsFragment">
 
     <FrameLayout
         android:id="@+id/myJobs_signin_FrameLayout"

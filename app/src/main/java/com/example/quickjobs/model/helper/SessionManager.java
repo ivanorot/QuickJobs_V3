@@ -1,10 +1,9 @@
-package com.example.quickjobs.helper;
+package com.example.quickjobs.model.helper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.quickjobs.source.SharedPreferencesManager;
+import com.example.quickjobs.model.source.SharedPreferencesManager;
 
 public class SessionManager {
 

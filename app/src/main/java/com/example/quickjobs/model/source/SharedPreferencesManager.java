@@ -1,16 +1,10 @@
-package com.example.quickjobs.source;
+package com.example.quickjobs.model.source;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.preference.AndroidResources;
-import androidx.preference.Preference;
-
-import com.example.quickjobs.R;
-import com.example.quickjobs.helper.Constants;
-
-import io.grpc.internal.SharedResourceHolder;
+import com.example.quickjobs.model.helper.Constants;
 
 public class SharedPreferencesManager implements android.content.SharedPreferences.OnSharedPreferenceChangeListener {
     private final String TAG = "SharedPrefManager";

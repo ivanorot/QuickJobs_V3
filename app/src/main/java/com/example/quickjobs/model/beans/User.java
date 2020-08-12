@@ -1,6 +1,4 @@
-package com.example.quickjobs.model;
-
-import android.location.Address;
+package com.example.quickjobs.model.beans;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.Exclude;
@@ -25,7 +23,7 @@ public class User implements Serializable {
     private List<String> photos;
 
     @Exclude
-    private boolean isAuthenticated, isNew, isCreated, isAnonymous, locationHasBeenUpdated;
+    private boolean isAuthenticated, isNew, isCreated, isAnonymous;
 
 
     public User() {
@@ -169,10 +167,6 @@ public class User implements Serializable {
     }
 
     public boolean hasLocationAvailable() {
-        return locationHasBeenUpdated;
-    }
-
-    public void setLocationAvailiable(boolean hasBeenUpdated) {
-        locationHasBeenUpdated = hasBeenUpdated;
+        return (longitude <= 180.0 && latitude <= 180.0);
     }
 }

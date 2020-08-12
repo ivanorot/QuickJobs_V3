@@ -1,15 +1,16 @@
 package com.example.quickjobs.view.splash;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -18,44 +19,56 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.loader.content.AsyncTaskLoader;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.Constants;
-import com.example.quickjobs.interfaces.LocationChangeListener;
-import com.example.quickjobs.model.User;
-import com.example.quickjobs.helper.PermissionManager;
-import com.example.quickjobs.source.SharedPreferencesManager;
-import com.example.quickjobs.view.auth.AuthActivity;
+import com.example.quickjobs.model.helper.Constants;
+import com.example.quickjobs.model.interfaces.UserLocationCallback;
+import com.example.quickjobs.model.interfaces.PermissionAskListener;
+import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.interfaces.PermissionResultsListener;
 import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.viewmodel.SplashViewModel;
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationResult;
 
-import java.security.Permission;
-
-public class SplashActivity extends AppCompatActivity implements LocationChangeListener {
+public class SplashActivity extends AppCompatActivity implements UserLocationCallback, Animator.AnimatorListener {
     private final String TAG = "SplashActivity";
+    private final String BACKGROUND_THREAD_NAME = "INIT_DATA_THREAD";
+
+    private HandlerThread initDataHandlerThread_Background;
+    private Handler initDataHandler_Background;
 
     private ProgressBar loadingProgressBar;
     private SplashViewModel splashViewModel;
+
+    private TextView textView;
+    private ObjectAnimator animation;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        initSplashViewModel();
-        checkIfUserIsAnonymousAndAuthenticated();
+        initViewAndAnimation();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        splashViewModel.unregister(this);
+    }
+
+    private void initViewAndAnimation(){
+        textView = findViewById(R.id.quickJobsText);
+        progressBar = findViewById(R.id.progress_bar);
+        animation = ObjectAnimator.ofFloat(textView, "translationX", 0f, 100f, -100f, 0f);
+        animation.addListener(this);
+        animation.setDuration(2000);
 
     }
 
@@ -63,6 +76,26 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         splashViewModel.register(this);
         splashViewModel.loadUserAccountPreferences();
+
+    }
+
+    @Override
+    public void onAnimationStart(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animator) {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animator) {
     }
 
     private void checkIfUserIsAnonymousAndAuthenticated(){
@@ -156,7 +189,7 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
     }
 
     private void checkLocationPermission(){
-        splashViewModel.getPermissionManager().checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionManager.PermissionAskListnener() {
+        splashViewModel.getPermissionManager().checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, new PermissionAskListener() {
                     @Override
                     public void onNeedPermission() {
                         Log.println(Log.ERROR, TAG, "requesting location permission");
@@ -190,23 +223,33 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
 
         boolean wasPermissionGranted = true;
 
+
         for(int results : grantResults){
             Log.println(Log.ERROR, TAG, "results " + results);
-        }
 
-        for(int permissionResult: grantResults){
-            if (permissionResult < 0) {
+            if(results == -1){
                 wasPermissionGranted = false;
                 break;
             }
         }
 
-        if(wasPermissionGranted){
-            splashViewModel.enableLocationUpdates();
-        }else{
+        checkPermissionRequestResults(wasPermissionGranted);
 
-        }
+    }
 
+    public void checkPermissionRequestResults(boolean wasGranted){
+        splashViewModel.getPermissionManager().handlePermissionRequestResults(getApplication(), Manifest.permission.ACCESS_FINE_LOCATION, new PermissionResultsListener() {
+            @Override
+            public void onPermissionGranted() {
+                splashViewModel.enableLocationUpdates();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+//                set mock location
+                dialogForDeniedPermissionResults();
+            }
+        });
     }
 
     @Override
@@ -236,9 +279,9 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         });
     }
 
-    public void updateUserWithMockLocationAndPersistToCloud(double latitude, double longitude){
+    public void updateUserWithMockLocationAndPersistToCloud(){
         Log.println(Log.ERROR, TAG, "Setting Mock Location");
-        splashViewModel.updateUserWithMockLocationAndPersistToCloud(latitude, longitude);
+        splashViewModel.updateUserWithMockLocationAndPersistToCloud(Constants.MOCK_LATITUDE, Constants.MOCK_LONGITUDE);
         splashViewModel.authenticatedUserLiveData.observe(this, updatedUser -> {
             getQuickJobsBasedOnUserLocation(updatedUser.getLongitude(), updatedUser.getLatitude());
         });
@@ -258,7 +301,7 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
     public void checkIfUserLocationHasBeenFound(){
         splashViewModel.authenticatedUserLiveData.observe(this, user->{
             if(!user.hasLocationAvailable()){
-                updateUserWithMockLocationAndPersistToCloud(Constants.MOCK_LATITUDE, Constants.MOCK_LONGITUDE);
+                updateUserWithMockLocationAndPersistToCloud();
             }
         });
     }
@@ -283,11 +326,7 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
         countDownTimer.start();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        splashViewModel.unregister(this);
-    }
+
 
     private final int LOCATION_REQUEST_ID = 180;
 
@@ -316,6 +355,20 @@ public class SplashActivity extends AppCompatActivity implements LocationChangeL
                 .setPositiveButton("SETTINGS", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     goToSettings();
+                }).show();
+    }
+
+    private void dialogForDeniedPermissionResults(){
+        new AlertDialog.Builder(this).setTitle("Permission Denied")
+                .setMessage("To find jobs in your area we need your location. However, Trust is earned, ")
+                .setCancelable(false)
+                .setNegativeButton("NOT NOW", ((dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    updateUserWithMockLocationAndPersistToCloud();
+                }))
+                .setPositiveButton("CONTINUE", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_REQUEST_ID);
                 }).show();
     }
 

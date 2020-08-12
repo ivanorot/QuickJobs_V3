@@ -29,8 +29,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.PermissionManager;
-import com.example.quickjobs.view.splash.SplashActivity;
+import com.example.quickjobs.model.helper.PermissionManager;
+import com.example.quickjobs.model.interfaces.PermissionAskListener;
+import com.example.quickjobs.model.interfaces.PermissionResultsListener;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.nio.ByteBuffer;
@@ -252,7 +253,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void checkCameraPermission(){
         initPermissionManger();
-        permissionManager.checkPermission(this, Manifest.permission.CAMERA, new PermissionManager.PermissionAskListnener() {
+        permissionManager.checkPermission(this, Manifest.permission.CAMERA, new PermissionAskListener() {
             @Override
             public void onNeedPermission() {
                 Log.println(Log.ERROR, TAG, "Requesting location permission");
@@ -281,7 +282,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void checkPermissionResults(){
-        permissionManager.handlePermissionRequestResults(getApplicationContext(), Manifest.permission.CAMERA, new PermissionManager.PermissionRequestResultListener() {
+        permissionManager.handlePermissionRequestResults(getApplicationContext(), Manifest.permission.CAMERA, new PermissionResultsListener() {
             @Override
             public void onPermissionGranted() {
                 startCamera();

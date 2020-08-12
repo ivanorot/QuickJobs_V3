@@ -1,13 +1,11 @@
 package com.example.quickjobs.view.main;
 
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,10 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.viewmodel.MainViewModel;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationResult;
 
 public class HomeFragment extends Fragment {
     private final String TAG = "HomeFragment";

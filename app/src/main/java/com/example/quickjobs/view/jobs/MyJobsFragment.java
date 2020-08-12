@@ -1,28 +1,29 @@
 package com.example.quickjobs.view.jobs;
 
-import android.location.Location;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.quickjobs.R;
-import com.example.quickjobs.interfaces.LocationChangeListener;
 import com.example.quickjobs.viewmodel.MainViewModel;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationResult;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MyJobFragment#newInstance} factory method to
+ * Use the {@link MyJobsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyJobFragment extends Fragment{
+public class MyJobsFragment extends Fragment {
+    private final String TAG = "MyJobs";
+    private MainViewModel mainViewModel;
+    private NavController navController;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +34,7 @@ public class MyJobFragment extends Fragment{
     private String mParam1;
     private String mParam2;
 
-    public MyJobFragment() {
+    public MyJobsFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +44,11 @@ public class MyJobFragment extends Fragment{
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MyJobFragment.
+     * @return A new instance of fragment MyJobsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyJobFragment newInstance(String param1, String param2) {
-        MyJobFragment fragment = new MyJobFragment();
+    public static MyJobsFragment newInstance(String param1, String param2) {
+        MyJobsFragment fragment = new MyJobsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,11 +69,23 @@ public class MyJobFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_job, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_jobs, container, false);
 
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-
+        initViewModel();
+        initNavController(view);
+        mainViewModel.currentUserMutableLiveData.observe(getViewLifecycleOwner(), currentUser->{
+            if(currentUser.isAnonymous()){
+                NavHostFragment.findNavController(this).navigate(R.id.anonymousUserRestrictedFragment);
+            }
+        });
         return view;
     }
 
+    private void initViewModel(){
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+    }
+
+    private void initNavController(View view){
+        navController = Navigation.findNavController(view);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.quickjobs.helper;
+package com.example.quickjobs.model.helper;
 
 
 import android.app.AlertDialog;

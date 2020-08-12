@@ -14,7 +14,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.Constants;
+import com.example.quickjobs.model.helper.Constants;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;

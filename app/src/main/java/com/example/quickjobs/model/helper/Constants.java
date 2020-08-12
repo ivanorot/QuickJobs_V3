@@ -1,8 +1,6 @@
-package com.example.quickjobs.helper;
+package com.example.quickjobs.model.helper;
 
 import android.Manifest;
-
-import com.example.quickjobs.R;
 
 public class Constants {
     public static final String USER_PREFERENCE_NAME = "CURRENT_USER_SHARED_PREFERENCES";

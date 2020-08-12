@@ -1,106 +1,98 @@
 package com.example.quickjobs.viewmodel;
 
 import android.app.Application;
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.quickjobs.helper.Constants;
-import com.example.quickjobs.helper.PermissionManager;
-import com.example.quickjobs.interfaces.LocationChangeListener;
-import com.example.quickjobs.model.QuickJob;
-import com.example.quickjobs.model.User;
-import com.example.quickjobs.repos.SplashRepository;
-import com.example.quickjobs.source.SharedPreferencesManager;
+import com.example.quickjobs.model.helper.Constants;
+import com.example.quickjobs.model.helper.PermissionManager;
+import com.example.quickjobs.model.interfaces.UserLocationCallback;
+import com.example.quickjobs.model.beans.QuickJob;
+import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.MainRepository;
+import com.example.quickjobs.model.source.SharedPreferencesManager;
 
 import java.util.List;
 
 public class SplashViewModel extends AndroidViewModel {
     private final String TAG = "SplashViewModel";
-    private SplashRepository splashRepository;
+    private MainRepository mainRepository;
     private SharedPreferencesManager sharedPreferencesManager;
 
     public LiveData<User> authenticatedUserLiveData;
     public LiveData<User> isUserAnonymousOrAuthenticatedLiveData;
-
+    public LiveData<Boolean> isAllDataLoadedLiveData;
+    public LiveData<Boolean> setLoadingScreenVisible;
     public LiveData<List<QuickJob>> jobsBasedOnUserLocation;
 
-    private MutableLiveData<Boolean> shouldMakeLoadingScreenVisible;
-
     private PermissionManager permissionManager;
+
+
 
     public SplashViewModel(@NonNull Application application) {
         super(application);
 
-        splashRepository = new SplashRepository(application);
+        mainRepository = MainRepository.getInstance(application);
         permissionManager = new PermissionManager(application);
         sharedPreferencesManager = SharedPreferencesManager.getInstance(application);
-        shouldMakeLoadingScreenVisible = new MutableLiveData<>(false);
         permissionManager = new PermissionManager(application);
+        isAllDataLoadedLiveData = new MutableLiveData<>(false);
+        setLoadingScreenVisible = new MutableLiveData<>(false);
 
     }
 
     public void checkIfUserIsAnonymousAndAuthenticated(){
-        isUserAnonymousOrAuthenticatedLiveData = splashRepository.checkIfUserIsAnonymousAndAuthenticated();
+        isUserAnonymousOrAuthenticatedLiveData = mainRepository.checkIfUserIsAnonymousAndAuthenticated();
     }
 
     public void setAnonymousUser(User anonymousUser){
-        authenticatedUserLiveData = splashRepository.addAnonymousUserToLiveData(anonymousUser);
+        authenticatedUserLiveData = mainRepository.addAnonymousUserToLiveData(anonymousUser);
     }
 
     public void setAuthenticatedUser(String Uid){
-        authenticatedUserLiveData = splashRepository.addAuthenticatedUserLiveData(Uid);
+        authenticatedUserLiveData = mainRepository.addAuthenticatedUserLiveData(Uid);
     }
 
     public void signInAnonymously(){
-        authenticatedUserLiveData = splashRepository.signInAnonymously();
+        authenticatedUserLiveData = mainRepository.signInAnonymously();
     }
 
     public void checkIfCurrentUserHasLocationPersisted(){
-        authenticatedUserLiveData = splashRepository.checkIfCurrentUserHasLocationPersisted();
+        authenticatedUserLiveData = mainRepository.checkIfCurrentUserHasLocationPersisted();
     }
 
     public void enableLocationUpdates(){
-        splashRepository.enableLocationUpdates();
+        mainRepository.enableLocationUpdates();
     }
 
     public void updateUserLocationAndPersistToCloud(Location location){
-        authenticatedUserLiveData = splashRepository.updateUserLocationAndPersist(location);
+        authenticatedUserLiveData = mainRepository.updateUserLocationAndPersist(location);
     }
 
     public void updateUserWithMockLocationAndPersistToCloud(double latitude, double longitude){
-        authenticatedUserLiveData = splashRepository.updateUserWithMockLocationAndPersistToCloud(latitude, longitude);
+        authenticatedUserLiveData = mainRepository.updateUserWithMockLocationAndPersistToCloud(latitude, longitude);
     }
 
     public void getJobsBasedOnUserLocation(double longitude, double latitude, int maxDistance){
-        jobsBasedOnUserLocation = splashRepository.getJobsBasedOnUserLocation(longitude, latitude, maxDistance);
+        jobsBasedOnUserLocation = mainRepository.getJobsBasedOnUserLocation(longitude, latitude, maxDistance);
     }
 
     public void enableSnapshotListeners(){
-        splashRepository.enableSnapshotListeners();
+        mainRepository.enableSnapshotListeners();
     }
 
-    public LiveData<Boolean> shouldMakeLoadingScreenVisible(){
-        return shouldMakeLoadingScreenVisible;
+    public void register(UserLocationCallback userLocationCallback){
+        mainRepository.register(userLocationCallback);
     }
 
-    public void setShouldMakeLoadingScreenVisible(Boolean loadFirstAttempt){
-        shouldMakeLoadingScreenVisible.setValue(loadFirstAttempt);
-    }
-
-    public void register(LocationChangeListener locationChangeListener){
-        splashRepository.register(locationChangeListener);
-    }
-
-    public void unregister(LocationChangeListener locationChangeListener){
-        splashRepository.unregister(locationChangeListener);
+    public void unregister(UserLocationCallback userLocationCallback){
+        mainRepository.unregister(userLocationCallback);
     }
 
     public PermissionManager getPermissionManager(){

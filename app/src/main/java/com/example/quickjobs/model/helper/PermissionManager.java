@@ -1,4 +1,4 @@
-package com.example.quickjobs.helper;
+package com.example.quickjobs.model.helper;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -7,8 +7,9 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
+
+import com.example.quickjobs.model.interfaces.PermissionAskListener;
+import com.example.quickjobs.model.interfaces.PermissionResultsListener;
 
 public class PermissionManager {
     private SessionManager sessionManager;
@@ -29,7 +30,7 @@ public class PermissionManager {
         return false;
     }
 
-    public void checkPermission(Context context, String permission, PermissionAskListnener listnener){
+    public void checkPermission(Context context, String permission, PermissionAskListener listnener){
         final String TAG = "checkPermission";
         if(shouldAskPermission(context, permission)){
             if(ActivityCompat.shouldShowRequestPermissionRationale((AppCompatActivity) context, permission)){
@@ -54,23 +55,11 @@ public class PermissionManager {
         }
     }
 
-    public void handlePermissionRequestResults(Context context, String permission, PermissionRequestResultListener listener){
+    public void handlePermissionRequestResults(Context context, String permission, PermissionResultsListener listener){
         if(shouldAskPermission(context, permission)){
             listener.onPermissionDenied();
         }else{
             listener.onPermissionGranted();
         }
-    }
-
-    public interface PermissionAskListnener{
-        void onNeedPermission();
-        void onPermssionPreviouslyDenied();
-        void onPermissionPreviouslyDeniedWithNeverAskAgain();
-        void onPermissionGranted();
-    }
-
-    public interface PermissionRequestResultListener{
-        void onPermissionGranted();
-        void onPermissionDenied();
     }
 }

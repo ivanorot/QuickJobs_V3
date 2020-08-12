@@ -1,7 +1,6 @@
 package com.example.quickjobs.view.settings;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,12 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.helper.Constants;
-import com.example.quickjobs.helper.Enumerations;
-import com.example.quickjobs.view.main.MainActivity;
 import com.example.quickjobs.view.splash.SplashActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;

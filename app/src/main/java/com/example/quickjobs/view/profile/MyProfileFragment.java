@@ -17,11 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.quickjobs.R;
+import com.example.quickjobs.model.beans.User;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.view.settings.SettingsActivity;
 import com.example.quickjobs.viewmodel.MainViewModel;
+
+import io.reactivex.Observer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +37,7 @@ import com.example.quickjobs.viewmodel.MainViewModel;
 public class MyProfileFragment extends Fragment {
     private final String TAG = "MyProfile";
     private MainViewModel mainViewModel;
+    private NavController navController;
 
     private FrameLayout signin_FrameLayout;
     private ScrollView myprofile_ScrollView;
@@ -90,23 +97,44 @@ public class MyProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
-        findInitViews(view);
-        initAuthentication();
+        initViews(view);
+//        initAuthentication();
+        initNavController(view);
         setHasOptionsMenu(true);
-        //Toast.makeText(getActivity(), "onCreateView method", Toast.LENGTH_SHORT).show();
 
-        signin_Button.setOnClickListener(ignore -> {
-            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
-            startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+
+        mainViewModel.currentUserMutableLiveData.observe(getViewLifecycleOwner(), user ->{
+            if(user.isAnonymous()){
+                navController.navigate(R.id.anonymousUserRestrictedFragment);
+            }
         });
+
+//        signin_Button.setOnClickListener(ignore -> {
+//            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
+//            startActivityForResult(authIntent, AUTH_REQUEST_CODE);
+//        });
 
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     public void initMainViewModel(){
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+    }
+
+    private void initViews(View v){
+        signin_FrameLayout = (FrameLayout) v.findViewById(R.id.myProfile_signin_FrameLayout);
+        myprofile_ScrollView = (ScrollView) v.findViewById(R.id.myProfile_ScrollView);
+        signin_Button = (Button) v.findViewById(R.id.myProfile_signin_button);
+    }
+
+    public void initNavController(View view){
+        navController = Navigation.findNavController(view);
     }
 
     //*****************************************************************************************************************
@@ -138,11 +166,7 @@ public class MyProfileFragment extends Fragment {
 
     //*******************************************************************************************************
 
-    private void findInitViews(View v){
-        signin_FrameLayout = (FrameLayout) v.findViewById(R.id.myProfile_signin_FrameLayout);
-        myprofile_ScrollView = (ScrollView) v.findViewById(R.id.myProfile_ScrollView);
-        signin_Button = (Button) v.findViewById(R.id.myProfile_signin_button);
-    }
+
 
     private void getProfileInfo(){
         //TODO: Fill myProfile with user info
