@@ -14,9 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +24,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.viewpager2.widget.ViewPager2;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +34,7 @@ import androidx.navigation.Navigation;
  * create an instance of this fragment.
  */
 public class newPostFragment extends Fragment {
-
+    private static final String TAG = "newPostFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,17 +48,15 @@ public class newPostFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ViewPager2 imagesViewPager;
     Button nextButton;
     ImageButton cameraButton;
     ImageButton galleryButton;
     ImageButton addPicButton;
-    ImageButton addPicButton2;
     EditText newPostTitle;
     String mTitleText;
-    ImageView pic1;
-    ImageView pic2;
-    int picCount = 0;
-    FrameLayout image2Layout;
+    List<Bitmap> images;
+    ViewPagerAdapter viewPagerAdapter;
 
 
 
@@ -101,13 +100,19 @@ public class newPostFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_new_post, container, false);
 
+        //Log.e(TAG, "onCreateView: ", );
+
+        //Log.println(Log.ERROR)
 
         InitfindViews(v);
+        viewPagerAdapter = new ViewPagerAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE, imagesViewPager);
+        imagesViewPager.setAdapter(viewPagerAdapter);
 
+        //imagesViewPager.getAdapter().bindViewHolder(imagesViewPager.getAdapter().createViewHolder(imagesViewPager, 0), 0);
 
+        ///imagesViewPager.getAdapter().loadNewData();
+        // imagesViewPager.set
         newPostTitle.addTextChangedListener(newPostInputWatcher);
-        addPicButton.setOnClickListener(addPicAction);
-
 
         return v;
     }
@@ -123,7 +128,8 @@ public class newPostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
-            displayPicture(pic);
+            images.add(pic);
+
 
         }
     }
@@ -152,32 +158,12 @@ public class newPostFragment extends Fragment {
 
     private void InitfindViews(View v){
         nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
-        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
-        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
+       // cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
+       // galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
         newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        pic1 = (ImageView) v.findViewById(R.id.newPost_image1_imageView);
-        addPicButton = v.findViewById(R.id.newPost_imageButton1_imageButton);
-        pic2 = (ImageView) v.findViewById(R.id.newPost_image2_imageView);
-        addPicButton2 = v.findViewById(R.id.newPost_imageButton2_imageButton);
-        image2Layout = v.findViewById(R.id.newPost_secondImage_FrameLayout);
+        imagesViewPager = v.findViewById(R.id.newPost_ViewPager2);
     }
 
-    private void displayPicture(Bitmap image) {
-        if (picCount == 0) {
-            addPicButton.setVisibility(View.GONE);
-            pic1.setVisibility(View.VISIBLE);
-            pic1.setImageBitmap(image);
-            image2Layout.setVisibility(View.VISIBLE);
-            addPicButton2.setOnClickListener(addPicAction);
-            picCount++;
-        } else {
-            addPicButton2.setVisibility(View.GONE);
-            pic2.setVisibility(View.VISIBLE);
-            pic2.setImageBitmap(image);
-
-        }
-
-    }
 
     private boolean allPermissionGranted() {
         int permissions_count = REQUIRED_PERSMISSIONS.length;

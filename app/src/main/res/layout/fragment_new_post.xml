@@ -137,73 +137,21 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <FrameLayout
+                    android:id="@+id/frameLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:animationCache="true"
+                    android:background="#D1C4E9 ">
 
-                    <FrameLayout
-                        android:id="@+id/frameLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:animationCache="true"
-                        android:background="#D1C4E9 "
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/newPost_ViewPager2"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:visibility="visible" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <ImageButton
-                                    android:id="@+id/newPost_imageButton1_imageButton"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:backgroundTint="@color/cardview_shadow_end_color"
-                                    android:src="@drawable/baseline_add_black_36" />
-
-                                <ImageView
-                                    android:id="@+id/newPost_image1_imageView"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/baseline_image_black_48"
-                                    android:visibility="gone" />
-                            </FrameLayout>
-
-                            <FrameLayout
-                                android:id="@+id/newPost_secondImage_FrameLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:id="@+id/newPost_image2_imageView"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/baseline_image_black_48"
-                                    android:visibility="gone" />
-
-                                <ImageButton
-                                    android:id="@+id/newPost_imageButton2_imageButton"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:backgroundTint="@color/cardview_shadow_end_color"
-                                    android:src="@drawable/baseline_add_black_36" />
-                            </FrameLayout>
-
-                        </LinearLayout>
-
-                    </FrameLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
