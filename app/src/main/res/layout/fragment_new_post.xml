@@ -143,13 +143,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:animationCache="true"
-                    android:background="#D1C4E9 ">
+                    android:background="#D1C4E9 "
+                    android:paddingLeft="24dp">
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/newPost_ViewPager2"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:visibility="visible">
+
+                    </androidx.viewpager2.widget.ViewPager2>
+
+                    <ImageButton
+                        android:id="@+id/newPost_addPic_imageButton"
+                        android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:visibility="visible" />
+                        android:backgroundTint="#5E35B1"
+                        android:src="@drawable/baseline_add_black_36"
+                        android:tint="#B39DDB" />
 
                 </FrameLayout>
 

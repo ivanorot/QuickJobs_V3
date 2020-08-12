@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,19 +100,11 @@ public class newPostFragment extends Fragment {
         // Inflate the layout for this
 
         View v = inflater.inflate(R.layout.fragment_new_post, container, false);
-
-        //Log.e(TAG, "onCreateView: ", );
-
-        //Log.println(Log.ERROR)
-
+        images = new ArrayList<>();
         InitfindViews(v);
-        viewPagerAdapter = new ViewPagerAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE, imagesViewPager);
+        viewPagerAdapter = new ViewPagerAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE);
         imagesViewPager.setAdapter(viewPagerAdapter);
-
-        //imagesViewPager.getAdapter().bindViewHolder(imagesViewPager.getAdapter().createViewHolder(imagesViewPager, 0), 0);
-
-        ///imagesViewPager.getAdapter().loadNewData();
-        // imagesViewPager.set
+        addPicButton.setOnClickListener(addPicAction);
         newPostTitle.addTextChangedListener(newPostInputWatcher);
 
         return v;
@@ -129,8 +122,7 @@ public class newPostFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
             images.add(pic);
-
-
+            viewPagerAdapter.loadNewData(images);
         }
     }
 
@@ -162,6 +154,7 @@ public class newPostFragment extends Fragment {
        // galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
         newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
         imagesViewPager = v.findViewById(R.id.newPost_ViewPager2);
+        addPicButton = v.findViewById(R.id.newPost_addPic_imageButton);
     }
 
 
