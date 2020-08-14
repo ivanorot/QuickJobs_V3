@@ -22,8 +22,7 @@ import com.example.quickjobs.viewmodel.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{
-    private final String TAG = "MainActivity";
-    private final String USER = "user";
+
 
     private MainViewModel mainViewModel;
 
@@ -34,30 +33,11 @@ public class MainActivity extends AppCompatActivity{
 
         Toast.makeText(this, "checking MainViewModel", Toast.LENGTH_SHORT).show();
         initMainViewModel();
-
-        Toast.makeText(this, "checking QuickJobsUser", Toast.LENGTH_SHORT).show();
-        initQuickJobsUser();
-
-        Toast.makeText(this, "checking NavController", Toast.LENGTH_SHORT).show();
         initNavController();
-
     }
 
-    public void initMainViewModel(){
+    public void initMainViewModel() {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-    }
-
-    public void initQuickJobsUser(){
-        mainViewModel.initializeCurrentUser();
-        mainViewModel.currentUserMutableLiveData.observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                Log.println(Log.ERROR, TAG, "Latitude: " + user.getLatitude());
-                Log.println(Log.ERROR, TAG, "Longitude: " + user.getLongitude());
-            }
-
-
-        });
     }
 
     public void initNavController(){
@@ -66,23 +46,4 @@ public class MainActivity extends AppCompatActivity{
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-    private void goToAuthActivity(){
-        Intent intent = new Intent(MainActivity.this, AuthActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private class MyNavController extends NavController{
-        public MyNavController(@NonNull Context context) {
-            super(context);
-        }
-
-
-    }
 }

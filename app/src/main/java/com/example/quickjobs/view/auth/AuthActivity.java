@@ -21,11 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AuthActivity extends AppCompatActivity{
-    private final String TAG = "AuthActivity";
-    private final String USER = "user";
-
-    private GoogleSignInClient googleSignInClient;
-    private AuthViewModel authViewModel;
 
     private final int RC_SIGN_IN = 0;
 
@@ -34,87 +29,6 @@ public class AuthActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        Log.println(Log.ERROR, TAG, "Auth ");
 
-        initAuthViewModel();
-        launchAuthentication();
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.println(Log.ERROR, TAG, "initiated");
-        Log.println(Log.ERROR, TAG, "\n" + RESULT_OK);
-        Log.println(Log.ERROR, TAG, "\n" + resultCode);
-
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode == RESULT_OK){
-                IdpResponse response = IdpResponse.fromResultIntent(data);
-                if(response != null){
-                    signInWithUsingDefault(response);
-                }
-            }
-            if(resultCode == RESULT_CANCELED){
-                goToSplashActivity();
-            }
-        }
-    }
-
-    private void launchAuthentication()
-    {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                    new AuthUI.IdpConfig.EmailBuilder().build(),
-                    new AuthUI.IdpConfig.GoogleBuilder().build(),
-                    new AuthUI.IdpConfig.PhoneBuilder().build()
-            );
-
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(providers)
-                            .setIsSmartLockEnabled(false)
-                            .setTheme(R.style.QuickJobsFirebaseAuth)
-                            .build(),
-                    RC_SIGN_IN
-            );
-    }
-
-    public void initAuthViewModel(){
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-    }
-
-    public void signInWithUsingDefault(IdpResponse response){
-        Log.println(Log.ERROR, TAG, "\n signInWithUsingDefault");
-        authViewModel.signInDefault(response);
-        authViewModel.authenticatedUserLiveData.observe(this, user ->{
-            if(user.isNew()){
-                Log.println(Log.ERROR, TAG, "\n  createNewUser");
-                createNewUser(user);
-            }
-            else{
-                Log.println(Log.ERROR, TAG, "\n goToMainActivity");
-                goToMainActivity(user);
-            }
-        });
-    }
-
-    public void createNewUser(User authenticatedUser) {
-        Log.println(Log.ERROR, TAG, "createNewUser()");
-        authViewModel.createUser(authenticatedUser);
-        authViewModel.createdUserLiveData.observe(this, this::goToMainActivity);
-    }
-    public void goToMainActivity(User user) {
-        Log.println(Log.ERROR, TAG, "\n goToMain");
-        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-    public void goToSplashActivity(){
-        Intent intent = new Intent(AuthActivity.this, SplashActivity.class);
-        startActivity(intent);
-        Log.println(Log.ERROR, TAG, "\n intent launched");
-        finish();
     }
 }

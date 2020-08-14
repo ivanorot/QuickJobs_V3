@@ -98,8 +98,6 @@ public class MyProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
         initViews(view);
-//        initAuthentication();
-        initNavController(view);
         setHasOptionsMenu(true);
 
 
@@ -108,12 +106,6 @@ public class MyProfileFragment extends Fragment {
                 navController.navigate(R.id.anonymousUserRestrictedFragment);
             }
         });
-
-//        signin_Button.setOnClickListener(ignore -> {
-//            Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
-//            startActivityForResult(authIntent, AUTH_REQUEST_CODE);
-//        });
-
 
         return view;
     }
@@ -131,45 +123,6 @@ public class MyProfileFragment extends Fragment {
         signin_FrameLayout = (FrameLayout) v.findViewById(R.id.myProfile_signin_FrameLayout);
         myprofile_ScrollView = (ScrollView) v.findViewById(R.id.myProfile_ScrollView);
         signin_Button = (Button) v.findViewById(R.id.myProfile_signin_button);
-    }
-
-    public void initNavController(View view){
-        navController = Navigation.findNavController(view);
-    }
-
-    //*****************************************************************************************************************
-    private void initAuthentication(){
-        Toast.makeText(getActivity(), "Authentication method", Toast.LENGTH_SHORT).show();
-            try {
-                if (!(mainViewModel.currentUserMutableLiveData.getValue().isAnonymous())) {
-                    Toast.makeText(getActivity(), "is signed in", Toast.LENGTH_SHORT).show();
-                    signin_FrameLayout.setVisibility(View.GONE);
-                    myprofile_ScrollView.setVisibility(View.VISIBLE);
-                    getProfileInfo();
-                } else {
-                    Toast.makeText(getActivity(), "is not signed in", Toast.LENGTH_SHORT).show();
-                    signin_Button.setOnClickListener(ignore -> {
-                        Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
-                        startActivityForResult(authIntent, AUTH_REQUEST_CODE);
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "Null", Toast.LENGTH_SHORT).show();
-                signin_Button.setOnClickListener(ignore -> {
-                    Intent authIntent = new Intent(requireActivity(), AuthActivity.class);
-                    startActivityForResult(authIntent, AUTH_REQUEST_CODE);
-                    getActivity().finish();
-                });
-            }
-    }
-
-    //*******************************************************************************************************
-
-
-
-    private void getProfileInfo(){
-        //TODO: Fill myProfile with user info
     }
 
     @Override
@@ -195,7 +148,6 @@ public class MyProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        initAuthentication();
 
     }
 }

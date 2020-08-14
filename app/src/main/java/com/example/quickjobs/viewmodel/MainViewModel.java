@@ -26,15 +26,4 @@ public class MainViewModel extends AndroidViewModel {
         currentUserMutableLiveData = new MutableLiveData<>();
     }
 
-    public void initializeCurrentUser(){
-        currentUserMutableLiveData = mainRepository.getCurrentUserMutableLiveData();
-    }
-
-    public void setCurrentUserAnonymous(User user){
-        mainRepository.addAnonymousUserToSource(user);
-    }
-
-    public void register(UserLocationCallback userLocationCallback){
-        mainRepository.register(userLocationCallback);
-    }
 }

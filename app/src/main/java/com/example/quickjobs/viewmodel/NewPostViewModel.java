@@ -28,16 +28,5 @@ public class NewPostViewModel extends AndroidViewModel {
         mainRepository = MainRepository.getInstance(application);
     }
 
-    public void initCurrentUser(){
-        currentUser = mainRepository.getCurrentUserMutableLiveData();
-    }
-
-    public LiveData<Boolean> getIsJobPostComplete() {
-        return isJobPostComplete;
-    }
-
-    public void setIsJobPostComplete(Boolean inIsJobPostComplete) {
-        isJobPostComplete.setValue(inIsJobPostComplete);
-    }
 
 }

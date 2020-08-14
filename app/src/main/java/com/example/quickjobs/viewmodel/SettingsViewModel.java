@@ -23,7 +23,7 @@ public class SettingsViewModel extends AndroidViewModel {
     }
 
     public void initCurrentUser(){
-        currentUserLiveData = mainRepository.getCurrentUserMutableLiveData();
+        currentUserLiveData = mainRepository.getCurrentUserFromUserSource();
     }
 
     public void saveUserPreference(String preferenceKey, Boolean preferenceState){

@@ -14,7 +14,7 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.example.quickjobs.R;
-import com.example.quickjobs.model.helper.Constants;
+import com.example.quickjobs.model.constants.Constants;
 import com.example.quickjobs.view.auth.AuthActivity;
 import com.example.quickjobs.viewmodel.SettingsViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,15 +62,15 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     private void initViewModelAndCurrentUser(String rootKey){
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         settingsViewModel.initCurrentUser();
-        settingsViewModel.currentUserLiveData.observe(this, currentUser -> {
-            if(currentUser.isAnonymous()){
-                setPreferencesFromResource(R.xml.pref_account_preference_anonymous, rootKey);
-            }
-            else{
-                setPreferencesFromResource(R.xml.pref_account_preference, rootKey);
-            }
-            initPreferences();
-        });
+//        settingsViewModel.currentUserLiveData.observe(this, currentUser -> {
+//            if(currentUser.isAnonymous()){
+//                setPreferencesFromResource(R.xml.pref_account_preference_anonymous, rootKey);
+//            }
+//            else{
+//                setPreferencesFromResource(R.xml.pref_account_preference, rootKey);
+//            }
+//            initPreferences();
+//        });
     }
 
     @Override
@@ -129,7 +129,7 @@ public class AccountSettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void changeAppDefaultLanguage(ListPreference listPreference, String lanuage){
-        settingsViewModel.saveUserPreference(Constants.USER_LANGUAGE_PREFERENCE_NAME, listPreference.getValue());
+        settingsViewModel.saveUserPreference(Constants.USER_PREFERENCE_LANGUAGE, listPreference.getValue());
         listPreference.setSummary(lanuage);
     }
 

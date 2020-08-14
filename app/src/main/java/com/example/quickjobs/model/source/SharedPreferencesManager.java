@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.quickjobs.model.helper.Constants;
+import com.example.quickjobs.model.constants.Constants;
+
+import java.util.Map;
 
 public class SharedPreferencesManager implements android.content.SharedPreferences.OnSharedPreferenceChangeListener {
     private final String TAG = "SharedPrefManager";
@@ -12,16 +14,13 @@ public class SharedPreferencesManager implements android.content.SharedPreferenc
     private static SharedPreferencesManager Instance;
 
     private SharedPreferences userSettingsSharedPreferences;
-    private SharedPreferences userLanguageSharedPreferences;
     private SharedPreferences permissionStatePreferences;
 
     private SharedPreferences.Editor userSettingsSharedPreferencesEditor;
-    private SharedPreferences.Editor userLanguageSharedPreferencesEditor;
     private SharedPreferences.Editor permissionStateSharedPreferencesEditor;
 
     private SharedPreferencesManager(Context context){
         userSettingsSharedPreferences = context.getSharedPreferences(Constants.USER_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        userLanguageSharedPreferences = context.getSharedPreferences(Constants.USER_LANGUAGE_PREFERENCE_NAME, Context.MODE_PRIVATE);
         permissionStatePreferences  = context.getSharedPreferences(Constants.APP_PERMISSION_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
@@ -50,13 +49,13 @@ public class SharedPreferencesManager implements android.content.SharedPreferenc
     }
 
     public void updateUserPreferences(String languageKey, String currentLanguage){
-        if(userLanguageSharedPreferencesEditor == null){
+        if(userSettingsSharedPreferencesEditor == null){
             synchronized (SharedPreferences.Editor.class){
-                userLanguageSharedPreferencesEditor = userLanguageSharedPreferences.edit();
+                userSettingsSharedPreferencesEditor = userSettingsSharedPreferences.edit();
             }
         }
-        userLanguageSharedPreferencesEditor.putString(languageKey, currentLanguage);
-        userLanguageSharedPreferencesEditor.apply();
+        userSettingsSharedPreferencesEditor.putString(languageKey, currentLanguage);
+        userSettingsSharedPreferencesEditor.apply();
     }
 
     public void updatePermissionPreferences(String permissionKey, Boolean permissionState){
@@ -69,13 +68,12 @@ public class SharedPreferencesManager implements android.content.SharedPreferenc
         permissionStateSharedPreferencesEditor.apply();
     }
 
-    public Boolean getValueFromUserPreferences(String preferenceKey, Boolean defaultValue){
-        return userSettingsSharedPreferences.getBoolean(preferenceKey, defaultValue);
+    public Map<String, ?> getUsersCurrentPreferences(){
+        return userSettingsSharedPreferences.getAll();
     }
 
-    public String getValueFromUserLanguagePreferences(){
-        final String DEFAULTVALUE = "English";
-        return userLanguageSharedPreferences.getString(Constants.USER_LANGUAGE_PREFERENCE_NAME, DEFAULTVALUE);
+    public Boolean getValueFromUserPreferences(String preferenceKey, Boolean defaultValue){
+        return userSettingsSharedPreferences.getBoolean(preferenceKey, defaultValue);
     }
 
     public Boolean getValueFromPermissionPreferences(String permission, Boolean defaultState){

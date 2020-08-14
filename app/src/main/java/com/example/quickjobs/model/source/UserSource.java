@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.renderscript.RenderScript;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.quickjobs.model.beans.User;
+import com.example.quickjobs.model.concurrency.UserSourceHandler;
+import com.example.quickjobs.model.concurrency.UserSourceHandlerThread;
 import com.example.quickjobs.model.helper.ExceptionHandler;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,15 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class UserSource implements EventListener<DocumentSnapshot>{
-    private final String USER_SOURCE_BACKGROUND_THREAD_NAME = "USER_SOURCE_BACKGROUND_THREAD";
+
     private final String USER_COLLECTION_NAME = "users";
     private final String TAG = "UserSource";
 
     private static UserSource Instance;
 
 //  Threads
-    private HandlerThread userSourceHandlerThread_Background;
-    private Handler userSourceHandler_Background;
+    private UserSourceHandlerThread userSourceHandlerThread_Background;
 
 //  Authentication
     private DocumentReference currentUserDocument;
@@ -58,18 +60,19 @@ public class UserSource implements EventListener<DocumentSnapshot>{
     }
 
     public void initUserSourceThread(){
-        userSourceHandlerThread_Background = new HandlerThread(USER_SOURCE_BACKGROUND_THREAD_NAME);
+        userSourceHandlerThread_Background = new UserSourceHandlerThread();
         userSourceHandlerThread_Background.start();
-        userSourceHandler_Background = new Handler(userSourceHandlerThread_Background.getLooper());
+        Log.println(Log.ERROR, TAG, userSourceHandlerThread_Background.getName() + ": " + userSourceHandlerThread_Background.isAlive());
     }
 
     public void terminateUserSourceThread(){
         userSourceHandlerThread_Background.quitSafely();
         try {
-
             userSourceHandlerThread_Background.join();
+
+            Log.println(Log.ERROR, TAG, userSourceHandlerThread_Background.getName() + ": " + userSourceHandlerThread_Background.isAlive());
+
             userSourceHandlerThread_Background = null;
-            userSourceHandler_Background = null;
 
         }catch (InterruptedException exception){
             ExceptionHandler.consumeException(TAG, exception);

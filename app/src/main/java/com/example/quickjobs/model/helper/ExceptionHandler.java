@@ -3,15 +3,32 @@ package com.example.quickjobs.model.helper;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExceptionHandler {
+    private static final String CAUSE = "CAUSE: ";
 
-    public static void consumeException(String TAG, Exception e){
+    public static void consumeException(final String OWNER, Exception e){
         if(e.getMessage() != null) {
-            Log.println(Log.ERROR, TAG, e.getMessage());
+            Log.println(Log.ERROR, OWNER, e.getMessage());
+        }
+
+        if(e.getCause() != null){
+            Log.println(Log.ERROR, CAUSE, e.getCause().toString());
+        }
+    }
+
+    public static void consumeThrowable(final String OWNER, Throwable e){
+        if(e.getMessage() != null) {
+            Log.println(Log.ERROR, OWNER, e.getMessage());
+        }
+
+        if(e.getCause() != null){
+            Log.println(Log.ERROR, CAUSE, e.getCause().toString());
         }
     }
 

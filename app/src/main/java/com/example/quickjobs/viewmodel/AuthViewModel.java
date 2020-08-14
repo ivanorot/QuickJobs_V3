@@ -25,12 +25,4 @@ public class AuthViewModel extends AndroidViewModel {
         mainRepository = MainRepository.getInstance(application);
     }
 
-    public void signInDefault(IdpResponse firebaseResponse){
-        authenticatedUserLiveData = mainRepository.firebaseGenericSignIn(firebaseResponse);
-    }
-
-    public void createUser(User authenticatedUser){
-        createdUserLiveData = mainRepository.createUserInFireBaseIfNotExists(authenticatedUser);
-    }
-
 }

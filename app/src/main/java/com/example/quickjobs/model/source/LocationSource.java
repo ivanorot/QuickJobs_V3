@@ -8,7 +8,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.quickjobs.model.helper.Constants;
+import com.example.quickjobs.model.constants.Constants;
 import com.example.quickjobs.model.interfaces.UserLocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
