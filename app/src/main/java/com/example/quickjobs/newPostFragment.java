@@ -24,7 +24,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class newPostFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ViewPager2 imagesViewPager;
+    RecyclerView imagesRecyclerView;
     Button nextButton;
     ImageButton cameraButton;
     ImageButton galleryButton;
@@ -57,7 +58,8 @@ public class newPostFragment extends Fragment {
     EditText newPostTitle;
     String mTitleText;
     List<Bitmap> images;
-    ViewPagerAdapter viewPagerAdapter;
+    RecyclerViewAdapter recyclerViewAdapter;
+
 
 
 
@@ -101,10 +103,11 @@ public class newPostFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_new_post, container, false);
         images = new ArrayList<>();
-        InitfindViews(v);
-        viewPagerAdapter = new ViewPagerAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE);
-        imagesViewPager.setAdapter(viewPagerAdapter);
-        addPicButton.setOnClickListener(addPicAction);
+        initfindViews(v);
+        initRecyclerViewSetup();
+
+        cameraButton.setOnClickListener(addPicAction);
+        galleryButton.setOnClickListener(addPicActionGallery);
         newPostTitle.addTextChangedListener(newPostInputWatcher);
 
         return v;
@@ -116,14 +119,43 @@ public class newPostFragment extends Fragment {
         }
     };
 
+    View.OnClickListener addPicActionGallery = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent gallerySession = new Intent(Intent.ACTION_GET_CONTENT);
+            gallerySession.setType("image/*");
+            startActivityForResult(gallerySession, REQUEST_IMAGE_CAPTURE);
+        }
+    };
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
             images.add(pic);
-            viewPagerAdapter.loadNewData(images);
+            recyclerViewAdapter.loadNewData(images);
         }
+    }
+
+    private void initRecyclerViewSetup(){
+        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE);
+        imagesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        imagesRecyclerView.setAdapter(recyclerViewAdapter);
+        imagesRecyclerView.setClipToPadding(false);
+        imagesRecyclerView.setClipChildren(false);
+        //imagesRecyclerView.setOffscreenPageLimit(4);
+        //imagesRecyclerView.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
+
+      /*  CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(4));
+        compositePageTransformer.addTransformer((new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float r = 1 - Math.abs(position);
+                page.setScaleY(1);
+                }
+        }));
+          imagesRecyclerView.setPageTransformer(compositePageTransformer);*/
     }
 
     private TextWatcher newPostInputWatcher = new TextWatcher() {
@@ -148,13 +180,13 @@ public class newPostFragment extends Fragment {
         }
     };
 
-    private void InitfindViews(View v){
+    private void initfindViews(View v){
         nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
-       // cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
-       // galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
+        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
+        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
         newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        imagesViewPager = v.findViewById(R.id.newPost_ViewPager2);
-        addPicButton = v.findViewById(R.id.newPost_addPic_imageButton);
+        imagesRecyclerView = v.findViewById(R.id.newPost_RecyclerView);
+        //addPicButton = v.findViewById(R.id.newPost_addPic_imageButton);
     }
 
 
@@ -192,6 +224,11 @@ public class newPostFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), REQUIRED_PERSMISSIONS, REQUESTED_CODE_PERMISSIONS);
             Toast.makeText(getContext(), "Not all permission granted", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void delete(int position){
+        images.remove(position);
+        recyclerViewAdapter.loadNewData(images);
     }
 
 
