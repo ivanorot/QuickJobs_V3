@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,6 @@ public class newPostFragment extends Fragment implements ViewOrDeleteImageDialog
     private String mParam1;
     private String mParam2;
 
-    RecyclerView imagesRecyclerView;
     Button nextButton;
     ImageButton addPicButton;
     EditText newPostTitle;

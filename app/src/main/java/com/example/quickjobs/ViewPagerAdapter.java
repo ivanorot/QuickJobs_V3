@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
     private static final String TAG = "ViewPagerAdapter";
     private Context context;
     private List<Bitmap> bitmaps;
@@ -26,7 +26,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static int IMAGE_CAPTURE_REQUEST;
     private Activity thisActivity;
 
-    public RecyclerViewAdapter(Context mContext, Activity activity, int image_capture_req) {
+    public ViewPagerAdapter(Context mContext, Activity activity, int image_capture_req) {
         context = mContext;
         thisActivity = activity;
         IMAGE_CAPTURE_REQUEST = image_capture_req;
@@ -37,13 +37,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @NonNull
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(context).inflate(R.layout.camera_item, parent, false);
+    public ViewPagerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.cardview_view_image, parent, false);
             return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewPagerAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: position = "+ position + " bitmap size = " + bitmaps.size());
         if (bitmaps != null) {
             holder.image.setImageBitmap(bitmaps.get(position));
