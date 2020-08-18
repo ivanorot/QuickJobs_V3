@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.List;
  * Use the {@link newPostFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class newPostFragment extends Fragment {
+public class newPostFragment extends Fragment implements ViewOrDeleteImageDialog.dialogListener {
     private static final String TAG = "newPostFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,13 +53,13 @@ public class newPostFragment extends Fragment {
 
     RecyclerView imagesRecyclerView;
     Button nextButton;
-    ImageButton cameraButton;
-    ImageButton galleryButton;
     ImageButton addPicButton;
     EditText newPostTitle;
     String mTitleText;
     List<Bitmap> images;
-    RecyclerViewAdapter recyclerViewAdapter;
+    ImageView[] imageViews;
+    ImageView[] blankViews;
+    ImageView coverImageView;
 
 
 
@@ -104,10 +105,8 @@ public class newPostFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_new_post, container, false);
         images = new ArrayList<>();
         initfindViews(v);
-        initRecyclerViewSetup();
+        addPicButton.setOnClickListener(addPicAction);
 
-        cameraButton.setOnClickListener(addPicAction);
-        galleryButton.setOnClickListener(addPicActionGallery);
         newPostTitle.addTextChangedListener(newPostInputWatcher);
 
         return v;
@@ -132,31 +131,11 @@ public class newPostFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             Bitmap pic = (Bitmap) data.getExtras().get("data");
-            images.add(pic);
-            recyclerViewAdapter.loadNewData(images);
+            addImages(pic);
+
         }
     }
 
-    private void initRecyclerViewSetup(){
-        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), getActivity(), REQUEST_IMAGE_CAPTURE);
-        imagesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
-        imagesRecyclerView.setAdapter(recyclerViewAdapter);
-        imagesRecyclerView.setClipToPadding(false);
-        imagesRecyclerView.setClipChildren(false);
-        //imagesRecyclerView.setOffscreenPageLimit(4);
-        //imagesRecyclerView.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
-      /*  CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-        compositePageTransformer.addTransformer(new MarginPageTransformer(4));
-        compositePageTransformer.addTransformer((new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float r = 1 - Math.abs(position);
-                page.setScaleY(1);
-                }
-        }));
-          imagesRecyclerView.setPageTransformer(compositePageTransformer);*/
-    }
 
     private TextWatcher newPostInputWatcher = new TextWatcher() {
         @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -181,12 +160,13 @@ public class newPostFragment extends Fragment {
     };
 
     private void initfindViews(View v){
+        initFindBlankViews(v);
+        initFindImageViews(v);
+
+        coverImageView = v.findViewById(R.id.newPost_cover_imageView);
         nextButton = (Button) v.findViewById(R.id.newPost_Next_button);
-        cameraButton = (ImageButton) v.findViewById(R.id.newPost_camera_imageButton);
-        galleryButton = (ImageButton) v.findViewById((R.id.newPost_gallery_imageButton));
         newPostTitle = (EditText) v.findViewById(R.id.newPost_titletext_EditText);
-        imagesRecyclerView = v.findViewById(R.id.newPost_RecyclerView);
-        //addPicButton = v.findViewById(R.id.newPost_addPic_imageButton);
+        addPicButton = v.findViewById(R.id.newPost_addPic_imageButton);
     }
 
 
@@ -228,8 +208,106 @@ public class newPostFragment extends Fragment {
 
     private void delete(int position){
         images.remove(position);
-        recyclerViewAdapter.loadNewData(images);
+    }
+
+    private void initFindBlankViews(View v){
+        blankViews = new ImageView[9];
+        blankViews[0] = v.findViewById(R.id.newPost_blank1_imageView);
+        blankViews[1] = v.findViewById(R.id.newPost_blank2_imageView);
+        blankViews[2] = v.findViewById(R.id.newPost_blank3_imageView);
+        blankViews[3] = v.findViewById(R.id.newPost_blank4_imageView);
+        blankViews[4] = v.findViewById(R.id.newPost_blank5_imageView);
+        blankViews[5] = v.findViewById(R.id.newPost_blank6_imageView);
+        blankViews[6] = v.findViewById(R.id.newPost_blank7_imageView);
+        blankViews[7] = v.findViewById(R.id.newPost_blank8_imageView);
+        blankViews[8] = v.findViewById(R.id.newPost_blank9_imageView);
+    }
+
+    private void initFindImageViews(View v){
+        imageViews = new ImageView[9];
+        imageViews[0] = v.findViewById(R.id.newPost_image1_imageView);
+        imageViews[1] = v.findViewById(R.id.newPost_image2_imageView);
+        imageViews[2] = v.findViewById(R.id.newPost_image3_imageView);
+        imageViews[3] = v.findViewById(R.id.newPost_image4_imageView);
+        imageViews[4] = v.findViewById(R.id.newPost_image5_imageView);
+        imageViews[5] = v.findViewById(R.id.newPost_image6_imageView);
+        imageViews[6] = v.findViewById(R.id.newPost_image7_imageView);
+        imageViews[7] = v.findViewById(R.id.newPost_image8_imageView);
+        imageViews[8] = v.findViewById(R.id.newPost_image9_imageView);
+    }
+
+    private void addImages(Bitmap pic){
+        images.add(pic);
+        rearrangeViews();
+    }
+
+    private void deleteImages(int imageDeleted){
+        images.remove(imageDeleted);
+        rearrangeViews();
+    }
+
+    private void rearrangeViews(){
+        initViewSetting();
+        setImages();
+        setButton();
+        if(images.size()==0){
+            coverImageView.setVisibility(View.GONE);
+        }
+    }
+    private void setButton(){
+        if(images.size()>=9){
+            addPicButton.setVisibility(View.GONE);
+        }
+        else
+            addPicButton.setVisibility(View.VISIBLE);
     }
 
 
+    private void initViewSetting(){
+        for (int i = 0; i < 9; i++){
+            blankViews[i].setVisibility(View.VISIBLE);
+            imageViews[i].setVisibility(View.GONE);
+        }
+    }
+
+    private void setImages(){
+        if (images != null&&images.size()!=0) {
+            coverImageView.setImageBitmap(images.get(0));
+            coverImageView.setVisibility(View.VISIBLE);
+            for (int i = 0; i < images.size(); i++){
+                blankViews[i].setVisibility(View.GONE);
+                imageViews[i].setVisibility(View.VISIBLE);
+                imageViews[i].setImageBitmap(images.get(i));
+                imageViews[i].setOnClickListener(onClickImage);
+            }
+        }
+    }
+
+   View.OnClickListener onClickImage = new View.OnClickListener() {
+       @Override
+       public void onClick(View v) {
+           int position = 10;
+           for (int i = 0; i < images.size(); i++){
+               if (v.getId() == imageViews[i].getId()){
+                   position = i;
+                   break;
+               }
+           }
+           Log.d(TAG, "onClick:"+ position);
+           ViewOrDeleteImageDialog viewOrDeleteImageDialog = new ViewOrDeleteImageDialog(position);
+           viewOrDeleteImageDialog.setTargetFragment(newPostFragment.this, 1);
+           Log.d(TAG, "onClick: initialized VieworDelete");
+           viewOrDeleteImageDialog.show(getParentFragmentManager(), "TAG");
+
+           
+
+
+       }
+   };
+
+
+    @Override
+    public void imageDeletion(int position) {
+        deleteImages(position);
+    }
 }

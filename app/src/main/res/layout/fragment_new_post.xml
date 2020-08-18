@@ -5,6 +5,7 @@
     android:id="@+id/newPost_FrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="2dp"
     android:background="#EDE7F6 "
     tools:context=".newPostFragment">
 
@@ -57,111 +58,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingTop="16dp">
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <ImageView
+                    android:id="@+id/newPost_cover_imageView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/constraintLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="64dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/linearLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
-                            app:layout_constraintStart_toEndOf="@+id/linearLayout2">
-
-                            <ImageButton
-                                android:id="@+id/newPost_gallery_imageButton"
-                                android:layout_width="150dp"
-                                android:layout_height="150dp"
-                                android:backgroundTint="#512DA8"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_add_photo_alternate_black_48"
-                                android:tint="#B39DDB"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/newPost_gallery_textView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="34dp"
-                                android:text="Gallery"
-                                android:textColor="#B39DDB"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/linearLayout2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageButton
-                                android:id="@+id/newPost_camera_imageButton"
-                                android:layout_width="150dp"
-                                android:layout_height="150dp"
-                                android:backgroundTint="#512DA8"
-                                android:baselineAlignBottom="true"
-                                android:src="@drawable/baseline_add_a_photo_black_48"
-                                android:tint="#B39DDB"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/newPost_camera_textView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="34dp"
-                                android:text="Camera"
-                                android:textColor="#B39DDB"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <FrameLayout
-                    android:id="@+id/frameLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:animationCache="true"
-                    android:background="#D1C4E9 "
-                    android:paddingLeft="24dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/newPost_RecyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                        </androidx.recyclerview.widget.RecyclerView>
-
-                    </LinearLayout>
-
-                </FrameLayout>
+                    android:layout_height="250dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_image_black_48"
+                    android:visibility="gone" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -191,6 +101,197 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:padding="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp">
+
+                        <ImageView
+                            android:id="@+id/newPost_image1_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:padding="2dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image2_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:padding="2dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image3_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+
+                        <ImageView
+                            android:id="@+id/newPost_image4_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image5_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image6_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image7_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image8_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_image9_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:cropToPadding="true"
+                            android:scaleType="centerCrop"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+
+                        <ImageButton
+                            android:id="@+id/newPost_addPic_imageButton"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:background="#00FFFFFF"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/newpic_button" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank1_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+
+                        <ImageView
+                            android:id="@+id/newPost_blank2_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank3_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank4_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank5_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank6_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank7_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank8_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                        <ImageView
+                            android:id="@+id/newPost_blank9_imageView"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:padding="2dp"
+                            android:src="@drawable/pic_preview" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
 
             </LinearLayout>
         </ScrollView>
